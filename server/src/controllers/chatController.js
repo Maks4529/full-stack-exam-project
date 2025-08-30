@@ -1,11 +1,9 @@
-const Conversation = require('../models/mongoModels/conversation');
-const Message = require('../models/mongoModels/Message');
-const Catalog = require('../models/mongoModels/Catalog');
 const moment = require('moment');
+const _ = require('lodash');
 const db = require('../models');
+const {Catalog, Conversation, Message} = require('../models/mongoModels');
 const userQueries = require('./queries/userQueries');
 const controller = require('../socketInit');
-const _ = require('lodash');
 
 module.exports.addMessage = async (req, res, next) => {
   const participants = [req.tokenData.userId, req.body.recipient];
