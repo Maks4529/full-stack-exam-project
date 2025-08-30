@@ -1,43 +1,49 @@
-import React from 'react';
 import classNames from 'classnames';
-import { useField } from 'formik';
+import { useField, useFormikContext } from 'formik';
 
 const ImageUpload = props => {
   const [field, meta, helpers] = useField(props.name);
+  const { setFieldValue } = useFormikContext();
   const { uploadContainer, inputContainer, imgStyle } = props.classes;
+
   const onChange = e => {
-    const node = window.document.getElementById('imagePreview');
     const file = e.target.files[0];
+    if (!file) {
+      console.error('No file selected');
+      return;
+    }
+
     const imageType = /image.*/;
     if (!file.type.match(imageType)) {
-      e.target.value = '';
-    } else {
-      field.onChange(file);
-      const reader = new FileReader();
-      reader.onload = () => {
-        node.src = reader.result;
-      };
-      reader.readAsDataURL(file);
+      console.error('Invalid file type');
+      return;
     }
+
+    setFieldValue(field.name, file);
   };
+
   return (
     <div className={uploadContainer}>
       <div className={inputContainer}>
         <span>Support only images (*.png, *.gif, *.jpeg)</span>
         <input
-          {...field}
+          name={field.name}
           id='fileInput'
           type='file'
           accept='.jpg, .png, .jpeg'
-          onClick={onChange}
+          onChange={onChange}
         />
-        <label htmlFor='fileInput'>Chose file</label>
+        <label htmlFor='fileInput'>Choose file</label>
       </div>
-      <img
-        id='imagePreview'
-        className={classNames({ [imgStyle]: !!field.value })}
-        alt='user'
-      />
+      {field.value && field.value instanceof File ? (
+        <img
+          src={URL.createObjectURL(field.value)}
+          id='imagePreview'
+          className={classNames({ [imgStyle]: !!field.value })}
+          alt='user'
+          onLoad={e => URL.revokeObjectURL(e.target.src)} 
+        />
+      ) : null}
     </div>
   );
 };
