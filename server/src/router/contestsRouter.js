@@ -22,6 +22,13 @@ contestsRouter.get(
     '/byCustomer',
     checkToken.checkToken,
     contestController.getCustomersContests,
-)
+);
+
+contestsRouter.get(
+  '/:contestId',
+  checkToken.checkToken,
+  basicMiddlewares.canGetContest,
+  contestController.getContestById,
+);
 
 module.exports = contestsRouter;

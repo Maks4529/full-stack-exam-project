@@ -27,13 +27,6 @@ router.post(
 
 router.use('/contests', contestsRouter);
 
-router.get(
-  '/getContestById',
-  checkToken.checkToken,
-  basicMiddlewares.canGetContest,
-  contestController.getContestById
-);
-
 router.post(
   '/getAllContests',
   checkToken.checkToken,

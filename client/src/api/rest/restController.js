@@ -49,9 +49,4 @@ export const getActiveContests = ({
     ownEntries,
   });
 
-export const getContestById = data =>
-  http.get('getContestById', {
-    headers: {
-      contestId: data.contestId,
-    },
-  });
+export const getContestById = ({contestId}) => http.get(`contests/${contestId}`);
