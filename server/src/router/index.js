@@ -19,50 +19,9 @@ router.post(
 
 router.post('/login', validators.validateLogin, userController.login);
 
-router.post(
-  '/dataForContest',
-  checkToken.checkToken,
-  contestController.dataForContest
-);
-
 router.use('/contests', contestsRouter);
 
-router.post(
-  '/getAllContests',
-  checkToken.checkToken,
-  basicMiddlewares.onlyForCreative,
-  contestController.getContests
-);
-
 router.post('/getUser', checkToken.checkAuth);
-
-router.get(
-  '/downloadFile/:fileName',
-  checkToken.checkToken,
-  contestController.downloadFile
-);
-
-router.post(
-  '/updateContest',
-  checkToken.checkToken,
-  upload.updateContestFile,
-  contestController.updateContest
-);
-
-router.post(
-  '/setNewOffer',
-  checkToken.checkToken,
-  upload.uploadLogoFiles,
-  basicMiddlewares.canSendOffer,
-  contestController.setNewOffer
-);
-
-router.post(
-  '/setOfferStatus',
-  checkToken.checkToken,
-  basicMiddlewares.onlyForCustomerWhoCreateContest,
-  contestController.setOfferStatus
-);
 
 router.post(
   '/changeMark',

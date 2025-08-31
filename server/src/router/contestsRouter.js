@@ -31,4 +31,47 @@ contestsRouter.get(
   contestController.getContestById,
 );
 
+contestsRouter.post(
+  '/dataForContest',
+  checkToken.checkToken,
+  contestController.dataForContest
+);
+
+contestsRouter.post(
+  '/getAllContests',
+  checkToken.checkToken,
+  basicMiddlewares.onlyForCreative,
+  contestController.getContests
+);
+
+contestsRouter.post(
+  '/updateContest',
+  checkToken.checkToken,
+  upload.updateContestFile,
+  contestController.updateContest
+);
+
+contestsRouter.get(
+  '/downloadFile/:fileName',
+  checkToken.checkToken,
+  contestController.downloadFile
+);
+
+contestsRouter.post(
+  '/setNewOffer',
+  checkToken.checkToken,
+  upload.uploadLogoFiles,
+  basicMiddlewares.canSendOffer,
+  contestController.setNewOffer
+);
+
+contestsRouter.post(
+  '/setOfferStatus',
+  checkToken.checkToken,
+  basicMiddlewares.onlyForCustomerWhoCreateContest,
+  contestController.setOfferStatus
+);
+
+
+
 module.exports = contestsRouter;
