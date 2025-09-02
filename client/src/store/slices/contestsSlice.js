@@ -23,16 +23,15 @@ const initialState = {
 export const getContests = decorateAsyncThunk({
   key: `${CONTESTS_SLICE_NAME}/getContests`,
   thunk: async ({ requestData, role }) => {
-    const { data } =
-      role === CONSTANTS.CUSTOMER
-        ? await restController.getCustomersContests(requestData)
-        : await restController.getActiveContests(requestData);
+    const { data } = role === CONSTANTS.CUSTOMER
+      ? await restController.getCustomersContests(requestData)
+      : await restController.getActiveContests(requestData);
     return data;
   },
 });
 
 const reducers = {
-  clearContestsList: state => {
+  clearContestsList: (state) => {
     state.error = null;
     state.contests = [];
   },
@@ -48,7 +47,7 @@ const reducers = {
   }),
 };
 
-const extraReducers = builder => {
+const extraReducers = (builder) => {
   builder.addCase(getContests.pending, pendingReducer);
   builder.addCase(getContests.fulfilled, (state, { payload }) => {
     state.isFetching = false;

@@ -5,7 +5,7 @@ import RegistrationForm from '../../components/RegistrationForm/RegistrationForm
 import styles from './RegistrationPage.module.sass';
 import { clearAuthError } from '../../store/slices/authSlice';
 
-const RegistrationPage = props => {
+function RegistrationPage(props) {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   dispatch(clearAuthError());
@@ -17,6 +17,6 @@ const RegistrationPage = props => {
       </div>
     </div>
   );
-};
+}
 
 export default RegistrationPage;

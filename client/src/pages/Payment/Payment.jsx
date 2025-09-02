@@ -8,15 +8,13 @@ import styles from './Payment.module.sass';
 import CONSTANTS from '../../constants';
 import Error from '../../components/Error/Error';
 
-const Payment = props => {
+function Payment(props) {
   const navigate = useNavigate();
 
-  const pay = values => {
+  const pay = (values) => {
     const { contests } = props.contestCreationStore;
     const contestArray = [];
-    Object.keys(contests).forEach(key =>
-      contestArray.push({ ...contests[key] })
-    );
+    Object.keys(contests).forEach((key) => contestArray.push({ ...contests[key] }));
     const { number, expiry, cvc } = values;
     const data = new FormData();
     for (let i = 0; i < contestArray.length; i++) {
@@ -69,18 +67,18 @@ const Payment = props => {
           <span>Total:</span>
           <span>$100.00 USD</span>
         </div>
-        <a href='http://www.google.com'>Have a promo code?</a>
+        <a href="http://www.google.com">Have a promo code?</a>
       </div>
     </div>
   );
-};
+}
 
-const mapStateToProps = state => ({
+const mapStateToProps = (state) => ({
   payment: state.payment,
   contestCreationStore: state.contestCreationStore,
 });
 
-const mapDispatchToProps = dispatch => ({
+const mapDispatchToProps = (dispatch) => ({
   pay: ({ data, navigate }) => dispatch(pay({ data, navigate })),
   clearPaymentStore: () => dispatch(clearPaymentStore()),
 });

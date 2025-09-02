@@ -8,7 +8,7 @@ import ContestForm from '../../components/ContestForm/ContestForm';
 import BackButton from '../../components/BackButton/BackButton';
 import ProgressBar from '../../components/ProgressBar/ProgressBar';
 
-const ContestCreationPage = props => {
+function ContestCreationPage(props) {
   const formRef = useRef();
   const navigate = useNavigate();
 
@@ -16,35 +16,34 @@ const ContestCreationPage = props => {
     ? props.contestCreationStore.contests[props.contestType]
     : { contestType: props.contestType };
 
-  const handleSubmit = values => {
-  const formData = new FormData();
+  const handleSubmit = (values) => {
+    const formData = new FormData();
 
-  Object.entries(values).forEach(([key, value]) => {
-    if (value !== undefined && value !== null) {
-      if (key === 'file' && value) {
-        formData.append(key, value);
-      } else {
-        formData.append(key, value);
+    Object.entries(values).forEach(([key, value]) => {
+      if (value !== undefined && value !== null) {
+        if (key === 'file' && value) {
+          formData.append(key, value);
+        } else {
+          formData.append(key, value);
+        }
       }
-    }
-  });
+    });
 
-  props.saveContest({ type: props.contestType, info: values });
+    props.saveContest({ type: props.contestType, info: values });
 
-  axios.post('/api/contest', formData, {
-    headers: { 'Content-Type': 'multipart/form-data' },
-  })
-  .then(res => {
-    const route =
-      props.bundleStore.bundle[props.contestType] === 'payment'
-        ? '/payment'
-        : `/startContest/${props.bundleStore.bundle[props.contestType]}Contest`;
-    navigate(route);
-  })
-  .catch(err => {
-    console.error('Помилка при збереженні конкурсу:', err);
-  });
-};
+    axios.post('/api/contest', formData, {
+      headers: { 'Content-Type': 'multipart/form-data' },
+    })
+      .then((res) => {
+        const route = props.bundleStore.bundle[props.contestType] === 'payment'
+          ? '/payment'
+          : `/startContest/${props.bundleStore.bundle[props.contestType]}Contest`;
+        navigate(route);
+      })
+      .catch((err) => {
+        console.error('Помилка при збереженні конкурсу:', err);
+      });
+  };
 
   const submitForm = () => {
     if (formRef.current) {
@@ -86,18 +85,18 @@ const ContestCreationPage = props => {
       </div>
     </div>
   );
-};
+}
 
-const mapStateToProps = state => {
+const mapStateToProps = (state) => {
   const { contestCreationStore, bundleStore } = state;
   return { contestCreationStore, bundleStore };
 };
 
-const mapDispatchToProps = dispatch => ({
-  saveContest: data => dispatch(saveContestToStore(data)),
+const mapDispatchToProps = (dispatch) => ({
+  saveContest: (data) => dispatch(saveContestToStore(data)),
 });
 
 export default connect(
   mapStateToProps,
-  mapDispatchToProps
+  mapDispatchToProps,
 )(ContestCreationPage);

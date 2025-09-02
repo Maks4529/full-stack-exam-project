@@ -7,7 +7,7 @@ import CONSTANTS from '../../../../constants';
 import FormInput from '../../../FormInput/FormInput';
 import Schems from '../../../../utils/validators/validationSchems';
 
-const ChatInput = props => {
+function ChatInput(props) {
   const submitHandler = (values, { resetForm }) => {
     props.sendMessage({
       messageBody: values.message,
@@ -26,35 +26,35 @@ const ChatInput = props => {
       >
         <Form className={styles.form}>
           <FormInput
-            name='message'
-            type='text'
-            label='message'
+            name="message"
+            type="text"
+            label="message"
             classes={{
               container: styles.container,
               input: styles.input,
               notValid: styles.notValid,
             }}
           />
-          <button type='submit'>
+          <button type="submit">
             <img
               src={`${CONSTANTS.STATIC_IMAGES_PATH}send.png`}
-              alt='send Message'
+              alt="send Message"
             />
           </button>
         </Form>
       </Formik>
     </div>
   );
-};
+}
 
-const mapStateToProps = state => {
+const mapStateToProps = (state) => {
   const { interlocutor } = state.chatStore;
   const { data } = state.userStore;
   return { interlocutor, data };
 };
 
-const mapDispatchToProps = dispatch => ({
-  sendMessage: data => dispatch(sendMessage(data)),
+const mapDispatchToProps = (dispatch) => ({
+  sendMessage: (data) => dispatch(sendMessage(data)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(ChatInput);

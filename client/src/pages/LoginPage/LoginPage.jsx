@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import LoginForm from '../../components/LoginForm/LoginForm';
 import styles from './LoginPage.module.sass';
 
-const LoginPage = props => {
+function LoginPage(props) {
   const navigate = useNavigate();
 
   return (
@@ -15,6 +15,6 @@ const LoginPage = props => {
       </div>
     </div>
   );
-};
+}
 
 export default LoginPage;

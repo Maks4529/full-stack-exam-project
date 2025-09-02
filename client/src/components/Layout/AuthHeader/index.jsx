@@ -4,7 +4,7 @@ import Logo from '../../Logo';
 import styles from './AuthHeader.module.sass';
 import CONSTANTS from '../../../constants';
 
-const AuthHeader = () => {
+function AuthHeader() {
   const { pathname } = useLocation();
 
   const isLoginPage = pathname === '/login';
@@ -13,7 +13,7 @@ const AuthHeader = () => {
     <div className={styles.container}>
       <div className={styles.loginContainer}>
         <div className={styles.headerAuthPage}>
-          <Logo src={`${CONSTANTS.STATIC_IMAGES_PATH}logo.png`} alt='logo' />
+          <Logo src={`${CONSTANTS.STATIC_IMAGES_PATH}logo.png`} alt="logo" />
           <div className={styles.linkAuthContainer}>
             <Link
               to={isLoginPage ? '/registration' : '/login'}
@@ -26,6 +26,6 @@ const AuthHeader = () => {
       </div>
     </div>
   );
-};
+}
 
 export default AuthHeader;

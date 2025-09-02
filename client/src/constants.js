@@ -83,5 +83,5 @@ export default {
   ],
   CONTACTS: {
     phone: '(877) 355-3585',
-  }
+  },
 };
