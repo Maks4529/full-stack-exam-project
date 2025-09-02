@@ -159,7 +159,7 @@ const OfferBox = props => {
             <img
               onClick={() =>
                 props.changeShowImage({
-                  imagePath: data.fileName,
+                  imagePath: `${CONSTANTS.publicURL}${data.fileName}`,
                   isShowOnFull: true,
                 })
               }

@@ -19,6 +19,9 @@ export default defineConfig({
     },
     react(),
   ],
+  define: {
+    global: 'window',
+  },
   server: {
     port: 3000,
     host: true,

@@ -106,7 +106,7 @@ module.exports.onlyForCustomerWhoCreateContest = async (req, res, next) => {
 
 module.exports.canUpdateContest = async (req, res, next) => {
   try {
-    const result = bd.Contests.findOne({
+    const result = await bd.Contests.findOne({
       where: {
         userId: req.tokenData.userId,
         id: req.body.contestId,

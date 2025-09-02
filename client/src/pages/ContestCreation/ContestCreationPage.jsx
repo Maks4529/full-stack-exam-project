@@ -17,13 +17,34 @@ const ContestCreationPage = props => {
     : { contestType: props.contestType };
 
   const handleSubmit = values => {
-    props.saveContest({ type: props.contestType, info: values });
+  const formData = new FormData();
+
+  Object.entries(values).forEach(([key, value]) => {
+    if (value !== undefined && value !== null) {
+      if (key === 'file' && value) {
+        formData.append(key, value);
+      } else {
+        formData.append(key, value);
+      }
+    }
+  });
+
+  props.saveContest({ type: props.contestType, info: values });
+
+  axios.post('/api/contest', formData, {
+    headers: { 'Content-Type': 'multipart/form-data' },
+  })
+  .then(res => {
     const route =
       props.bundleStore.bundle[props.contestType] === 'payment'
         ? '/payment'
         : `/startContest/${props.bundleStore.bundle[props.contestType]}Contest`;
     navigate(route);
-  };
+  })
+  .catch(err => {
+    console.error('Помилка при збереженні конкурсу:', err);
+  });
+};
 
   const submitForm = () => {
     if (formRef.current) {
