@@ -5,7 +5,7 @@ module.exports.createWhereForAllContests = (
   typeIndex,
   contestId,
   industry,
-  awardSort
+  awardSort,
 ) => {
   const object = {
     where: {},

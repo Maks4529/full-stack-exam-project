@@ -1,4 +1,4 @@
-const {Router} = require('express');
+const { Router } = require('express');
 const checkToken = require('../middlewares/checkToken');
 const basicMiddlewares = require('../middlewares/basicMiddlewares');
 const upload = require('../utils/fileUpload');
@@ -9,19 +9,19 @@ const contestController = require('../controllers/contestController');
 const contestsRouter = Router();
 
 contestsRouter.post(
-    '/',
-    checkToken.checkToken,
-    basicMiddlewares.onlyForCustomer,
-    upload.uploadContestFiles,
-    basicMiddlewares.parseBody,
-    validators.validateContestCreation,
-    userController.payment
+  '/',
+  checkToken.checkToken,
+  basicMiddlewares.onlyForCustomer,
+  upload.uploadContestFiles,
+  basicMiddlewares.parseBody,
+  validators.validateContestCreation,
+  userController.payment,
 );
 
 contestsRouter.get(
-    '/byCustomer',
-    checkToken.checkToken,
-    contestController.getCustomersContests,
+  '/byCustomer',
+  checkToken.checkToken,
+  contestController.getCustomersContests,
 );
 
 contestsRouter.get(
@@ -34,27 +34,27 @@ contestsRouter.get(
 contestsRouter.post(
   '/dataForContest',
   checkToken.checkToken,
-  contestController.dataForContest
+  contestController.dataForContest,
 );
 
 contestsRouter.post(
   '/getAllContests',
   checkToken.checkToken,
   basicMiddlewares.onlyForCreative,
-  contestController.getContests
+  contestController.getContests,
 );
 
 contestsRouter.post(
   '/updateContest',
   checkToken.checkToken,
   upload.updateContestFile,
-  contestController.updateContest
+  contestController.updateContest,
 );
 
 contestsRouter.get(
   '/downloadFile/:fileName',
   checkToken.checkToken,
-  contestController.downloadFile
+  contestController.downloadFile,
 );
 
 contestsRouter.post(
@@ -62,16 +62,15 @@ contestsRouter.post(
   checkToken.checkToken,
   upload.uploadLogoFiles,
   basicMiddlewares.canSendOffer,
-  contestController.setNewOffer
+  contestController.setNewOffer,
 );
 
 contestsRouter.post(
   '/setOfferStatus',
   checkToken.checkToken,
   basicMiddlewares.onlyForCustomerWhoCreateContest,
-  contestController.setOfferStatus
+  contestController.setOfferStatus,
 );
-
 
 
 module.exports = contestsRouter;

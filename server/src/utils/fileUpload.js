@@ -25,13 +25,13 @@ const storageContestFiles = multer.diskStorage({
 const uploadAvatars = multer({ storage: storageContestFiles }).single('file');
 const uploadContestFiles = multer({ storage: storageContestFiles }).array(
   'files',
-  3
+  3,
 );
 const updateContestFile = multer({ storage: storageContestFiles }).single(
-  'file'
+  'file',
 );
 const uploadLogoFiles = multer({ storage: storageContestFiles }).single(
-  'offerData'
+  'offerData',
 );
 
 module.exports.uploadAvatar = (req, res, next) => {

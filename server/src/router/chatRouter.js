@@ -1,4 +1,4 @@
-const {Router} = require('express');
+const { Router } = require('express');
 const checkToken = require('../middlewares/checkToken');
 const chatController = require('../controllers/chatController');
 
@@ -18,31 +18,31 @@ chatRouter.post('/favorite', checkToken.checkToken, chatController.favoriteChat)
 chatRouter.post(
   '/createCatalog',
   checkToken.checkToken,
-  chatController.createCatalog
+  chatController.createCatalog,
 );
 
 chatRouter.post(
   '/updateNameCatalog',
   checkToken.checkToken,
-  chatController.updateNameCatalog
+  chatController.updateNameCatalog,
 );
 
 chatRouter.post(
   '/addNewChatToCatalog',
   checkToken.checkToken,
-  chatController.addNewChatToCatalog
+  chatController.addNewChatToCatalog,
 );
 
 chatRouter.post(
   '/removeChatFromCatalog',
   checkToken.checkToken,
-  chatController.removeChatFromCatalog
+  chatController.removeChatFromCatalog,
 );
 
 chatRouter.post(
   '/deleteCatalog',
   checkToken.checkToken,
-  chatController.deleteCatalog
+  chatController.deleteCatalog,
 );
 
 chatRouter.post('/getCatalogs', checkToken.checkToken, chatController.getCatalogs);

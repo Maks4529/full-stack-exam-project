@@ -12,7 +12,7 @@ userRouter.post(
   '/registration',
   validators.validateRegistrationData,
   hashPass,
-  userController.registration
+  userController.registration,
 );
 
 userRouter.post('/login', validators.validateLogin, userController.login);
@@ -23,21 +23,21 @@ userRouter.post(
   '/changeMark',
   checkToken.checkToken,
   basicMiddlewares.onlyForCustomer,
-  userController.changeMark
+  userController.changeMark,
 );
 
 userRouter.post(
   '/updateUser',
   checkToken.checkToken,
   upload.uploadAvatar,
-  userController.updateUser
+  userController.updateUser,
 );
 
 userRouter.post(
   '/cashout',
   checkToken.checkToken,
   basicMiddlewares.onlyForCreative,
-  userController.cashout
+  userController.cashout,
 );
 
 module.exports = userRouter;

@@ -26,7 +26,7 @@ module.exports.login = async (req, res, next) => {
         rating: foundUser.rating,
       },
       CONSTANTS.JWT_SECRET,
-      { expiresIn: CONSTANTS.ACCESS_TOKEN_TIME }
+      { expiresIn: CONSTANTS.ACCESS_TOKEN_TIME },
     );
     await userQueries.updateUser({ accessToken }, foundUser.id);
     res.send({ token: accessToken });
@@ -37,7 +37,7 @@ module.exports.login = async (req, res, next) => {
 module.exports.registration = async (req, res, next) => {
   try {
     const newUser = await userQueries.userCreation(
-      Object.assign(req.body, { password: req.hashPass })
+      Object.assign(req.body, { password: req.hashPass }),
     );
     const accessToken = jwt.sign(
       {
@@ -52,7 +52,7 @@ module.exports.registration = async (req, res, next) => {
         rating: newUser.rating,
       },
       CONSTANTS.JWT_SECRET,
-      { expiresIn: CONSTANTS.ACCESS_TOKEN_TIME }
+      { expiresIn: CONSTANTS.ACCESS_TOKEN_TIME },
     );
     await userQueries.updateUser({ accessToken }, newUser.id);
     res.send({ token: accessToken });
@@ -73,7 +73,7 @@ function getQuery (offerId, userId, mark, isFirst, transaction) {
         mark,
         userId,
       },
-      transaction
+      transaction,
     );
   const getUpdateQuery = () =>
     ratingQueries.updateRating({ mark }, { offerId, userId }, transaction);
@@ -127,13 +127,13 @@ module.exports.payment = async (req, res, next) => {
         balance: bd.sequelize.literal(`
                 CASE
             WHEN "cardNumber"='${req.body.number.replace(
-              / /g,
-              ''
-            )}' AND "cvc"='${req.body.cvc}' AND "expiry"='${req.body.expiry}'
+    / /g,
+    '',
+  )}' AND "cvc"='${req.body.cvc}' AND "expiry"='${req.body.expiry}'
                 THEN "balance"-${req.body.price}
             WHEN "cardNumber"='${CONSTANTS.SQUADHELP_BANK_NUMBER}' AND "cvc"='${
-          CONSTANTS.SQUADHELP_BANK_CVC
-        }' AND "expiry"='${CONSTANTS.SQUADHELP_BANK_EXPIRY}'
+  CONSTANTS.SQUADHELP_BANK_CVC
+}' AND "expiry"='${CONSTANTS.SQUADHELP_BANK_EXPIRY}'
                 THEN "balance"+${req.body.price} END
         `),
       },
@@ -145,7 +145,7 @@ module.exports.payment = async (req, res, next) => {
           ],
         },
       },
-      transaction
+      transaction,
     );
     const orderId = uuid();
     req.body.contests.forEach((contest, index) => {
@@ -178,7 +178,7 @@ module.exports.updateUser = async (req, res, next) => {
     }
     const updatedUser = await userQueries.updateUser(
       req.body,
-      req.tokenData.userId
+      req.tokenData.userId,
     );
     res.send({
       firstName: updatedUser.firstName,
@@ -202,23 +202,23 @@ module.exports.cashout = async (req, res, next) => {
     const updatedUser = await userQueries.updateUser(
       { balance: bd.sequelize.literal('balance - ' + req.body.sum) },
       req.tokenData.userId,
-      transaction
+      transaction,
     );
     await bankQueries.updateBankBalance(
       {
         balance: bd.sequelize.literal(`CASE 
                 WHEN "cardNumber"='${req.body.number.replace(
-                  / /g,
-                  ''
-                )}' AND "expiry"='${req.body.expiry}' AND "cvc"='${
-          req.body.cvc
-        }'
+    / /g,
+    '',
+  )}' AND "expiry"='${req.body.expiry}' AND "cvc"='${
+  req.body.cvc
+}'
                     THEN "balance"+${req.body.sum}
                 WHEN "cardNumber"='${
-                  CONSTANTS.SQUADHELP_BANK_NUMBER
-                }' AND "expiry"='${
-          CONSTANTS.SQUADHELP_BANK_EXPIRY
-        }' AND "cvc"='${CONSTANTS.SQUADHELP_BANK_CVC}'
+  CONSTANTS.SQUADHELP_BANK_NUMBER
+}' AND "expiry"='${
+  CONSTANTS.SQUADHELP_BANK_EXPIRY
+}' AND "cvc"='${CONSTANTS.SQUADHELP_BANK_CVC}'
                     THEN "balance"-${req.body.sum}
                  END
                 `),
@@ -231,7 +231,7 @@ module.exports.cashout = async (req, res, next) => {
           ],
         },
       },
-      transaction
+      transaction,
     );
     transaction.commit();
     res.send({ balance: updatedUser.balance });
