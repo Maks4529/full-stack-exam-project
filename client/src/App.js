@@ -18,6 +18,7 @@ import CONSTANTS from './constants';
 import browserHistory from './browserHistory';
 import ChatContainer from './components/Chat/ChatComponents/ChatContainer/ChatContainer';
 import Layout from './pages/Layout/Layout';
+import HowItWorksPage from './pages/HowItWorksPage/HowItWorksPage';
 import OnlyNotAuthorizedUserRoute from './components/Routes/OnlyNotAuthorizedUserRoute/OnlyNotAuthorizedUserRoute';
 import PrivateRoute from './components/Routes/PrivateRoute/PrivateRoute';
 
@@ -78,6 +79,7 @@ class App extends Component {
               <Route path="/dashboard" element={<Dashboard />} />
               <Route path="/contest/:id" element={<ContestPage />} />
               <Route path="/account" element={<UserProfile />} />
+              <Route path="/how-it-works" element={<HowItWorksPage />} />
             </Route>
             <Route path="*" element={<NotFound />} />
           </Route>
