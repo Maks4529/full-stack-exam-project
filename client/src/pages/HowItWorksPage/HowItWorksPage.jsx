@@ -3,6 +3,7 @@ import Header from '../../components/HowItWorks/Header/Header';
 import ItemCard from '../../components/HowItWorks/Card/ItemCard/ItemCard';
 import CONSTANTS from '../../constants';
 import styles from './HowItWorks.module.sass';
+import StepCard from '../../components/HowItWorks/Card/StepCard/StepCard';
 
 class HowItWorksPage extends Component {
   render () {
@@ -39,9 +40,19 @@ class HowItWorksPage extends Component {
             Atom offers 3 ways to get you a perfect name for your business.
           </p>
           <div className={styles.cardsContainer}>
-            <ItemCard  icon={`${CONSTANTS.STATIC_IMAGES_PATH}lightning.svg`} iconAlt={`lighting`} title={'Launch a Contest'} description={'Work with hundreds of creative experts to get custom name suggestions for your business or brand. All names are auto-checked for URL availability.'} link={'/startContest'} linkBody={'Launch a Contest'}/>
-            <ItemCard  icon={`${CONSTANTS.STATIC_IMAGES_PATH}computer.svg`} iconAlt={`computer`} title={'Explore Names For Sale'} description={'Our branding team has curated thousands of pre-made names that you can purchase instantly. All names include a matching URL and a complimentary Logo Design.'} link={'/namesForSale'} linkBody={'Explore Names For Sale'}/>
-            <ItemCard  icon={`${CONSTANTS.STATIC_IMAGES_PATH}lamp.svg`} iconAlt={`lamp`} title={'Agency-level Managed Contests'} description={'Our Managed contests combine the power of crowdsourcing with the rich experience of our branding consultants. Get a complete agency-level experience at a fraction of Agency costs.'} link={'/managedContests'} linkBody={'Learn More'}/>
+            <ItemCard  icon={`${CONSTANTS.STATIC_IMAGES_PATH}/howItWorks/lightning.svg`} iconAlt={`lighting`} title={'Launch a Contest'} description={'Work with hundreds of creative experts to get custom name suggestions for your business or brand. All names are auto-checked for URL availability.'} link={'/startContest'} linkBody={'Launch a Contest'}/>
+            <ItemCard  icon={`${CONSTANTS.STATIC_IMAGES_PATH}/howItWorks/computer.svg`} iconAlt={`computer`} title={'Explore Names For Sale'} description={'Our branding team has curated thousands of pre-made names that you can purchase instantly. All names include a matching URL and a complimentary Logo Design.'} link={'/namesForSale'} linkBody={'Explore Names For Sale'}/>
+            <ItemCard  icon={`${CONSTANTS.STATIC_IMAGES_PATH}/howItWorks/lamp.svg`} iconAlt={`lamp`} title={'Agency-level Managed Contests'} description={'Our Managed contests combine the power of crowdsourcing with the rich experience of our branding consultants. Get a complete agency-level experience at a fraction of Agency costs.'} link={'/managedContests'} linkBody={'Learn More'}/>
+          </div>
+        </section>
+        <section className={styles.container3}>
+          <img src={`${CONSTANTS.STATIC_IMAGES_PATH}/howItWorks/trophy.svg`} alt="trophy" />
+          <h2>How Do Naming Contests Work?</h2>
+          <div className={styles.stepsContainer}>
+          <StepCard step={'1'} description={'Fill out your Naming Brief and begin receiving name ideas in minutes'} />
+          <StepCard step={'2'} description={'Rate the submissions and provide feedback to creatives. Creatives submit even more names based on your feedback.'} />
+          <StepCard step={'3'} description={'Our team helps you test your favorite names with your target audience. We also assist with Trademark screening.'} />
+          <StepCard step={'4'} description={'Pick a Winner. The winner gets paid for their submission.'} />
           </div>
         </section>
       </main>

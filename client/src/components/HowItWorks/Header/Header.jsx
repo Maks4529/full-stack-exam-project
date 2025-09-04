@@ -6,7 +6,7 @@ import styles from './Header.module.sass';
 function Header() {
   return (
     <header className={styles.header}>
-        <Link to='/'><img className={styles.logo} src={`${CONSTANTS.STATIC_IMAGES_PATH}atom-logo.webp`} alt="atom-logo" /></Link>
+        <Link to='/'><img className={styles.logo} src={`${CONSTANTS.STATIC_IMAGES_PATH}/howItWorks/atom-logo.webp`} alt="atom-logo" /></Link>
         <ul className={styles.linkList}>
             <li className={styles.menuLink}><a href='https://google.com'>Domains for Sale</a></li>
             <li className={styles.menuLink}><a href='https://google.com'>Naming & Branding</a></li>
