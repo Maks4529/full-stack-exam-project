@@ -79,10 +79,10 @@ class App extends Component {
               <Route path="/dashboard" element={<Dashboard />} />
               <Route path="/contest/:id" element={<ContestPage />} />
               <Route path="/account" element={<UserProfile />} />
-              <Route path="/how-it-works" element={<HowItWorksPage />} />
             </Route>
             <Route path="*" element={<NotFound />} />
           </Route>
+            <Route path="/how-it-works" element={<HowItWorksPage />} />
         </Routes>
         <ChatContainer />
       </Router>
