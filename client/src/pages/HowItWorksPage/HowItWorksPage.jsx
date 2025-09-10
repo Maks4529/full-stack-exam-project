@@ -1,9 +1,10 @@
 import { Component } from 'react';
 import Header from '../../components/HowItWorks/Header/Header';
 import ItemCard from '../../components/HowItWorks/Card/ItemCard/ItemCard';
+import StepCard from '../../components/HowItWorks/Card/StepCard/StepCard';
+import AccordionFaq from '../../components/HowItWorks/Accordion/AccordionFaq';
 import CONSTANTS from '../../constants';
 import styles from './HowItWorks.module.sass';
-import StepCard from '../../components/HowItWorks/Card/StepCard/StepCard';
 
 class HowItWorksPage extends Component {
   render () {
@@ -54,6 +55,10 @@ class HowItWorksPage extends Component {
           <StepCard step={'3'} description={'Our team helps you test your favorite names with your target audience. We also assist with Trademark screening.'} />
           <StepCard step={'4'} description={'Pick a Winner. The winner gets paid for their submission.'} />
           </div>
+        </section>
+        <section className={styles.container4}>
+          <h2>Frequently Asked Questions</h2>
+          <AccordionFaq />
         </section>
       </main>
         </>
