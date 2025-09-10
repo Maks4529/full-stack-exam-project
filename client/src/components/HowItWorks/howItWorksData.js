@@ -269,6 +269,15 @@ const DATA = {
         'We handle creative payouts via Paypal or Payoneer. Depending upon your country of residence, we may require additional documentation to verify your identity as well as your Tax status.',
     },
   ],
+  tags: [
+    { title: 'Tech', link: 'https://google.com' },
+    { title: 'Clothing', link: 'https://google.com' },
+    { title: 'Finance', link: 'https://google.com' },
+    { title: 'Real Estate', link: 'https://google.com' },
+    { title: 'Crypto', link: 'https://google.com' },
+    { title: 'Short', link: 'https://google.com' },
+    { title: 'One Word', link: 'https://google.com' }
+  ],
 };
 
 export default DATA;

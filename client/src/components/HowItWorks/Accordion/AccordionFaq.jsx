@@ -2,7 +2,7 @@ import { useState } from 'react';
 import classNames from 'classnames';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faXmark } from '@fortawesome/free-solid-svg-icons';
-import DATA from './questionsData';
+import DATA from '../howItWorksData';
 import styles from './AccordionFaq.module.sass';
 
 function AccordionFaq () {

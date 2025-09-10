@@ -1,0 +1,40 @@
+.inputContainer
+  display: flex
+  align-items: center
+  width: 100%
+  max-width: 600px
+  padding: 2px
+  border-radius: 50px
+  background: linear-gradient(90deg, #a18cd1, #fbc2eb)
+  overflow: hidden
+  margin-top: 100px
+
+  .input
+    flex: 1
+    border: none
+    outline: none
+    padding: 12px 20px
+    font-size: 16px
+    color: #555
+    border-radius: 50px
+    background: #fff
+    &::placeholder
+      color: #aaa
+
+  .button
+    width: 45px
+    height: 45px
+    border: none
+    border-radius: 50%
+    background: #ff6f61
+    color: #fff
+    display: flex
+    align-items: center
+    justify-content: center
+    cursor: pointer
+    font-size: 18px
+    margin-left: 8px
+    transition: background 0.3s ease
+
+    &:hover
+      background: #ff4b3e

@@ -3,7 +3,9 @@ import Header from '../../components/HowItWorks/Header/Header';
 import ItemCard from '../../components/HowItWorks/Card/ItemCard/ItemCard';
 import StepCard from '../../components/HowItWorks/Card/StepCard/StepCard';
 import AccordionFaq from '../../components/HowItWorks/Accordion/AccordionFaq';
+import InputSearch from '../../components/HowItWorks/InputSearch/InputSearch';
 import CONSTANTS from '../../constants';
+import DATA from '../../components/HowItWorks/howItWorksData';
 import styles from './HowItWorks.module.sass';
 
 class HowItWorksPage extends Component {
@@ -59,6 +61,10 @@ class HowItWorksPage extends Component {
         <section className={styles.container4}>
           <h2>Frequently Asked Questions</h2>
           <AccordionFaq />
+          <InputSearch />
+          <ul className={styles.tagsContainer}>
+            {DATA.tags.map((tag, index) => <li key={index} className={styles.tag}><a href={tag.link}>{tag.title}</a></li>)}
+          </ul>
         </section>
       </main>
         </>
