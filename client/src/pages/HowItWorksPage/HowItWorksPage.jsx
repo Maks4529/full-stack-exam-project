@@ -7,6 +7,7 @@ import InputSearch from '../../components/HowItWorks/InputSearch/InputSearch';
 import CONSTANTS from '../../constants';
 import DATA from '../../components/HowItWorks/howItWorksData';
 import styles from './HowItWorks.module.sass';
+import Footer from '../../components/HowItWorks/Footer/Footer';
 
 class HowItWorksPage extends Component {
   render () {
@@ -67,6 +68,7 @@ class HowItWorksPage extends Component {
           </ul>
         </section>
       </main>
+      <Footer />
         </>
     );
   }
