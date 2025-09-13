@@ -1,0 +1,13 @@
+import { Component } from 'react';
+
+class EventsPage extends Component {
+    render() {
+        return (
+            <div>
+                EventsPage
+            </div>
+        );
+    }
+}
+
+export default EventsPage;

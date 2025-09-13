@@ -19,6 +19,7 @@ import browserHistory from './browserHistory';
 import ChatContainer from './components/Chat/ChatComponents/ChatContainer/ChatContainer';
 import Layout from './pages/Layout/Layout';
 import HowItWorksPage from './pages/HowItWorksPage/HowItWorksPage';
+import EventsPage from './pages/EventsPage/EventsPage';
 import OnlyNotAuthorizedUserRoute from './components/Routes/OnlyNotAuthorizedUserRoute/OnlyNotAuthorizedUserRoute';
 import PrivateRoute from './components/Routes/PrivateRoute/PrivateRoute';
 
@@ -83,6 +84,7 @@ class App extends Component {
             <Route path="*" element={<NotFound />} />
           </Route>
             <Route path="/how-it-works" element={<HowItWorksPage />} />
+            <Route path='events' element={<EventsPage />} />
         </Routes>
         <ChatContainer />
       </Router>
