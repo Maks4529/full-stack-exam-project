@@ -38,9 +38,11 @@
     font-size: 28px
     font-weight: bold
     color: #1e7de4
+    margin-bottom: 20px
 
 .questionsContainer
-    width: 800px
+    width: 100%
+    max-width: 800px
     display: flex
     flex-direction: column
     gap: 20px
@@ -89,3 +91,51 @@
 .answer
     font-size: 16px
     line-height: 28px
+
+@media (max-width: 900px)
+  .faqContainer
+    padding-left: 15px
+    padding-right: 15px
+    gap: 8px
+
+  .listFaq
+    flex-wrap: wrap
+    gap: 10px
+    li
+      font-size: 14px
+      padding: 12px 10px
+      a
+        font-size: 14px
+        padding: 6px 10px
+
+  .questionsContainer
+    width: 100%
+    max-width: 100%
+    padding-left: 10px
+    padding-right: 10px
+    margin-top: 20px
+
+  .questionsContainer h3
+    font-size: 20px
+    margin-bottom: 15px
+
+  .questionsList
+    gap: 15px
+
+  .question
+    padding: 12px 15px 12px 12px
+    border-radius: 8px
+
+  .questionText
+    font-size: 16px
+    padding-right: 30px
+
+  .answer
+    font-size: 14px
+    line-height: 22px
+
+  .plus
+    right: 10px
+    svg
+      width: 16px
+      height: 16px

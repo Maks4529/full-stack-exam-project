@@ -5,16 +5,17 @@ import { faXmark } from '@fortawesome/free-solid-svg-icons';
 import DATA from '../howItWorksData';
 import styles from './AccordionFaq.module.sass';
 
-function AccordionFaq () {
+function AccordionFaq() {
   const [activeIndex, setActiveIndex] = useState(0);
   const [openQuestion, setOpenQuestion] = useState(null);
-  const {
-    menuItems,
-    questionsBody1,
-    questionsBody2,
-    questionsBody3,
-    questionsBody4,
-  } = DATA;
+  const { menuItems, questionsBody1, questionsBody2, questionsBody3, questionsBody4 } = DATA;
+
+  const sections = [
+    { id: 'question1', title: 'Launching A Contest', questions: questionsBody1 },
+    { id: 'question2', title: 'Buying From Marketplace', questions: questionsBody2 },
+    { id: 'question3', title: 'Managed Contests', questions: questionsBody3 },
+    { id: 'question4', title: 'For Creatives', questions: questionsBody4 },
+  ];
 
   const toggleQuestion = (section, index) => {
     setOpenQuestion(
@@ -37,99 +38,32 @@ function AccordionFaq () {
           </li>
         ))}
       </ul>
+
       <div className={styles.questionsContainer}>
-        <h3 id='question1'>Launching A Contest</h3>
-        <ul className={styles.questionsList}>
-          {questionsBody1.map(( item, index) => (
-            <li
-              key={index}
-              onClick={() => toggleQuestion('questionsBody1', index)}
-              className={classNames(styles.question, {
-                [styles.open]:
-                  openQuestion?.section === 'questionsBody1' &&
-                  openQuestion?.index === index,
+        {sections.map((section) => (
+          <div key={section.id}>
+            <h3 id={section.id}>{section.title}</h3>
+            <ul className={styles.questionsList}>
+              {section.questions.map((item, index) => {
+                const isOpen =
+                  openQuestion?.section === section.id && openQuestion?.index === index;
+                return (
+                  <li
+                    key={index}
+                    onClick={() => toggleQuestion(section.id, index)}
+                    className={classNames(styles.question, { [styles.open]: isOpen })}
+                  >
+                    <span className={styles.questionText}>{item.question}</span>
+                    <span className={styles.plus}>
+                      <FontAwesomeIcon icon={faXmark} />
+                    </span>
+                    {isOpen && <div className={styles.answer}>{item.answer}</div>}
+                  </li>
+                );
               })}
-            >
-              <span className={styles.questionText}>{item.question}</span>
-              <span className={styles.plus}>
-                <FontAwesomeIcon icon={faXmark} />
-              </span>
-              {openQuestion?.section === 'questionsBody1' &&
-                openQuestion?.index === index && (
-                  <p className={styles.answer}>{item.answer}</p>
-                )}
-            </li>
-          ))}
-        </ul>
-        <h3 id='question2'>Buying From Marketplace</h3>
-        <ul className={styles.questionsList}>
-          {questionsBody2.map((item, index) => (
-            <li
-              key={index}
-              onClick={() => toggleQuestion('questionsBody2', index)}
-              className={classNames(styles.question, {
-                [styles.open]:
-                  openQuestion?.section === 'questionsBody2' &&
-                  openQuestion?.index === index,
-              })}
-            >
-              <span className={styles.questionText}>{item.question}</span>
-              <span className={styles.plus}>
-                <FontAwesomeIcon icon={faXmark} />
-              </span>
-              {openQuestion?.section === 'questionsBody2' &&
-                openQuestion?.index === index && (
-                  <p className={styles.answer}>{item.answer}</p>
-                )}
-            </li>
-          ))}
-        </ul>
-        <h3 id='question3'>Managed Contests</h3>
-        <ul className={styles.questionsList}>
-          {questionsBody3.map((item, index) => (
-            <li
-              key={index}
-              onClick={() => toggleQuestion('questionsBody3', index)}
-              className={classNames(styles.question, {
-                [styles.open]:
-                  openQuestion?.section === 'questionsBody3' &&
-                  openQuestion?.index === index,
-              })}
-            >
-              <span className={styles.questionText}>{item.question}</span>
-              <span className={styles.plus}>
-                <FontAwesomeIcon icon={faXmark} />
-              </span>
-              {openQuestion?.section === 'questionsBody3' &&
-                openQuestion?.index === index && (
-                  <p className={styles.answer}>{item.answer}</p>
-                )}
-            </li>
-          ))}
-        </ul>
-        <h3 id='question4'>For Creatives</h3>
-        <ul className={styles.questionsList}>
-          {questionsBody4.map((item, index) => (
-            <li
-              key={index}
-              onClick={() => toggleQuestion('questionsBody4', index)}
-              className={classNames(styles.question, {
-                [styles.open]:
-                  openQuestion?.section === 'questionsBody4' &&
-                  openQuestion?.index === index,
-              })}
-            >
-              <span className={styles.questionText}>{item.question}</span>
-              <span className={styles.plus}>
-                <FontAwesomeIcon icon={faXmark} />
-              </span>
-              {openQuestion?.section === 'questionsBody4' &&
-                openQuestion?.index === index && (
-                  <p className={styles.answer}>{item.answer}</p>
-                )}
-            </li>
-          ))}
-        </ul>
+            </ul>
+          </div>
+        ))}
       </div>
     </article>
   );
