@@ -225,4 +225,14 @@ export default {
       )
       .required('required'),
   }),
+  EventsSchema: yup.object({
+    name: yup.string().required("Enter the event name"),
+    date: yup.date()
+      .required("Enter the date")
+      .min(new Date(), "The date cannot be in the past"),
+    time: yup.string().required("Enter the time"),
+    notifyBefore: yup.number()
+      .required("Enter reminder time")
+      .min(1, "Minimum is 1 minute"),
+  }),
 };

@@ -109,9 +109,17 @@ class Header extends React.Component {
         </div>
         <div className={styles.loginSignnUpHeaders}>
           <div className={styles.numberContainer}>
-            <a href={`tel:${CONSTANTS.CONTACTS.phone}`} className={styles.phoneLink}>
-            <img src={`${CONSTANTS.STATIC_IMAGES_PATH}phone.png`} alt='phone' />
-            <span className={styles.phoneLinkSpan}>{CONSTANTS.CONTACTS.phone}</span>
+            <a
+              href={`tel:${CONSTANTS.CONTACTS.phone}`}
+              className={styles.phoneLink}
+            >
+              <img
+                src={`${CONSTANTS.STATIC_IMAGES_PATH}phone.png`}
+                alt='phone'
+              />
+              <span className={styles.phoneLinkSpan}>
+                {CONSTANTS.CONTACTS.phone}
+              </span>
             </a>
           </div>
           <div className={styles.userButtonsContainer}>
@@ -120,11 +128,11 @@ class Header extends React.Component {
         </div>
         <div className={styles.navContainer}>
           <Link to='/' className={styles.logoLink}>
-          <img
-            src={`${CONSTANTS.STATIC_IMAGES_PATH}blue-logo.png`}
-            className={styles.logo}
-            alt='blue_logo'
-          />
+            <img
+              src={`${CONSTANTS.STATIC_IMAGES_PATH}blue-logo.png`}
+              className={styles.logo}
+              alt='blue_logo'
+            />
           </Link>
           <div className={styles.leftNav}>
             <div className={styles.nav}>
@@ -172,8 +180,11 @@ class Header extends React.Component {
                     <li>
                       <Link to='/how-it-works'>HOW IT WORKS</Link>
                     </li>
-                    <li>
+                    <li className={styles.eventsMenuItem}>
                       <Link to='/events'>EVENTS</Link>
+                      {this.props.showEventBadge && (
+                        <div className={styles.badge}></div>
+                      )}
                     </li>
                     <li>
                       <a href='http://www.google.com'>PRICING</a>
@@ -283,7 +294,10 @@ class Header extends React.Component {
   }
 }
 
-const mapStateToProps = state => state.userStore;
+const mapStateToProps = state => ({
+  ...state.userStore,
+  showEventBadge: state.userStore.showEventBadge,
+});
 const mapDispatchToProps = dispatch => ({
   getUser: () => dispatch(getUser()),
   clearUserStore: () => dispatch(clearUserStore()),
