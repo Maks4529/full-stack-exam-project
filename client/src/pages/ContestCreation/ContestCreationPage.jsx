@@ -1,4 +1,4 @@
-import React, { useRef } from 'react';
+import React, { useRef, useEffect } from 'react';
 import { connect } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import styles from './ContestCreationPage.module.sass';
@@ -7,6 +7,8 @@ import NextButton from '../../components/NextButton/NextButton';
 import ContestForm from '../../components/ContestForm/ContestForm';
 import BackButton from '../../components/BackButton/BackButton';
 import ProgressBar from '../../components/ProgressBar/ProgressBar';
+import ButtonGroup from '../../components/ButtonGroup/ButtonGroup';
+import axios from 'axios';
 
 function ContestCreationPage(props) {
   const formRef = useRef();
@@ -51,7 +53,11 @@ function ContestCreationPage(props) {
     }
   };
 
-  !props.bundleStore.bundle && navigate('/startContest', { replace: true });
+  useEffect(() => {
+    if (!props.bundleStore.bundle) {
+      navigate('/startContest', { replace: true });
+    }
+  }, [props.bundleStore.bundle, navigate]);
 
   return (
     <div>
@@ -74,6 +80,7 @@ function ContestCreationPage(props) {
             defaultData={contestData}
           />
         </div>
+          <ButtonGroup onChange={(value) => console.log('Selected option:', value)} />
       </div>
       <div className={styles.footerButtonsContainer}>
         <div className={styles.lastContainer}>
