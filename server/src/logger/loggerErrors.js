@@ -8,10 +8,17 @@ if (!fs.existsSync(LOG_DIR)) {
   fs.mkdirSync(LOG_DIR, { recursive: true });
 }
 
+function formatDateISO() {
+  const d = new Date();
+  const pad = (n) => String(n).padStart(2, '0');
+  return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())} ` +
+         `${pad(d.getHours())}:${pad(d.getMinutes())}:${pad(d.getSeconds())}`;
+}
+
 function toErrorRecord(err, code) {
   return {
     message: err.message || String(err),
-    time: Date.now(),
+    time: formatDateISO(),
     code: code || err.code || null,
     stackTrace: {
       name: err.name,

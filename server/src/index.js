@@ -1,6 +1,8 @@
 const http = require('http');
 const app = require('./app');
 require('dotenv').config();
+require('./logger/loggerErrors');
+require('./logger/dailyArchiveLogs');
 
 const controller = require('./socketInit');
 
