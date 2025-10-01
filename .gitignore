@@ -13,3 +13,4 @@
 *server/public/*
 public/images/*
 server/.env
+server/logs/*
