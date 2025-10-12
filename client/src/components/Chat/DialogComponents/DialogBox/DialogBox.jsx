@@ -39,18 +39,18 @@ function DialogBox(props) {
       })}
     >
       <img
-        src={
-          interlocutor.avatar === 'anon.png'
-            ? CONSTANTS.ANONYM_IMAGE_PATH
-            : `${CONSTANTS.publicURL}${interlocutor.avatar}`
-        }
-        alt="user"
-      />
+  src={
+    interlocutor?.avatar === 'anon.png'
+      ? CONSTANTS.ANONYM_IMAGE_PATH
+      : `${CONSTANTS.publicURL}${interlocutor?.avatar ?? 'anon.png'}`
+  }
+  alt="user"
+/>
       <div className={styles.infoContainer}>
         <div className={styles.interlocutorInfo}>
           <span className={styles.interlocutorName}>
-            {interlocutor.firstName}
-          </span>
+  {interlocutor?.firstName ?? 'Anonimous'}
+</span>
           <span className={styles.interlocutorMessage}>{text}</span>
         </div>
         <div className={styles.buttonsContainer}>
