@@ -2,6 +2,7 @@ import React from 'react';
 import { toast } from 'react-toastify';
 import WebSocket from './WebSocket';
 import Notification from '../../../components/Notification/Notification';
+import { addNotification } from '../../../store/slices/notificationsSlice';
 
 class NotificationSocket extends WebSocket {
   constructor (dispatch, getState, room) {
@@ -16,26 +17,50 @@ class NotificationSocket extends WebSocket {
 
   onChangeMark = () => {
     this.socket.on('changeMark', () => {
-      toast('Someone liked your offer');
+      try {
+        this.dispatch(addNotification({ message: 'Someone liked your offer' }));
+      } catch (e) {
+        toast('Someone liked your offer');
+      }
     });
   };
 
   onChangeOfferStatus = () => {
     this.socket.on('changeOfferStatus', message => {
-      toast(
-        <Notification message={message.message} contestId={message.contestId} />
-      );
+      try {
+        this.dispatch(
+          addNotification({
+            message: message.message,
+            contestId: message.contestId,
+          })
+        );
+      } catch (e) {
+        toast(
+          <Notification
+            message={message.message}
+            contestId={message.contestId}
+          />
+        );
+      }
     });
   };
 
   onEntryCreated = () => {
     this.socket.on('onEntryCreated', () => {
-      toast('New Entry');
+      try {
+        const id = Date.now();
+        this.dispatch(
+          addNotification({ id, message: 'New entry was created' })
+        );
+      } catch (e) {
+        toast('New Entry');
+      }
     });
   };
 
   subscribe = id => {
-    this.socket.emit('subscribe', id);
+    const room = String(id);
+    this.socket.emit('subscribe', room);
   };
 
   unsubsctibe = id => {

@@ -1,5 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
+import NotificationsDropdown from '../NotificationsDropdown/NotificationsDropdown';
 import { Link } from 'react-router-dom';
 import styles from './Header.module.sass';
 import CONSTANTS from '../../constants';
@@ -8,6 +9,11 @@ import { getUser } from '../../store/slices/userSlice';
 import withRouter from '../../hocs/withRouter';
 
 class Header extends React.Component {
+  constructor (props) {
+    super(props);
+    this.emailIconRef = React.createRef();
+    this.state = { showNotifications: false };
+  }
   componentDidMount () {
     if (!this.props.data) {
       this.props.getUser();
@@ -74,11 +80,30 @@ class Header extends React.Component {
               </li>
             </ul>
           </div>
-          <img
-            src={`${CONSTANTS.STATIC_IMAGES_PATH}email.png`}
-            className={styles.emailIcon}
-            alt='email'
-          />
+          <div>
+            <img
+              ref={this.emailIconRef}
+              src={`${CONSTANTS.STATIC_IMAGES_PATH}email.png`}
+              className={styles.emailIcon}
+              alt='email'
+              onClick={() =>
+                this.setState({
+                  showNotifications: !this.state.showNotifications,
+                })
+              }
+            />
+            {this.props.notificationsUnread > 0 && (
+              <div className={styles.emailBadge}>
+                {this.props.notificationsUnread}
+              </div>
+            )}
+            {this.state && this.state.showNotifications && (
+              <NotificationsDropdown
+                anchorRef={this.emailIconRef}
+                onClose={() => this.setState({ showNotifications: false })}
+              />
+            )}
+          </div>
         </>
       );
     }
@@ -227,6 +252,16 @@ class Header extends React.Component {
                     </li>
                   </ul>
                 </li>
+                {this.props.data && this.props.data.role === 'moderator' && (
+                  <li className={styles.moderatorNavItem}>
+                    <Link
+                      to='/moderator-offers'
+                      style={{ textDecoration: 'none' }}
+                    >
+                      <span>Moderation offers</span>
+                    </Link>
+                  </li>
+                )}
                 <li>
                   <span>Names For Sale</span>
                   <img
@@ -297,6 +332,9 @@ class Header extends React.Component {
 const mapStateToProps = state => ({
   ...state.userStore,
   showEventBadge: state.userStore.showEventBadge,
+  notificationsUnread: state.notifications
+    ? state.notifications.unreadCount
+    : 0,
 });
 const mapDispatchToProps = dispatch => ({
   getUser: () => dispatch(getUser()),
