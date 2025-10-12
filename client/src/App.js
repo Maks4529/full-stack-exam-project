@@ -20,6 +20,7 @@ import ChatContainer from './components/Chat/ChatComponents/ChatContainer/ChatCo
 import Layout from './pages/Layout/Layout';
 import HowItWorksPage from './pages/HowItWorksPage/HowItWorksPage';
 import EventsPage from './pages/EventsPage/EventsPage';
+import ModeratorOffersPage from './pages/ModeratorOffersPage/ModeratorOffersPage';
 import OnlyNotAuthorizedUserRoute from './components/Routes/OnlyNotAuthorizedUserRoute/OnlyNotAuthorizedUserRoute';
 import PrivateRoute from './components/Routes/PrivateRoute/PrivateRoute';
 
@@ -85,6 +86,7 @@ class App extends Component {
           </Route>
             <Route path="/how-it-works" element={<HowItWorksPage />} />
             <Route path='events' element={<EventsPage />} />
+            <Route path="/moderator-offers" element={<ModeratorOffersPage />} />
         </Routes>
         <ChatContainer />
       </Router>
