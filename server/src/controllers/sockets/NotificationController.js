@@ -11,9 +11,19 @@ class NotificationController extends WebSocket {
   }
 
   emitChangeOfferStatus (target, message, contestId) {
-    this.io
-      .to(target)
-      .emit(CONSTANTS.NOTIFICATION_CHANGE_OFFER_STATUS, { message, contestId });
+    try {
+      this.io
+        .to(String(target))
+        .emit(CONSTANTS.NOTIFICATION_CHANGE_OFFER_STATUS, {
+          message,
+          contestId,
+        });
+    } catch (e) {
+      console.error(
+        '[NotificationController] failed to emit changeOfferStatus',
+        e && (e.message || e)
+      );
+    }
   }
 }
 
