@@ -5,12 +5,29 @@ const ServerError = require('../errors/ServerError');
 const CONSTANTS = require('../constants');
 
 module.exports.parseBody = (req, res, next) => {
-  req.body.contests = JSON.parse(req.body.contests);
+  try {
+    if (typeof req.body.contests === 'string') {
+      req.body.contests = JSON.parse(req.body.contests);
+    }
+  } catch (e) {
+    return next(new ServerError('cannot parse contests body'));
+  }
+
+  if (!Array.isArray(req.body.contests)) {
+    return next(new ServerError('contests should be an array'));
+  }
+  
+  req.files = Array.isArray(req.files) ? req.files : [];
+
   for (let i = 0; i < req.body.contests.length; i++) {
     if (req.body.contests[i].haveFile) {
       const file = req.files.splice(0, 1);
-      req.body.contests[i].fileName = file[0].filename;
-      req.body.contests[i].originalFileName = file[0].originalname;
+      if (file && file[0]) {
+        req.body.contests[i].fileName = file[0].filename;
+        req.body.contests[i].originalFileName = file[0].originalname;
+      } else {
+        return next(new ServerError('missing contest file'));
+      }
     }
   }
   next();

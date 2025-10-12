@@ -5,7 +5,7 @@ module.exports.createWhereForAllContests = (
   typeIndex,
   contestId,
   industry,
-  awardSort,
+  awardSort
 ) => {
   const object = {
     where: {},
@@ -36,7 +36,7 @@ module.exports.createWhereForAllContests = (
 };
 
 function getPredicateTypes (index) {
-  return { [bd.Sequelize.Op.or]: [types[index].split(',')] };
+  return { [bd.Sequelize.Op.or]: types[index].split(',') };
 }
 
 const types = [
