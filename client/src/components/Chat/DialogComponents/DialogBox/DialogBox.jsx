@@ -3,7 +3,7 @@ import classNames from 'classnames';
 import styles from './DialogBox.module.sass';
 import CONSTANTS from '../../../../constants';
 
-function DialogBox(props) {
+const DialogBox = props => {
   const {
     chatPreview,
     userId,
@@ -16,7 +16,14 @@ function DialogBox(props) {
     interlocutor,
   } = props;
 
-  const { favoriteList = [], participants = [], blackList = [], _id, text, createAt } = chatPreview || {};
+  const {
+    favoriteList = [],
+    participants = [],
+    blackList = [],
+    _id,
+    text,
+    createAt,
+  } = chatPreview || {};
   const participantIndex = participants.indexOf(userId);
   const isFavorite = Boolean(favoriteList?.[participantIndex]);
   const isBlocked = Boolean(blackList?.[participantIndex]);
@@ -42,19 +49,21 @@ function DialogBox(props) {
             ? CONSTANTS.ANONYM_IMAGE_PATH
             : `${CONSTANTS.publicURL}${interlocutor?.avatar ?? 'anon.png'}`
         }
-        alt="user"
+        alt='user'
       />
 
       <div className={styles.infoContainer}>
         <div className={styles.interlocutorInfo}>
-          <span className={styles.interlocutorName}>{interlocutor?.firstName ?? 'Anonimous'}</span>
+          <span className={styles.interlocutorName}>
+            {interlocutor?.firstName ?? 'Anonimous'}
+          </span>
           <span className={styles.interlocutorMessage}>{text}</span>
         </div>
         <div className={styles.buttonsContainer}>
           <span className={styles.time}>{getTimeStr(createAt)}</span>
 
           <i
-            onClick={(event) =>
+            onClick={event =>
               changeFavorite(
                 {
                   participants,
@@ -71,7 +80,7 @@ function DialogBox(props) {
           />
 
           <i
-            onClick={(event) =>
+            onClick={event =>
               changeBlackList(
                 {
                   participants,
@@ -88,50 +97,18 @@ function DialogBox(props) {
           />
 
           <i
-            onClick={(event) => catalogOperation(event, _id)}
+            onClick={event => catalogOperation(event, _id)}
             className={classNames({
-              'far fa-plus-square': chatMode !== CONSTANTS.CATALOG_PREVIEW_CHAT_MODE,
-              'fas fa-minus-circle': chatMode === CONSTANTS.CATALOG_PREVIEW_CHAT_MODE,
+              'far fa-plus-square':
+                chatMode !== CONSTANTS.CATALOG_PREVIEW_CHAT_MODE,
+              'fas fa-minus-circle':
+                chatMode === CONSTANTS.CATALOG_PREVIEW_CHAT_MODE,
             })}
           />
         </div>
       </div>
     </div>
   );
-}
+};
 
 export default DialogBox;
-                            })}
-                          />
-
-                          <i
-                            onClick={(event) =>
-                              changeBlackList(
-                                {
-                                  participants,
-                                  participantsConversationId: _id,
-                                  blackListFlag: !isBlocked,
-                                },
-                                event
-                              )
-                            }
-                            className={classNames({
-                              'fas fa-user-lock': !isBlocked,
-                              'fas fa-unlock': isBlocked,
-                            })}
-                          />
-
-                          <i
-                            onClick={(event) => catalogOperation(event, _id)}
-                            className={classNames({
-                              'far fa-plus-square': chatMode !== CONSTANTS.CATALOG_PREVIEW_CHAT_MODE,
-                              'fas fa-minus-circle': chatMode === CONSTANTS.CATALOG_PREVIEW_CHAT_MODE,
-                            })}
-                          />
-                        </div>
-                      </div>
-                    </div>
-                  );
-                }
-
-                export default DialogBox;
