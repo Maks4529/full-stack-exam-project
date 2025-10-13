@@ -58,29 +58,35 @@ module.exports = (sequelize, DataTypes) => {
     },
     {
       timestamps: false,
-    },
+    }
   );
 
   User.associate = function (models) {
-    User.hasMany(models.Order, { foreignKey: 'user_id', targetKey: 'id' });
-  };
+    const pick = (singular, plural) =>
+      models[singular] || models[plural] || null;
 
-  User.associate = function (models) {
-    User.hasMany(models.Participant, {
-      foreignKey: 'user_id',
-      targetKey: 'id',
-    });
-  };
+    const OrderModel = pick('Order', 'Orders');
+    if (OrderModel) {
+      User.hasMany(OrderModel, { foreignKey: 'userId', targetKey: 'id' });
+    }
 
-  User.associate = function (models) {
-    User.hasMany(models.Offer, { foreignKey: 'user_id', targetKey: 'id' });
-  };
+    const ParticipantModel = pick('Participant', 'Participants');
+    if (ParticipantModel) {
+      User.hasMany(ParticipantModel, { foreignKey: 'userId', targetKey: 'id' });
+    }
 
-  User.associate = function (models) {
-    User.hasMany(models.RefreshToken, {
-      foreignKey: 'user_id',
-      targetKey: 'id',
-    });
+    const OfferModel = pick('Offer', 'Offers');
+    if (OfferModel) {
+      User.hasMany(OfferModel, { foreignKey: 'userId', targetKey: 'id' });
+    }
+
+    const RefreshTokenModel = pick('RefreshToken', 'RefreshTokens');
+    if (RefreshTokenModel) {
+      User.hasMany(RefreshTokenModel, {
+        foreignKey: 'userId',
+        targetKey: 'id',
+      });
+    }
   };
 
   return User;
