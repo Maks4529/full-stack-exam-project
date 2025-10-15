@@ -191,22 +191,38 @@ const resolveOffer = async (
     creatorId,
     transaction
   );
-  const updatedOffers = await contestQueries.updateOfferStatus(
-    {
-      status: db.sequelize.literal(` CASE
-            WHEN "id"=${offerId} THEN '${CONSTANTS.OFFER_STATUS_WON}'
-            ELSE '${CONSTANTS.OFFER_STATUS_REJECTED}'
-            END
-    `),
-    },
+  await contestQueries.updateOffer(
+    { status: CONSTANTS.OFFER_STATUS_WON },
+    { id: offerId },
+    transaction
+  );
+
+  const updatedOffers = await contestQueries.updateOfferStatusSafe(
+    { status: CONSTANTS.OFFER_STATUS_REJECTED },
     {
       contestId,
+      id: { [db.Sequelize.Op.ne]: offerId },
     },
     transaction
   );
-  transaction.commit();
+
+  const winningOffer = await db.Offers.findByPk(offerId, { transaction });
+
+  const rejectedOffers = updatedOffers.map(offer =>
+    offer && offer.dataValues ? offer.dataValues : offer
+  );
+
+  const offersData = [
+    winningOffer && winningOffer.dataValues
+      ? winningOffer.dataValues
+      : winningOffer,
+    ...rejectedOffers,
+  ];
+
+  await transaction.commit();
+
   const arrayRoomsId = [];
-  updatedOffers.forEach(offer => {
+  offersData.forEach(offer => {
     if (
       offer.status === CONSTANTS.OFFER_STATUS_REJECTED &&
       creatorId !== offer.userId
@@ -224,7 +240,7 @@ const resolveOffer = async (
   controller
     .getNotificationController()
     .emitChangeOfferStatus(creatorId, 'Someone of your offers WIN', contestId);
-  return updatedOffers[0].dataValues;
+  return offersData[0];
 };
 
 module.exports.setOfferStatus = async (req, res, next) => {

@@ -53,6 +53,15 @@ module.exports.updateOfferStatus = async (data, predicate, transaction) => {
   }
 };
 
+module.exports.updateOfferStatusSafe = async (data, predicate, transaction) => {
+  const result = await bd.Offers.update(data, {
+    where: predicate,
+    returning: true,
+    transaction,
+  });
+  return result[1] || [];
+};
+
 module.exports.createOffer = async data => {
   const result = await bd.Offers.create(data);
   if (!result) {
