@@ -39,7 +39,8 @@ module.exports = (sequelize, DataTypes) => {
   );
 
   Offer.associate = function (models) {
-    const pick = (singular, plural) => models[singular] || models[plural] || null;
+    const pick = (singular, plural) =>
+      models[singular] || models[plural] || null;
     const UserModel = pick('User', 'Users');
     const ContestModel = pick('Contest', 'Contests');
 
@@ -48,7 +49,10 @@ module.exports = (sequelize, DataTypes) => {
     }
 
     if (ContestModel) {
-      Offer.belongsTo(ContestModel, { foreignKey: 'contestId', targetKey: 'id' });
+      Offer.belongsTo(ContestModel, {
+        foreignKey: 'contestId',
+        targetKey: 'id',
+      });
     }
   };
 
