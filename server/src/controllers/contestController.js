@@ -170,77 +170,97 @@ const resolveOffer = async (
   priority,
   transaction
 ) => {
-  const finishedContest = await contestQueries.updateContestStatus(
-    {
-      status: db.sequelize.literal(`   CASE
+  try {
+    const finishedContest = await contestQueries.updateContestStatus(
+      {
+        status: db.sequelize.literal(`   CASE
             WHEN "id"=${contestId}  AND "orderId"='${orderId}' THEN '${
-        CONSTANTS.CONTEST_STATUS_FINISHED
-      }'
+          CONSTANTS.CONTEST_STATUS_FINISHED
+        }'
             WHEN "orderId"='${orderId}' AND "priority"=${priority + 1}  THEN '${
-        CONSTANTS.CONTEST_STATUS_ACTIVE
-      }'
+          CONSTANTS.CONTEST_STATUS_ACTIVE
+        }'
             ELSE '${CONSTANTS.CONTEST_STATUS_PENDING}'
             END
     `),
-    },
-    { orderId },
-    transaction
-  );
-  await userQueries.updateUser(
-    { balance: db.sequelize.literal('balance + ' + finishedContest.prize) },
-    creatorId,
-    transaction
-  );
-  await contestQueries.updateOffer(
-    { status: CONSTANTS.OFFER_STATUS_WON },
-    { id: offerId },
-    transaction
-  );
-
-  const updatedOffers = await contestQueries.updateOfferStatusSafe(
-    { status: CONSTANTS.OFFER_STATUS_REJECTED },
-    {
-      contestId,
-      id: { [db.Sequelize.Op.ne]: offerId },
-    },
-    transaction
-  );
-
-  const winningOffer = await db.Offers.findByPk(offerId, { transaction });
-
-  const rejectedOffers = updatedOffers.map(offer =>
-    offer && offer.dataValues ? offer.dataValues : offer
-  );
-
-  const offersData = [
-    winningOffer && winningOffer.dataValues
-      ? winningOffer.dataValues
-      : winningOffer,
-    ...rejectedOffers,
-  ];
-
-  await transaction.commit();
-
-  const arrayRoomsId = [];
-  offersData.forEach(offer => {
-    if (
-      offer.status === CONSTANTS.OFFER_STATUS_REJECTED &&
-      creatorId !== offer.userId
-    ) {
-      arrayRoomsId.push(offer.userId);
-    }
-  });
-  controller
-    .getNotificationController()
-    .emitChangeOfferStatus(
-      arrayRoomsId,
-      'Someone of yours offers was rejected',
-      contestId
+      },
+      { orderId },
+      transaction
     );
-  controller
-    .getNotificationController()
-    .emitChangeOfferStatus(creatorId, 'Someone of your offers WIN', contestId);
-  return offersData[0];
+
+    if (!finishedContest || typeof finishedContest.prize === 'undefined') {
+      throw new ServerError(
+        'Failed to compute contest prize when resolving offer'
+      );
+    }
+
+    await userQueries.updateUser(
+      { balance: db.sequelize.literal('balance + ' + finishedContest.prize) },
+      creatorId,
+      transaction
+    );
+
+    const winningOffer = await contestQueries.updateOffer(
+      { status: CONSTANTS.OFFER_STATUS_WON },
+      { id: offerId },
+      transaction
+    );
+
+    const [rejectedCount, rejectedRows] = await db.Offers.update(
+      { status: CONSTANTS.OFFER_STATUS_REJECTED },
+      {
+        where: {
+          contestId,
+          id: { [db.Sequelize.Op.ne]: offerId },
+        },
+        returning: true,
+        transaction,
+      }
+    );
+
+    const updatedOffers = [
+      winningOffer,
+      ...(rejectedRows || []).map(r => (r && r.dataValues ? r.dataValues : r)),
+    ];
+
+    await transaction.commit();
+
+    const offersData = updatedOffers.map(o =>
+      o && o.dataValues ? o.dataValues : o
+    );
+    const arrayRoomsId = [];
+    offersData.forEach(offer => {
+      if (
+        offer.status === CONSTANTS.OFFER_STATUS_REJECTED &&
+        creatorId !== offer.userId
+      ) {
+        arrayRoomsId.push(offer.userId);
+      }
+    });
+
+    controller
+      .getNotificationController()
+      .emitChangeOfferStatus(
+        arrayRoomsId,
+        'Someone of yours offers was rejected',
+        contestId
+      );
+    controller
+      .getNotificationController()
+      .emitChangeOfferStatus(
+        creatorId,
+        'Someone of your offers WIN',
+        contestId
+      );
+    return offersData[0];
+  } catch (err) {
+    try {
+      if (transaction && !transaction.finished) await transaction.rollback();
+    } catch (rbErr) {
+      console.error('Rollback failed', rbErr);
+    }
+    throw err;
+  }
 };
 
 module.exports.setOfferStatus = async (req, res, next) => {
@@ -269,7 +289,13 @@ module.exports.setOfferStatus = async (req, res, next) => {
       );
       res.send(winningOffer);
     } catch (err) {
-      transaction.rollback();
+      try {
+        if (transaction && !transaction.finished) {
+          await transaction.rollback();
+        }
+      } catch (rbErr) {
+        console.error('Rollback failed in setOfferStatus', rbErr);
+      }
       next(err);
     }
   }

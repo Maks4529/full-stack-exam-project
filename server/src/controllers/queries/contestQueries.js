@@ -41,25 +41,26 @@ module.exports.updateOffer = async (data, predicate, transaction) => {
 };
 
 module.exports.updateOfferStatus = async (data, predicate, transaction) => {
-  const result = await bd.Offers.update(data, {
-    where: predicate,
-    returning: true,
-    transaction,
-  });
-  if (result[0] < 1) {
-    throw new ServerError('cannot update offer!');
-  } else {
+  try {
+    const result = await bd.Offers.update(data, {
+      where: predicate,
+      returning: true,
+      transaction,
+    });
+    if (result[0] < 1) {
+      throw new ServerError('cannot update offer!');
+    }
     return result[1];
+  } catch (err) {
+    console.error('updateOfferStatus failed', {
+      data,
+      predicate,
+      transaction: Boolean(transaction),
+      message: err && err.message,
+      stack: err && err.stack,
+    });
+    throw err;
   }
-};
-
-module.exports.updateOfferStatusSafe = async (data, predicate, transaction) => {
-  const result = await bd.Offers.update(data, {
-    where: predicate,
-    returning: true,
-    transaction,
-  });
-  return result[1] || [];
 };
 
 module.exports.createOffer = async data => {
