@@ -23,8 +23,10 @@ class CatalogCreation extends React.Component {
       changeShowAddChatToCatalogMenu,
       isFetching,
     } = this.props;
-    const { ADD_CHAT_TO_OLD_CATALOG, CREATE_NEW_CATALOG_AND_ADD_CHAT } =
-      CONSTANTS;
+    const {
+      ADD_CHAT_TO_OLD_CATALOG,
+      CREATE_NEW_CATALOG_AND_ADD_CHAT,
+    } = CONSTANTS;
     return (
       <>
         {!isFetching && (
@@ -44,9 +46,7 @@ class CatalogCreation extends React.Component {
                 Old
               </span>
               <span
-                onClick={() =>
-                  changeTypeOfChatAdding(CREATE_NEW_CATALOG_AND_ADD_CHAT)
-                }
+                onClick={() => changeTypeOfChatAdding(CREATE_NEW_CATALOG_AND_ADD_CHAT)}
                 className={classNames({
                   [styles.active]:
                     catalogCreationMode === CREATE_NEW_CATALOG_AND_ADD_CHAT,
@@ -71,8 +71,7 @@ const mapStateToProps = (state) => state.chatStore;
 
 const mapDispatchToProps = (dispatch) => ({
   changeTypeOfChatAdding: (data) => dispatch(changeTypeOfChatAdding(data)),
-  changeShowAddChatToCatalogMenu: () =>
-    dispatch(changeShowAddChatToCatalogMenu()),
+  changeShowAddChatToCatalogMenu: () => dispatch(changeShowAddChatToCatalogMenu()),
   getCatalogList: () => dispatch(getCatalogList()),
 });
 

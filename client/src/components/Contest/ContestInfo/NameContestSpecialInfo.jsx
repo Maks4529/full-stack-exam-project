@@ -1,7 +1,7 @@
 import React from 'react';
 import styles from './ContestInfo.module.sass';
 
-const NameContestSpecialInfo = props => {
+function NameContestSpecialInfo(props) {
   const { typeOfName, styleName } = props;
   return (
     <>
@@ -15,6 +15,6 @@ const NameContestSpecialInfo = props => {
       </div>
     </>
   );
-};
+}
 
 export default NameContestSpecialInfo;

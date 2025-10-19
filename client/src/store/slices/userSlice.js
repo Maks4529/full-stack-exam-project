@@ -10,6 +10,7 @@ const initialState = {
   isFetching: true,
   error: null,
   data: null,
+  showEventBadge: false,
 };
 
 export const getUser = createAsyncThunk(
@@ -55,6 +56,9 @@ const reducers = {
   clearUserError: state => {
     state.error = null;
   },
+  setShowEventBadge: (state, action) => {
+    state.showEventBadge = action.payload;
+  }
 };
 
 const extraReducers = builder => {
@@ -87,6 +91,6 @@ const userSlice = createSlice({
 
 const { actions, reducer } = userSlice;
 
-export const { clearUserStore, clearUserError } = actions;
+export const { clearUserStore, clearUserError, setShowEventBadge } = actions;
 
 export default reducer;

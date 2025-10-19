@@ -16,12 +16,12 @@ import styles from './OfferBox.module.sass';
 import 'react-confirm-alert/src/react-confirm-alert.css';
 import './confirmStyle.css';
 
-const OfferBox = (props) => {
+function OfferBox(props) {
   const findConversationInfo = () => {
     const { messagesPreview, id } = props;
     const participants = [id, props.data.User.id];
     participants.sort(
-      (participant1, participant2) => participant1 - participant2
+      (participant1, participant2) => participant1 - participant2,
     );
     for (let i = 0; i < messagesPreview.length; i++) {
       if (isEqual(participants, messagesPreview[i].participants)) {
@@ -43,8 +43,7 @@ const OfferBox = (props) => {
       buttons: [
         {
           label: 'Yes',
-          onClick: () =>
-            props.setOfferStatus(props.data.User.id, props.data.id, 'resolve'),
+          onClick: () => props.setOfferStatus(props.data.User.id, props.data.id, 'resolve'),
         },
         {
           label: 'No',
@@ -60,8 +59,7 @@ const OfferBox = (props) => {
       buttons: [
         {
           label: 'Yes',
-          onClick: () =>
-            props.setOfferStatus(props.data.User.id, props.data.id, 'reject'),
+          onClick: () => props.setOfferStatus(props.data.User.id, props.data.id, 'reject'),
         },
         {
           label: 'No',
@@ -106,8 +104,12 @@ const OfferBox = (props) => {
     });
   };
 
-  const { data, role, id, contestType } = props;
-  const { avatar, firstName, lastName, email, rating } = props.data.User;
+  const {
+    data, role, id, contestType,
+  } = props;
+  const {
+    avatar, firstName, lastName, email, rating,
+  } = props.data.User;
   return (
     <div className={styles.offerContainer}>
       {offerStatus()}
@@ -132,24 +134,24 @@ const OfferBox = (props) => {
             <Rating
               initialRating={rating}
               fractions={2}
-              fullSymbol={
+              fullSymbol={(
                 <img
                   src={`${CONSTANTS.STATIC_IMAGES_PATH}star.png`}
                   alt="star"
                 />
-              }
-              placeholderSymbol={
+              )}
+              placeholderSymbol={(
                 <img
                   src={`${CONSTANTS.STATIC_IMAGES_PATH}star.png`}
                   alt="star"
                 />
-              }
-              emptySymbol={
+              )}
+              emptySymbol={(
                 <img
                   src={`${CONSTANTS.STATIC_IMAGES_PATH}star-outline.png`}
                   alt="star-outline"
                 />
-              }
+              )}
               readonly
             />
           </div>
@@ -157,12 +159,10 @@ const OfferBox = (props) => {
         <div className={styles.responseConainer}>
           {contestType === CONSTANTS.LOGO_CONTEST ? (
             <img
-              onClick={() =>
-                props.changeShowImage({
-                  imagePath: data.fileName,
-                  isShowOnFull: true,
-                })
-              }
+              onClick={() => props.changeShowImage({
+                imagePath: `${CONSTANTS.publicURL}${data.fileName}`,
+                isShowOnFull: true,
+              })}
               className={styles.responseLogo}
               src={`${CONSTANTS.publicURL}${data.fileName}`}
               alt="logo"
@@ -173,24 +173,24 @@ const OfferBox = (props) => {
           {data.User.id !== id && (
             <Rating
               fractions={2}
-              fullSymbol={
+              fullSymbol={(
                 <img
                   src={`${CONSTANTS.STATIC_IMAGES_PATH}star.png`}
                   alt="star"
                 />
-              }
-              placeholderSymbol={
+              )}
+              placeholderSymbol={(
                 <img
                   src={`${CONSTANTS.STATIC_IMAGES_PATH}star.png`}
                   alt="star"
                 />
-              }
-              emptySymbol={
+              )}
+              emptySymbol={(
                 <img
                   src={`${CONSTANTS.STATIC_IMAGES_PATH}star-outline.png`}
                   alt="star"
                 />
-              }
+              )}
               onClick={changeMark}
               placeholderRating={data.mark}
             />
@@ -212,7 +212,7 @@ const OfferBox = (props) => {
       )}
     </div>
   );
-};
+}
 
 const mapDispatchToProps = (dispatch) => ({
   changeMark: (data) => dispatch(changeMark(data)),
@@ -234,5 +234,5 @@ const mapStateToProps = (state) => {
 };
 
 export default withRouter(
-  connect(mapStateToProps, mapDispatchToProps)(OfferBox)
+  connect(mapStateToProps, mapDispatchToProps)(OfferBox),
 );

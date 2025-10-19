@@ -15,16 +15,19 @@ const DialogBox = props => {
     chatMode,
     interlocutor,
   } = props;
+
   const {
-    favoriteList,
-    participants,
-    blackList,
+    favoriteList = [],
+    participants = [],
+    blackList = [],
     _id,
     text,
     createAt,
-  } = chatPreview;
-  const isFavorite = favoriteList[participants.indexOf(userId)];
-  const isBlocked = blackList[participants.indexOf(userId)];
+  } = chatPreview || {};
+  const participantIndex = participants.indexOf(userId);
+  const isFavorite = Boolean(favoriteList?.[participantIndex]);
+  const isBlocked = Boolean(blackList?.[participantIndex]);
+
   return (
     <div
       className={styles.previewChatBox}
@@ -42,26 +45,29 @@ const DialogBox = props => {
     >
       <img
         src={
-          interlocutor.avatar === 'anon.png'
+          interlocutor?.avatar === 'anon.png'
             ? CONSTANTS.ANONYM_IMAGE_PATH
-            : `${CONSTANTS.publicURL}${interlocutor.avatar}`
+            : `${CONSTANTS.publicURL}${interlocutor?.avatar ?? 'anon.png'}`
         }
         alt='user'
       />
+
       <div className={styles.infoContainer}>
         <div className={styles.interlocutorInfo}>
           <span className={styles.interlocutorName}>
-            {interlocutor.firstName}
+            {interlocutor?.firstName ?? 'Anonimous'}
           </span>
           <span className={styles.interlocutorMessage}>{text}</span>
         </div>
         <div className={styles.buttonsContainer}>
           <span className={styles.time}>{getTimeStr(createAt)}</span>
+
           <i
             onClick={event =>
               changeFavorite(
                 {
                   participants,
+                  participantsConversationId: _id,
                   favoriteFlag: !isFavorite,
                 },
                 event
@@ -72,11 +78,13 @@ const DialogBox = props => {
               'fas fa-heart': isFavorite,
             })}
           />
+
           <i
             onClick={event =>
               changeBlackList(
                 {
                   participants,
+                  participantsConversationId: _id,
                   blackListFlag: !isBlocked,
                 },
                 event
@@ -87,6 +95,7 @@ const DialogBox = props => {
               'fas fa-unlock': isBlocked,
             })}
           />
+
           <i
             onClick={event => catalogOperation(event, _id)}
             className={classNames({

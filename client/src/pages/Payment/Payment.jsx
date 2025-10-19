@@ -8,15 +8,13 @@ import styles from './Payment.module.sass';
 import CONSTANTS from '../../constants';
 import Error from '../../components/Error/Error';
 
-const Payment = (props) => {
+function Payment(props) {
   const navigate = useNavigate();
 
   const pay = (values) => {
     const { contests } = props.contestCreationStore;
     const contestArray = [];
-    Object.keys(contests).forEach((key) =>
-      contestArray.push({ ...contests[key] })
-    );
+    Object.keys(contests).forEach((key) => contestArray.push({ ...contests[key] }));
     const { number, expiry, cvc } = values;
     const data = new FormData();
     for (let i = 0; i < contestArray.length; i++) {
@@ -73,7 +71,7 @@ const Payment = (props) => {
       </div>
     </div>
   );
-};
+}
 
 const mapStateToProps = (state) => ({
   payment: state.payment,

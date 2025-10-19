@@ -10,7 +10,7 @@ import styles from './CatalogHeader.module.sass';
 import FormInput from '../../../FormInput/FormInput';
 import Schems from '../../../../utils/validators/validationSchems';
 
-const CatalogListHeader = (props) => {
+function CatalogListHeader(props) {
   const changeCatalogName = (values) => {
     const { changeCatalogName, _id } = props;
     changeCatalogName({ catalogName: values.catalogName, catalogId: _id });
@@ -62,7 +62,7 @@ const CatalogListHeader = (props) => {
       )}
     </div>
   );
-};
+}
 
 const mapStateToProps = (state) => {
   const { isRenameCatalog } = state.chatStore;

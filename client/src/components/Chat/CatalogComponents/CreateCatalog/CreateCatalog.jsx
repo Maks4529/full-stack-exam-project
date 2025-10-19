@@ -6,7 +6,7 @@ import styles from './CreateCatalog.module.sass';
 import { createCatalog } from '../../../../store/slices/chatSlice';
 import Schems from '../../../../utils/validators/validationSchems';
 
-const CreateCatalog = (props) => {
+function CreateCatalog(props) {
   const click = (values) => {
     const { createCatalog } = props;
     const { addChatId } = props;
@@ -34,7 +34,7 @@ const CreateCatalog = (props) => {
       </Form>
     </Formik>
   );
-};
+}
 
 const mapDispatchToProps = (dispatch) => ({
   createCatalog: (data) => dispatch(createCatalog(data)),

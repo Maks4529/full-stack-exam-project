@@ -18,6 +18,9 @@ import CONSTANTS from './constants';
 import browserHistory from './browserHistory';
 import ChatContainer from './components/Chat/ChatComponents/ChatContainer/ChatContainer';
 import Layout from './pages/Layout/Layout';
+import HowItWorksPage from './pages/HowItWorksPage/HowItWorksPage';
+import EventsPage from './pages/EventsPage/EventsPage';
+import ModeratorOffersPage from './pages/ModeratorOffersPage/ModeratorOffersPage';
 import OnlyNotAuthorizedUserRoute from './components/Routes/OnlyNotAuthorizedUserRoute/OnlyNotAuthorizedUserRoute';
 import PrivateRoute from './components/Routes/PrivateRoute/PrivateRoute';
 
@@ -50,37 +53,40 @@ class App extends Component {
               <Route path="/startContest" element={<StartContestPage />} />
               <Route
                 path="/startContest/nameContest"
-                element={
+                element={(
                   <ContestCreationPage
                     contestType={CONSTANTS.NAME_CONTEST}
                     title="Company Name"
                   />
-                }
+                )}
               />
               <Route
                 path="/startContest/taglineContest"
-                element={
+                element={(
                   <ContestCreationPage
                     contestType={CONSTANTS.TAGLINE_CONTEST}
                     title="TAGLINE"
                   />
-                }
+                )}
               />
               <Route
                 path="/startContest/logoContest"
-                element={
+                element={(
                   <ContestCreationPage
                     contestType={CONSTANTS.LOGO_CONTEST}
                     title="LOGO"
                   />
-                }
+                )}
               />
               <Route path="/dashboard" element={<Dashboard />} />
-              <Route path="/contest/:id" element={<ContestPage />}/>
-              <Route path="/account" element={<UserProfile />}/>
+              <Route path="/contest/:id" element={<ContestPage />} />
+              <Route path="/account" element={<UserProfile />} />
             </Route>
             <Route path="*" element={<NotFound />} />
           </Route>
+            <Route path="/how-it-works" element={<HowItWorksPage />} />
+            <Route path='events' element={<EventsPage />} />
+            <Route path="/moderator-offers" element={<ModeratorOffersPage />} />
         </Routes>
         <ChatContainer />
       </Router>

@@ -11,3 +11,6 @@
 .server/public/images
 **server/public/*
 *server/public/*
+public/images/*
+server/.env
+server/logs/*

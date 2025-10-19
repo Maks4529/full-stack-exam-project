@@ -6,7 +6,7 @@ import { changeEditModeOnUserProfile } from '../../store/slices/userProfileSlice
 import CONSTANTS from '../../constants';
 import styles from './UserInfo.module.sass';
 
-const UserInfo = (props) => {
+function UserInfo(props) {
   const updateUserData = (values) => {
     const formData = new FormData();
     formData.append('file', values.file);
@@ -17,8 +17,15 @@ const UserInfo = (props) => {
   };
 
   const { isEdit, changeEditMode, data } = props;
-  const { avatar, firstName, lastName, displayName, email, role, balance } =
-    data;
+  const {
+    avatar,
+    firstName,
+    lastName,
+    displayName,
+    email,
+    role,
+    balance,
+  } = data;
   return (
     <div className={styles.mainContainer}>
       {isEdit ? (
@@ -72,7 +79,7 @@ const UserInfo = (props) => {
       </div>
     </div>
   );
-};
+}
 
 const mapStateToProps = (state) => {
   const { data } = state.userStore;

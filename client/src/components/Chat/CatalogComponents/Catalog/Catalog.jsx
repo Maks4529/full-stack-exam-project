@@ -1,9 +1,9 @@
 import React from 'react';
 import styles from './Catalog.module.sass';
 
-const Catalog = props => {
+function Catalog (props) {
   const { deleteCatalog, goToCatalog } = props;
-  const { catalogName, chats, _id } = props.catalog;
+  const { catalogName, chats = [], _id } = props.catalog || {};
   return (
     <div
       className={styles.catalogContainer}
@@ -20,6 +20,6 @@ const Catalog = props => {
       </div>
     </div>
   );
-};
+}
 
 export default Catalog;

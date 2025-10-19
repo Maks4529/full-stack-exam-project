@@ -1,37 +1,37 @@
 {
+  "parser": "@babel/eslint-parser",
   "parserOptions": {
-    "ecmaVersion": 6,
+    "requireConfigFile": false,
+    "babelOptions": {
+      "presets": ["@babel/preset-react"]
+    },
+    "ecmaVersion": 2020,
     "sourceType": "module",
     "ecmaFeatures": {
       "jsx": true
     }
   },
-  "plugins": [
-    "jest"
-  ],
-  "extends": "eslint-config-airbnb",
-  "parser": "babel-eslint",
+  "plugins": ["react", "jest", "unused-imports"],
+  "extends": ["airbnb", "plugin:react/recommended"],
   "rules": {
     "react/jsx-filename-extension": [
       1,
       {
-        "extensions": [
-          ".js",
-          ".jsx"
-        ]
+        "extensions": [".js", ".jsx"]
       }
     ],
     "no-underscore-dangle": [
       "error",
       {
-        "allow": [
-          "_id"
-        ]
+        "allow": ["_id"]
       }
-    ]
+    ],
+    "no-unused-vars": "off",
+    "unused-imports/no-unused-imports": "error"
   },
   "env": {
     "jest": true,
-    "browser": true
+    "browser": true,
+    "es2020": true
   }
 }

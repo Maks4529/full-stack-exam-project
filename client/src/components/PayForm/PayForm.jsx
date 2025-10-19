@@ -8,7 +8,7 @@ import { changeFocusOnCard } from '../../store/slices/paymentSlice';
 import PayInput from '../InputComponents/PayInput/PayInput';
 import Schems from '../../utils/validators/validationSchems';
 
-const PayForm = (props) => {
+function PayForm(props) {
   const changeFocusOnCard = (name) => {
     props.changeFocusOnCard(name);
   };
@@ -33,7 +33,9 @@ const PayForm = (props) => {
         validationSchema={Schems.PaymentSchema}
       >
         {({ values }) => {
-          const { name, number, expiry, cvc } = values;
+          const {
+            name, number, expiry, cvc,
+          } = values;
 
           return (
             <>
@@ -153,7 +155,7 @@ const PayForm = (props) => {
       </div>
     </div>
   );
-};
+}
 
 const mapDispatchToProps = (dispatch) => ({
   changeFocusOnCard: (data) => dispatch(changeFocusOnCard(data)),

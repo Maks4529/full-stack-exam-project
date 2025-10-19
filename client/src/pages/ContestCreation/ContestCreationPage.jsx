@@ -1,4 +1,4 @@
-import React, { useRef } from 'react';
+import React, { useRef, useEffect } from 'react';
 import { connect } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import styles from './ContestCreationPage.module.sass';
@@ -7,8 +7,9 @@ import NextButton from '../../components/NextButton/NextButton';
 import ContestForm from '../../components/ContestForm/ContestForm';
 import BackButton from '../../components/BackButton/BackButton';
 import ProgressBar from '../../components/ProgressBar/ProgressBar';
+import ButtonGroup from '../../components/ButtonGroup/ButtonGroup';
 
-const ContestCreationPage = (props) => {
+function ContestCreationPage (props) {
   const formRef = useRef();
   const navigate = useNavigate();
 
@@ -16,7 +17,19 @@ const ContestCreationPage = (props) => {
     ? props.contestCreationStore.contests[props.contestType]
     : { contestType: props.contestType };
 
-  const handleSubmit = (values) => {
+  const handleSubmit = values => {
+    const formData = new FormData();
+
+    Object.entries(values).forEach(([key, value]) => {
+      if (value !== undefined && value !== null) {
+        if (key === 'file' && value) {
+          formData.append(key, value);
+        } else {
+          formData.append(key, value);
+        }
+      }
+    });
+
     props.saveContest({ type: props.contestType, info: values });
     const route =
       props.bundleStore.bundle[props.contestType] === 'payment'
@@ -31,7 +44,11 @@ const ContestCreationPage = (props) => {
     }
   };
 
-  !props.bundleStore.bundle && navigate('/startContest', {replace: true});
+  useEffect(() => {
+    if (!props.bundleStore.bundle) {
+      navigate('/startContest', { replace: true });
+    }
+  }, [props.bundleStore.bundle, navigate]);
 
   return (
     <div>
@@ -54,6 +71,9 @@ const ContestCreationPage = (props) => {
             defaultData={contestData}
           />
         </div>
+        <ButtonGroup
+          onChange={value => console.log('Selected option:', value)}
+        />
       </div>
       <div className={styles.footerButtonsContainer}>
         <div className={styles.lastContainer}>
@@ -65,15 +85,15 @@ const ContestCreationPage = (props) => {
       </div>
     </div>
   );
-};
+}
 
-const mapStateToProps = (state) => {
+const mapStateToProps = state => {
   const { contestCreationStore, bundleStore } = state;
   return { contestCreationStore, bundleStore };
 };
 
-const mapDispatchToProps = (dispatch) => ({
-  saveContest: (data) => dispatch(saveContestToStore(data)),
+const mapDispatchToProps = dispatch => ({
+  saveContest: data => dispatch(saveContestToStore(data)),
 });
 
 export default connect(

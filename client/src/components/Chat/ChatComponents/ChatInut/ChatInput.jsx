@@ -7,7 +7,7 @@ import CONSTANTS from '../../../../constants';
 import FormInput from '../../../FormInput/FormInput';
 import Schems from '../../../../utils/validators/validationSchems';
 
-const ChatInput = (props) => {
+function ChatInput(props) {
   const submitHandler = (values, { resetForm }) => {
     props.sendMessage({
       messageBody: values.message,
@@ -45,7 +45,7 @@ const ChatInput = (props) => {
       </Formik>
     </div>
   );
-};
+}
 
 const mapStateToProps = (state) => {
   const { interlocutor } = state.chatStore;

@@ -4,7 +4,7 @@ import { useNavigate, Outlet } from 'react-router-dom';
 import { getUser } from '../../../store/slices/userSlice';
 import Spinner from '../../Spinner/Spinner';
 
-const OnlyNotAuthorizedUserRoute = () => {
+function OnlyNotAuthorizedUserRoute() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const { data, isFetching } = useSelector((state) => state.userStore);
@@ -18,6 +18,6 @@ const OnlyNotAuthorizedUserRoute = () => {
   }
 
   return data ? navigate('/') : <Outlet />;
-};
+}
 
 export default OnlyNotAuthorizedUserRoute;

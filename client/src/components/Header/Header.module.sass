@@ -21,6 +21,14 @@
       align-self: flex-end
       @media(max-width: 920px)
         display: none
+    
+    .logoLink
+      .img
+        outline: none
+        border: none
+      &:focus
+        outline: none
+        border: none
 
     .startContestBtn
       text-align: center
@@ -148,6 +156,11 @@
       .emailIcon
         padding: 0 15px
         border-right: 1px solid #ebebeb
+        width: 24px
+        height: 24px
+        cursor: pointer
+        display: inline-block
+        vertical-align: middle
 
       .userInfo
         display: flex
@@ -220,6 +233,19 @@
         padding: 0 5px
         margin-left: 0
 
+      .phoneLink
+        text-decoration: none
+
+        .phoneLinkSpan
+          color: #337ab7
+          font-size: 14px
+          margin-left: 10px
+          @media(max-width: 360px)
+            font-size: 12px
+        &:focus
+          outline: none
+          border: none
+
       span
         color: #337ab7
         font-size: 14px
@@ -252,3 +278,39 @@
       color: lightyellow
       text-decoration: underline
 
+.eventsMenuItem
+  position: relative
+
+.emailBadge
+  position: absolute
+  top: 6px
+  right: 6px
+  background: #ff4d4f
+  color: white
+  border-radius: 50%
+  width: 18px
+  height: 18px
+  display: flex
+  align-items: center
+  justify-content: center
+  font-size: 11px
+  line-height: 1
+
+.moderatorNavItem
+  span
+    color: #d35400
+    font-weight: 500
+
+.badge 
+  display: inline-block
+  background-color: red
+  border-radius: 50%
+  width: 8px
+  height: 8px
+  position: absolute
+  top: 8px
+  left: 60px
+  padding: 0
+  margin: 0
+  box-sizing: border-box
+  font-size: 0

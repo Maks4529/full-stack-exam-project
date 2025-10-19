@@ -12,12 +12,12 @@ import FormInput from '../FormInput/FormInput';
 import Schems from '../../utils/validators/validationSchems';
 import Error from '../Error/Error';
 
-const OfferForm = props => {
+function OfferForm(props) {
   const renderOfferInput = () => {
     if (props.contestType === CONTANTS.LOGO_CONTEST) {
       return (
         <ImageUpload
-          name='offerData'
+          name="offerData"
           classes={{
             uploadContainer: styles.imageUploadContainer,
             inputContainer: styles.uploadInputContainer,
@@ -28,15 +28,15 @@ const OfferForm = props => {
     }
     return (
       <FormInput
-        name='offerData'
+        name="offerData"
         classes={{
           container: styles.inputContainer,
           input: styles.input,
           warning: styles.fieldWarning,
           notValid: styles.notValid,
         }}
-        type='text'
-        label='your suggestion'
+        type="text"
+        label="your suggestion"
       />
     );
   };
@@ -54,10 +54,9 @@ const OfferForm = props => {
   };
 
   const { valid, addOfferError, clearOfferError } = props;
-  const validationSchema =
-    props.contestType === CONTANTS.LOGO_CONTEST
-      ? Schems.LogoOfferSchema
-      : Schems.TextOfferSchema;
+  const validationSchema = props.contestType === CONTANTS.LOGO_CONTEST
+    ? Schems.LogoOfferSchema
+    : Schems.TextOfferSchema;
   return (
     <div className={styles.offerContainer}>
       {addOfferError && (
@@ -74,25 +73,27 @@ const OfferForm = props => {
         }}
         validationSchema={validationSchema}
       >
-        <Form className={styles.form}>
-          {renderOfferInput()}
-          {valid && (
-            <button type='submit' className={styles.btnOffer}>
+        {({ isValid }) => (
+          <Form className={styles.form}>
+            {renderOfferInput()}
+            {isValid && (
+            <button type="submit" className={styles.btnOffer}>
               Send Offer
             </button>
-          )}
-        </Form>
+            )}
+          </Form>
+        )}
       </Formik>
     </div>
   );
-};
+}
 
-const mapDispatchToProps = dispatch => ({
-  setNewOffer: data => dispatch(addOffer(data)),
+const mapDispatchToProps = (dispatch) => ({
+  setNewOffer: (data) => dispatch(addOffer(data)),
   clearOfferError: () => dispatch(clearAddOfferError()),
 });
 
-const mapStateToProps = state => {
+const mapStateToProps = (state) => {
   const { addOfferError } = state.contestByIdStore;
   return { addOfferError };
 };

@@ -6,7 +6,7 @@ import RegistrationFooter from '../../components/Layout/RegistrationFooter';
 import AuthHeader from '../../components/Layout/AuthHeader';
 import styles from './Layout.module.sass';
 
-const Layout = (props) => {
+function Layout(props) {
   const { pathname } = useLocation();
 
   const isRegisterPathname = pathname === '/registration';
@@ -23,6 +23,6 @@ const Layout = (props) => {
       {isRegisterPathname && <RegistrationFooter />}
     </div>
   );
-};
+}
 
 export default Layout;

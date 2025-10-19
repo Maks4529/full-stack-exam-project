@@ -11,7 +11,7 @@ import styles from './Brief.module.sass';
 import ContestInfo from '../Contest/ContestInfo/ContestInfo';
 import Error from '../Error/Error';
 
-const Brief = (props) => {
+function Brief(props) {
   const setNewContestData = (values) => {
     const data = new FormData();
     Object.keys(values).forEach((key) => {
@@ -101,7 +101,7 @@ const Brief = (props) => {
       />
     </div>
   );
-};
+}
 
 const mapStateToProps = (state) => {
   const { isEditContest } = state.contestByIdStore;

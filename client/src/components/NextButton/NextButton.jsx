@@ -1,7 +1,7 @@
 import React from 'react';
 import styles from './NextButton.module.sass';
 
-const NextButton = props => {
+function NextButton(props) {
   const { submit } = props;
 
   return (
@@ -9,6 +9,6 @@ const NextButton = props => {
       <span>Next</span>
     </div>
   );
-};
+}
 
 export default NextButton;

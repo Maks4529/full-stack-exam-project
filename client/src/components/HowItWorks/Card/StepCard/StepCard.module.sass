@@ -1,0 +1,33 @@
+.stepCard
+    display: flex
+    flex-direction: column
+    gap: 15px
+    padding: 15px
+    background-color: #fff
+    border-radius: 10px
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1)
+    position: relative
+    .step
+        width: max-content
+        font-size: 14px
+        font-weight: bold
+        color: #fff
+        padding: 10px 15px
+        border-radius: 15px
+        background-color: #1e7de4
+    .description
+        font-size: 16px
+        line-height: 28px
+        color: #999999
+    .arrow
+        position: absolute
+        top: 50%
+        transform: translateY(-50%)
+        right: -20px
+        font-size: 25px
+        color: #1e7de4
+    svg
+        transition: transform 0.3s ease
+
+    &:hover svg
+        transform: translateX(5px)

@@ -5,7 +5,7 @@ import SelectInput from '../../../SelectInput/SelectInput';
 import { addChatToCatalog } from '../../../../store/slices/chatSlice';
 import styles from './AddToCatalog.module.sass';
 
-const AddToCatalog = (props) => {
+function AddToCatalog(props) {
   const getCatalogsNames = () => {
     const { catalogList } = props;
     const namesArray = [];
@@ -56,7 +56,7 @@ const AddToCatalog = (props) => {
       )}
     </>
   );
-};
+}
 
 const mapStateToProps = (state) => state.chatStore;
 

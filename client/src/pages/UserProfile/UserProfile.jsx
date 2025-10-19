@@ -10,9 +10,11 @@ import { cashOut, clearPaymentStore } from '../../store/slices/paymentSlice';
 import { changeProfileViewMode } from '../../store/slices/userProfileSlice';
 import Error from '../../components/Error/Error';
 
-const UserProfile = (props) => {
+function UserProfile(props) {
   const pay = (values) => {
-    const { number, expiry, cvc, sum } = values;
+    const {
+      number, expiry, cvc, sum,
+    } = values;
     props.cashOut({
       number,
       expiry,
@@ -82,7 +84,7 @@ const UserProfile = (props) => {
       </div>
     </div>
   );
-};
+}
 
 const mapStateToProps = (state) => {
   const { balance, role } = state.userStore.data;
