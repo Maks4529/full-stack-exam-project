@@ -39,7 +39,7 @@ class HowItWorksPage extends Component {
         </section>
         <section className={styles.container2}>
           <div className={styles.blueMessage}>Our Services</div>
-          <h2>3 Ways To Use Atom</h2>
+          <h2 className={styles.titleH2}>3 Ways To Use Atom</h2>
           <p className={styles.description}>
             Atom offers 3 ways to get you a perfect name for your business.
           </p>
@@ -51,7 +51,7 @@ class HowItWorksPage extends Component {
         </section>
         <section className={styles.container3}>
           <img src={`${CONSTANTS.STATIC_IMAGES_PATH}/howItWorks/trophy.svg`} alt="trophy" />
-          <h2>How Do Naming Contests Work?</h2>
+          <h2 className={styles.titleH2}>How Do Naming Contests Work?</h2>
           <div className={styles.stepsContainer}>
           <StepCard step={'1'} description={'Fill out your Naming Brief and begin receiving name ideas in minutes'} />
           <StepCard step={'2'} description={'Rate the submissions and provide feedback to creatives. Creatives submit even more names based on your feedback.'} />
@@ -60,7 +60,7 @@ class HowItWorksPage extends Component {
           </div>
         </section>
         <section className={styles.container4}>
-          <h2>Frequently Asked Questions</h2>
+          <h2 className={styles.titleH2}>Frequently Asked Questions</h2>
           <AccordionFaq />
           <InputSearch />
           <ul className={styles.tagsContainer}>

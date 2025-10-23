@@ -22,9 +22,6 @@ function Header() {
         />
       </Link>
 
-      <button className={styles.burger} onClick={toggleMenu}>
-        <FontAwesomeIcon icon={isOpen ? faTimes : faBars} size="lg" />
-      </button>
       <ul className={`${styles.linkList} ${isOpen ? styles.open : ''}`}>
         <li className={styles.menuLink}><a href='https://google.com'>Domains for Sale</a></li>
         <li className={styles.menuLink}><a href='https://google.com'>Naming & Branding</a></li>
@@ -32,12 +29,20 @@ function Header() {
         <li className={styles.menuLink}><a href='https://google.com'>Trademarks</a></li>
         <li className={styles.menuLink}><a href='https://google.com'>Resources</a></li>
       </ul>
-      <ul className={styles.iconList}>
-        <li className={styles.menuIcon}><FontAwesomeIcon icon={faMagnifyingGlass} size="lg" /></li>
-        <li className={styles.menuIcon}><FontAwesomeIcon icon={faCircleUser} size="lg" /></li>
-        <li className={styles.menuIcon}><FontAwesomeIcon icon={faPhone} size="lg" /></li>
-        <li className={styles.menuIcon}><FontAwesomeIcon icon={faHeart} size="lg" /></li>
-      </ul>
+
+      <div className={styles.rightSide}>
+        <ul className={styles.iconList}>
+          <li className={`${styles.menuIcon} ${styles.searchIcon}`}><FontAwesomeIcon icon={faMagnifyingGlass} size="lg" /></li>
+          <li className={styles.menuIcon}><FontAwesomeIcon icon={faCircleUser} size="lg" /></li>
+          <li className={styles.menuIcon}><FontAwesomeIcon icon={faPhone} size="lg" /></li>
+          <li className={styles.menuIcon}><FontAwesomeIcon icon={faHeart} size="lg" /></li>
+        </ul>
+        
+        <button className={styles.burger} onClick={toggleMenu}>
+          <FontAwesomeIcon icon={isOpen ? faTimes : faBars} size="lg" />
+        </button>
+      </div>
+
     </header>
   );
 }

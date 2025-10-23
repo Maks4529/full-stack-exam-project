@@ -5,7 +5,8 @@
     padding: 15px
     background-color: #fff
     border-radius: 10px
-    height: 300px
+    min-height: 300px
+    max-height: 370px
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1)
 
 .icon
@@ -35,3 +36,8 @@ h3
 
     &:hover svg
         transform: translateX(5px)
+
+@media (max-width: 980px)
+    .itemCards
+        justify-content: center
+        align-items: center
