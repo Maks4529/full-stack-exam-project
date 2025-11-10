@@ -2,97 +2,118 @@ const db = require('../models');
 const mailer = require('../utils/mailer');
 const controller = require('../socketInit');
 
-module.exports.approveOffer = async (req, res, next) => {
+const _notifyCreator = async (offer, status) => {
+  const statusPastTense = status === 'approved' ? 'approved' : 'rejected';
+
+  const creatorName = offer.User?.firstName || 'Creator';
+  const contestTitle = offer.Contest?.title || 'your contest';
+  
+  const message = `Your offer for the contest "${contestTitle}" (ID: #${offer.id}) was ${statusPastTense}.`;
+  
   try {
-    const offer = await db.Offers.findByPk(req.body.offerId, {
-      include: [{ model: db.Users, attributes: ['email'] }],
-    });
-    if (!offer) return res.status(404).send({ error: 'Offer not found' });
-    offer.status = 'approved';
-    await offer.save();
     await db.Notification.create({
       userId: offer.userId,
-      message: `Your offer #${offer.id} was approved.`,
+      message: message,
     });
+  } catch (e) {
+    console.error(
+      `Failed to create DB notification for offer ${offer.id}:`,
+      e.message || e
+    );
+  }
 
+  try {
+    controller
+      .getNotificationController()
+      .emitChangeOfferStatus(
+        String(offer.userId),
+        message,
+        offer.contestId
+      );
+  } catch (e) {
+    console.error(
+      `Failed to emit socket notification for offer ${offer.id}:`,
+      e.message || e
+    );
+  }
+
+  const creatorEmail = offer.User && offer.User.email;
+
+  if (creatorEmail) {
     try {
-      controller
-        .getNotificationController()
-        .emitChangeOfferStatus(
-          String(offer.userId),
-          `Your offer #${offer.id} was approved.`,
-          offer.contestId
-        );
+      const htmlBody = `
+        <div style="font-family: Arial, sans-serif; line-height: 1.6;">
+          <h2 style="color: #333;">Hello, ${creatorName}!</h2>
+          <p>We have an update regarding your offer for the contest: <strong>"${contestTitle}"</strong>.</p>
+          <p>Your offer (ID: #${offer.id}) has been <strong>${statusPastTense}</strong> by the moderator.</p>
+          ${status === 'approved'
+            ? '<p style="color: green;">Congratulations! Your offer is now active.</p>'
+            : '<p style="color: red;">You can review the offer in your account and resubmit it if you wish.</p>'
+          }
+          <br>
+          <p>Thank you,</p>
+          <p>The Team</p>
+        </div>
+      `;
+
+      const textBody = `
+        Hello, ${creatorName}!
+        We have an update regarding your offer for the contest: "${contestTitle}".
+        Your offer (ID: #${offer.id}) has been ${statusPastTense} by the moderator.
+        ${status === 'approved' ? 'Congratulations! Your offer is now active.' : 'You can review the offer in your account and resubmit it if you wish.'}
+        Thank you,
+        The Team
+      `;
+
+      await mailer.sendMail({
+        to: creatorEmail,
+        subject: `Your offer for "${contestTitle}" was ${statusPastTense}`,
+        text: textBody,
+        html: htmlBody,
+      });
     } catch (e) {
       console.error(
-        'Failed to emit socket notification for approval',
+        `[Notify] ПОМИЛКА відправки ${statusPastTense} email для оферу ${offer.id}:`,
         e.message || e
       );
     }
-
-    const creatorEmail = offer.User && offer.User.email;
-    if (creatorEmail) {
-      try {
-        await mailer.sendMail({
-          to: creatorEmail,
-          subject: 'Your offer was approved',
-          text: `Hello, your offer #${offer.id} has been approved by moderator.`,
-        });
-      } catch (e) {
-        console.error('Failed to send approval email', e.message || e);
-      }
-    }
-
-    res.send({ success: true });
-  } catch (err) {
-    next(err);
+  } else {
+    console.warn(`[Notify] Email не буде відправлено. 'creatorEmail' не знайдено для оферу #${offer.id}.`);
   }
 };
 
-module.exports.rejectOffer = async (req, res, next) => {
+module.exports.updateOfferStatus = async (req, res, next) => {
   try {
-    const offer = await db.Offers.findByPk(req.body.offerId, {
-      include: [{ model: db.Users, attributes: ['email'] }],
-    });
-    if (!offer) return res.status(404).send({ error: 'Offer not found' });
+    const { offerId, status } = req.body;
 
-    offer.status = 'rejected';
+    if (status !== 'approved' && status !== 'rejected') {
+      return res.status(400).send({ error: 'Invalid status provided.' });
+    }
+
+    const offer = await db.Offers.findByPk(offerId, {
+      include: [
+        {
+          model: db.Users,
+          attributes: ['email', 'firstName'],
+        },
+        {
+          model: db.Contests,
+          attributes: ['title'],
+        },
+      ],
+    });
+
+    if (!offer) {
+      return res.status(404).send({ error: 'Offer not found' });
+    }
+
+    offer.status = status;
     await offer.save();
 
-    await db.Notification.create({
-      userId: offer.userId,
-      message: `Your offer #${offer.id} was rejected.`,
-    });
+    res.send({ success: true, newStatus: offer.status });
 
-    try {
-      controller
-        .getNotificationController()
-        .emitChangeOfferStatus(
-          String(offer.userId),
-          `Your offer #${offer.id} was rejected.`,
-          offer.contestId
-        );
-    } catch (e) {
-      console.error(
-        'Failed to emit socket notification for rejection',
-        e.message || e
-      );
-    }
+    _notifyCreator(offer, status);
 
-    const creatorEmail = offer.User && offer.User.email;
-    if (creatorEmail) {
-      try {
-        await mailer.sendMail({
-          to: creatorEmail,
-          subject: 'Your offer was rejected',
-          text: `Hello, your offer #${offer.id} has been rejected by moderator.`,
-        });
-      } catch (e) {
-        console.error('Failed to send rejection email', e.message || e);
-      }
-    }
-
-    res.send({ success: true });
   } catch (err) {
     next(err);
   }
@@ -100,21 +121,27 @@ module.exports.rejectOffer = async (req, res, next) => {
 
 module.exports.getAllOffersForModeration = async (req, res, next) => {
   try {
-    const limit = 10;
+    const limit = 6;
     const page = req.body.page || 1;
     const offset = (page - 1) * limit;
 
     const { count, rows } = await db.Offers.findAndCountAll({
       limit,
       offset,
+      where: { status: 'pending' },
       order: [['id', 'DESC']],
-      attributes: ['id', 'text', 'status', 'contestId', 'userId'],
+      include: [
+    	{
+    	  model: db.Contests,
+    	  attributes: ['title', 'contestType', 'styleName', 'brandStyle'],
+    	},
+      ],
     });
 
     res.send({
       offers: rows,
       totalPages: Math.ceil(count / limit),
-      currentPage: page,
+      currentPage: parseInt(page, 10),
     });
   } catch (err) {
     next(err);

@@ -49,11 +49,21 @@ class Header extends React.Component {
               alt='menu'
             />
             <ul>
-              <li>
+              {this.props.data && this.props.data.role !== CONSTANTS.MODERATOR &&<li>
                 <Link to='/dashboard' style={{ textDecoration: 'none' }}>
                   <span>View Dashboard</span>
                 </Link>
-              </li>
+              </li>}
+               {this.props.data && this.props.data.role === 'moderator' && (
+                  <li className={styles.moderatorNavItem}>
+                    <Link
+                      to='/moderator-offers'
+                      style={{ textDecoration: 'none' }}
+                    >
+                      <span>Moderation offers</span>
+                    </Link>
+                  </li>
+                )}
               <li>
                 <Link to='/account' style={{ textDecoration: 'none' }}>
                   <span>My Account</span>
@@ -67,14 +77,14 @@ class Header extends React.Component {
                   <span>Messages</span>
                 </Link>
               </li>
-              <li>
+              {this.props.data && this.props.data.role !== CONSTANTS.MODERATOR && <li>
                 <Link
                   to='http:/www.google.com'
                   style={{ textDecoration: 'none' }}
                 >
                   <span>Affiliate Dashboard</span>
                 </Link>
-              </li>
+              </li>}
               <li>
                 <span onClick={this.logOut}>Logout</span>
               </li>
@@ -252,16 +262,7 @@ class Header extends React.Component {
                     </li>
                   </ul>
                 </li>
-                {this.props.data && this.props.data.role === 'moderator' && (
-                  <li className={styles.moderatorNavItem}>
-                    <Link
-                      to='/moderator-offers'
-                      style={{ textDecoration: 'none' }}
-                    >
-                      <span>Moderation offers</span>
-                    </Link>
-                  </li>
-                )}
+               
                 <li>
                   <span>Names For Sale</span>
                   <img
@@ -314,7 +315,7 @@ class Header extends React.Component {
                 </li>
               </ul>
             </div>
-            {this.props.data && this.props.data.role !== CONSTANTS.CREATOR && (
+            {this.props.data && this.props.data.role !== CONSTANTS.CREATOR && this.props.data.role !== CONSTANTS.MODERATOR && (
               <div
                 className={styles.startContestBtn}
                 onClick={this.startContests}

@@ -5,6 +5,7 @@ import Header from '../../components/Header/Header';
 import CONSTANTS from '../../constants';
 import SlideBar from '../../components/SlideBar/SlideBar';
 import Footer from '../../components/Footer/Footer';
+import { getUser } from './../../store/slices/userSlice';
 import styles from './Home.module.sass';
 import carouselConstants from '../../carouselConstants';
 import Spinner from '../../components/Spinner/Spinner';
@@ -13,6 +14,12 @@ function Home(props) {
   const [index, setIndex] = useState(0);
   const [styleName, setStyle] = useState(styles.headline__static);
   let timeout;
+
+  const {data, getUser} = props;
+
+  useEffect(() => {
+    getUser();
+  }, [getUser]);
 
   useEffect(() => {
     timeout = setInterval(() => {
@@ -46,11 +53,11 @@ function Home(props) {
               explore our hand-picked collection of premium names available
               for immediate purchase
             </p>
-            <div className={styles.button}>
+            {data && data.role !== CONSTANTS.MODERATOR &&<div className={styles.button}>
               <Link className={styles.button__link} to="/dashboard">
                 DASHBOARD
               </Link>
-            </div>
+            </div>}
           </div>
           <div className={styles.greyContainer}>
             <SlideBar
@@ -242,11 +249,11 @@ function Home(props) {
             images={carouselConstants.exampleSliderImages}
             carouselType={carouselConstants.EXAMPLE_SLIDER}
           />
-          <div className={styles.button}>
-            <Link className={styles.button__link} to="/dashboard">
-              DASHBOARD
-            </Link>
-          </div>
+          {data && data.role !== CONSTANTS.MODERATOR &&<div className={styles.button}>
+              <Link className={styles.button__link} to="/dashboard">
+                DASHBOARD
+              </Link>
+          </div>}
           <div className={styles.blueContainer}>
             <h2 className={styles.whiteUnderline}>What our customers say</h2>
             <SlideBar
@@ -261,8 +268,12 @@ function Home(props) {
 }
 
 const mapStateToProps = (state) => {
-  const { isFetching } = state.userStore;
-  return { isFetching };
+  const { isFetching, data } = state.userStore;
+  return { isFetching, data };
 };
 
-export default connect(mapStateToProps, null)(Home);
+const mapDispatchToProps = {
+  getUser,
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(Home);

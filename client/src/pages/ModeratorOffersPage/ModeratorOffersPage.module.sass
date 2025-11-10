@@ -1,19 +1,19 @@
 .page
   width: 100%
-  min-height: 100vh
-  background-color: #0b4665
+  height: 100vh
+  background-color: #ffffff
   position: relative
 
 .container
   width: 100%
   max-width: 1100px
+  min-height: 100%
   margin: auto
   padding: 24px
-  padding-top: 80px
+  padding-top: 60px
   box-sizing: border-box
   display: flex
   flex-direction: column
-  justify-content: center
   align-items: center
 
 .header
@@ -63,13 +63,13 @@
 
 .title
   font-size: 32px
-  color: #ffffff
+  color: #000000
   margin: 0
   display: flex
 
 .sub
   font-size: 14px
-  color: #6b8ab1
+  color: #5a7495
   margin-top: 10px
 
 .status
@@ -96,83 +96,20 @@
   @media(max-width: 700px)
     grid-template-columns: 1fr
 
-.card
-  background: #fff
-  border: 1px solid #eee
-  border-radius: 10px
-  box-shadow: 0 4px 14px rgba(12,18,28,0.04)
-  padding: 16px
-  display: flex
-  flex-direction: column
-  justify-content: space-between
-  min-height: 120px
-
-.cardHeader
-  display: flex
-  justify-content: space-between
-  align-items: center
-  margin-bottom: 8px
-
-.id
-  font-weight: 700
-  color: #333
-
-.statusBadge
-  background: #ffeb3b
-  color: #333
-  padding: 4px 8px
-  border-radius: 4px
-  font-size: 12px
-  text-transform: capitalize
-
-.cardBody
-  flex: 1
-  margin-bottom: 10px
-
 .row
   display: flex
   justify-content: flex-start
   margin-bottom: 6px
 
-.label
-  font-weight: 600
-  margin-right: 8px
-  color: #444
+.paginationButtons
+  margin-top: auto
+  padding: 20px 0
+  display: flex
+  justify-content: center
+  align-items: center
+  gap: 20px
 
-.value
-  color: #666
-
-.text
+.paginationInfo
+  font-size: 16px
   color: #333
-  font-size: 14px
-  line-height: 1.4
-  margin-top: 8px
-  max-height: 72px
-  overflow: hidden
-  text-overflow: ellipsis
-
-.cardFooter
-  display: flex
-  gap: 8px
-  justify-content: flex-end
-
-.actions
-  display: flex
-  justify-content: flex-end
-  gap: 10px
-
-.btnApprove
-  background: #28d2d0
-  border: none
-  color: white
-  padding: 8px 12px
-  border-radius: 4px
-  cursor: pointer
-
-.btnReject
-  background: #f56c6c
-  border: none
-  color: white
-  padding: 8px 12px
-  border-radius: 4px
-  cursor: pointer
+  margin: 0 20px

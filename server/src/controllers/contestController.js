@@ -306,32 +306,39 @@ module.exports.getCustomersContests = (req, res, next) => {
     query: { contestStatus: status, limit, offset },
     tokenData: { userId },
   } = req;
+
+  const requiredOfferStatus = 'approved'; 
+
   db.Contests.findAll({
     where: { status, userId },
     limit,
     offset: offset ? offset : 0,
     order: [['id', 'DESC']],
-    include: [
-      {
-        model: db.Offers,
-        required: false,
-        attributes: ['id'],
-      },
+    
+    attributes: [
+        ...Object.keys(db.Contests.rawAttributes),
+        [
+          db.sequelize.literal(`(
+            SELECT COUNT(*)
+            FROM "Offers" AS "o"
+            WHERE
+              "o"."contestId" = "Contests"."id" AND
+              "o"."status" = '${requiredOfferStatus}'
+          )`),
+          'count'
+        ]
     ],
   })
     .then(contests => {
-      contests.forEach(
-        contest => (contest.dataValues.count = contest.dataValues.Offers.length)
-      );
       let haveMore = true;
-      if (contests.length === 0) {
+      if (contests.length === 0 || contests.length < limit) { 
         haveMore = false;
       }
+    
       res.send({ contests, haveMore });
     })
     .catch(err => next(new ServerError(err)));
 };
-
 module.exports.getContests = (req, res, next) => {
   const predicates = UtilFunctions.createWhereForAllContests(
     req.body.typeIndex,
