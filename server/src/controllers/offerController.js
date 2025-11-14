@@ -175,3 +175,41 @@ module.exports.getApprovedOffers = async (req, res, next) => {
     next(err);
   }
 };
+
+module.exports.setOfferStatus = async (req, res, next) => {
+  let transaction;
+  if (req.body.command === 'reject') {
+    try {
+      const offer = await rejectOffer(
+        req.body.offerId,
+        req.body.creatorId,
+        req.body.contestId
+      );
+      res.send(offer);
+    } catch (err) {
+      next(err);
+    }
+  } else if (req.body.command === 'resolve') {
+    try {
+      transaction = await db.sequelize.transaction();
+      const winningOffer = await resolveOffer(
+        req.body.contestId,
+        req.body.creatorId,
+        req.body.orderId,
+        req.body.offerId,
+        req.body.priority,
+        transaction
+      );
+      res.send(winningOffer);
+    } catch (err) {
+      try {
+        if (transaction && !transaction.finished) {
+          await transaction.rollback();
+        }
+      } catch (rbErr) {
+        console.error('Rollback failed in setOfferStatus', rbErr);
+      }
+      next(err);
+    }
+  }
+};

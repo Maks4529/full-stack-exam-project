@@ -4,22 +4,6 @@ const db = require('../models');
 const userQueries = require('./queries/userQueries');
 const controller = require('../socketInit');
 
-function checkModelsPresent (req, res, next, required = []) {
-  const missing = [];
-  for (const name of required) {
-    const singular = name.endsWith('s') ? name.slice(0, -1) : name;
-    const plural = singular + 's';
-    if (!db[singular] && !db[plural]) missing.push(name);
-  }
-  if (missing.length) {
-    const available = Object.keys(db).slice(0, 100);
-    return res
-      .status(500)
-      .json({ error: 'Missing required chat models', missing, available });
-  }
-  return null;
-}
-
 async function findConversationByParticipants (participants) {
   const sql = `SELECT conversation_id FROM user_conversations WHERE user_id IN (:a, :b) GROUP BY conversation_id HAVING COUNT(*) = 2 LIMIT 1`;
   const rows = await db.sequelize.query(sql, {
@@ -68,7 +52,7 @@ async function getParticipantsFlags (conversationId, participants) {
 module.exports.addMessage = async (req, res, next) => {
   const participants = [
     Number(req.tokenData.userId),
-    Number(req.body.recipient),
+    Number(req.params.id), 
   ];
   participants.sort((a, b) => a - b);
   try {
@@ -126,7 +110,7 @@ module.exports.addMessage = async (req, res, next) => {
 
     res.send({
       message,
-      preview: Object.assign(preview, { interlocutor: req.body.interlocutor }),
+      preview,
     });
   } catch (err) {
     if (process.env.NODE_ENV !== 'production') {
@@ -139,7 +123,7 @@ module.exports.addMessage = async (req, res, next) => {
 module.exports.getChat = async (req, res, next) => {
   const participants = [
     Number(req.tokenData.userId),
-    Number(req.body.interlocutorId),
+    Number(req.params.id),
   ];
   participants.sort((a, b) => a - b);
   try {
@@ -158,7 +142,7 @@ module.exports.getChat = async (req, res, next) => {
       updatedAt: m.updated_at,
     }));
     const interlocutor = await userQueries.findUser({
-      id: req.body.interlocutorId,
+      id: req.params.id,
     });
     res.send({
       messages,
@@ -177,12 +161,6 @@ module.exports.getChat = async (req, res, next) => {
 
 module.exports.getPreview = async (req, res, next) => {
   try {
-    const modelCheck = checkModelsPresent(req, res, next, [
-      'UserConversation',
-      'Message',
-      'User',
-    ]);
-    if (modelCheck) return modelCheck;
     const userConvs = await db.UserConversation.findAll({
       where: { user_id: req.tokenData.userId },
     });
@@ -244,133 +222,78 @@ module.exports.getPreview = async (req, res, next) => {
   }
 };
 
-module.exports.blackList = async (req, res, next) => {
-  try {
-    const modelCheck = checkModelsPresent(req, res, next, ['UserConversation']);
-    if (modelCheck) return modelCheck;
-    const convId = req.body.participantsConversationId;
-    if (!convId)
-      return res
-        .status(400)
-        .json({ error: 'participantsConversationId is required' });
 
-    let participants = req.body.participants;
-    if (!Array.isArray(participants) || participants.length === 0) {
+const updateChatFlag = (flagName, flagValueField) => {
+  return async (req, res, next) => {
+    try {
+      const convId = req.params.id;
+      if (!convId) {
+        return res.status(400).json({ error: 'Conversation ID is required' });
+      }
+
+      const flagValue = req.body[flagValueField];
+      if (typeof flagValue === 'undefined') {
+        return res.status(400).json({ error: `${flagValueField} is required` });
+      }
+
+      await db.UserConversation.update(
+        { [flagName]: flagValue }, 
+        {
+          where: {
+            conversation_id: convId,
+            user_id: req.tokenData.userId,
+          },
+        }
+      );
+
       const rows = await db.UserConversation.findAll({
         where: { conversation_id: convId },
       });
-      participants = rows.map(r => r.user_id).sort((a, b) => a - b);
-    }
+      const participants = rows.map(r => r.user_id).sort((a, b) => a - b);
+      
+      const { blackList, favoriteList } = await getParticipantsFlags(
+        convId,
+        participants
+      );
 
-    await db.UserConversation.update(
-      { black_list: req.body.blackListFlag },
-      {
-        where: {
-          conversation_id: req.body.participantsConversationId,
-          user_id: req.tokenData.userId,
-        },
+      const interlocutorId = participants.find(
+        p => p !== Number(req.tokenData.userId)
+      );
+
+      const chat = {
+        participants,
+        blackList,
+        favoriteList,
+        _id: convId,
+      };
+
+      res.send(chat);
+
+      try {
+        const chatCtrl = controller.getChatController();
+        if (
+          chatCtrl &&
+          typeof chatCtrl.emitChangeBlockStatus === 'function' &&
+          interlocutorId
+        ) {
+          chatCtrl.emitChangeBlockStatus(interlocutorId, chat);
+        }
+      } catch (emitErr) {
+        if (process.env.NODE_ENV !== 'production') {
+          console.error('Socket emit error', emitErr);
+        }
       }
-    );
-    const { blackList, favoriteList } = await getParticipantsFlags(
-      convId,
-      participants
-    );
-    const interlocutorId = participants.find(
-      p => p !== Number(req.tokenData.userId)
-    );
-    const chat = {
-      participants,
-      blackList,
-      favoriteList,
-      _id: req.body.participantsConversationId,
-    };
-    res.send(chat);
-    try {
-      const chatCtrl = controller.getChatController();
-      if (
-        chatCtrl &&
-        typeof chatCtrl.emitChangeBlockStatus === 'function' &&
-        interlocutorId
-      ) {
-        chatCtrl.emitChangeBlockStatus(interlocutorId, chat);
-      }
-    } catch (emitErr) {
+    } catch (err) {
       if (process.env.NODE_ENV !== 'production') {
-        console.error('Socket emit error', emitErr);
+        return res.status(500).json({ error: err.message, stack: err.stack });
       }
+      next(err);
     }
-  } catch (err) {
-    if (process.env.NODE_ENV !== 'production') {
-      return res.status(500).json({ error: err.message, stack: err.stack });
-    }
-    next(err);
-  }
+  };
 };
 
-module.exports.favoriteChat = async (req, res, next) => {
-  try {
-    const modelCheck = checkModelsPresent(req, res, next, ['UserConversation']);
-    if (modelCheck) return modelCheck;
-
-    const convId = req.body.participantsConversationId;
-    if (!convId)
-      return res
-        .status(400)
-        .json({ error: 'participantsConversationId is required' });
-
-    let participants = req.body.participants;
-    if (!Array.isArray(participants) || participants.length === 0) {
-      const rows = await db.UserConversation.findAll({
-        where: { conversation_id: convId },
-      });
-      participants = rows.map(r => r.user_id).sort((a, b) => a - b);
-    }
-
-    await db.UserConversation.update(
-      { favorite: req.body.favoriteFlag },
-      {
-        where: {
-          conversation_id: convId,
-          user_id: req.tokenData.userId,
-        },
-      }
-    );
-
-    const { blackList, favoriteList } = await getParticipantsFlags(
-      convId,
-      participants
-    );
-    const interlocutorId = participants.find(
-      p => p !== Number(req.tokenData.userId)
-    );
-    const chat = {
-      participants,
-      blackList,
-      favoriteList,
-      _id: convId,
-    };
-    res.send(chat);
-    try {
-      const chatCtrl = controller.getChatController();
-      if (
-        chatCtrl &&
-        typeof chatCtrl.emitChangeBlockStatus === 'function' &&
-        interlocutorId
-      ) {
-        chatCtrl.emitChangeBlockStatus(interlocutorId, chat);
-      }
-    } catch (emitErr) {
-      if (process.env.NODE_ENV !== 'production') {
-        console.error('Socket emit error', emitErr);
-      }
-    }
-  } catch (err) {
-    if (process.env.NODE_ENV !== 'production') {
-      return res.status(500).json({ error: err.message, stack: err.stack });
-    }
-    next(err);
-  }
-};
+module.exports.blackList = updateChatFlag('black_list', 'blackListFlag');
+module.exports.favoriteChat = updateChatFlag('favorite', 'favoriteFlag');
 
 module.exports.createCatalog = async (req, res, next) => {
   try {
@@ -403,11 +326,11 @@ module.exports.updateNameCatalog = async (req, res, next) => {
   try {
     const [updated] = await db.Catalog.update(
       { catalog_name: req.body.catalogName },
-      { where: { id: req.body.catalogId, user_id: req.tokenData.userId } }
+      { where: { id: req.params.id, user_id: req.tokenData.userId } }
     );
     if (!updated)
       return res.status(404).send({ error: 'Catalog not found or not yours' });
-    const catalog = await db.Catalog.findByPk(req.body.catalogId);
+    const catalog = await db.Catalog.findByPk(req.params.id);
     const rows = await db.CatalogConversation.findAll({
       where: { catalog_id: catalog.id },
     });
@@ -425,13 +348,14 @@ module.exports.updateNameCatalog = async (req, res, next) => {
 module.exports.addNewChatToCatalog = async (req, res, next) => {
   try {
     const catalog = await db.Catalog.findOne({
-      where: { id: req.body.catalogId, user_id: req.tokenData.userId },
+      where: { id: req.params.id, user_id: req.tokenData.userId },
     });
     if (!catalog)
       return res.status(404).send({ error: 'Catalog not found or not yours' });
+    
     await db.CatalogConversation.findOrCreate({
       where: {
-        catalog_id: req.body.catalogId,
+        catalog_id: req.params.id,
         conversation_id: req.body.chatId,
       },
     });
@@ -453,14 +377,15 @@ module.exports.addNewChatToCatalog = async (req, res, next) => {
 module.exports.removeChatFromCatalog = async (req, res, next) => {
   try {
     const catalog = await db.Catalog.findOne({
-      where: { id: req.body.catalogId, user_id: req.tokenData.userId },
+      where: { id: req.params.catalogId, user_id: req.tokenData.userId },
     });
     if (!catalog)
       return res.status(404).send({ error: 'Catalog not found or not yours' });
+    
     await db.CatalogConversation.destroy({
       where: {
-        catalog_id: req.body.catalogId,
-        conversation_id: req.body.chatId,
+        catalog_id: req.params.catalogId,
+        conversation_id: req.params.chatId,
       },
     });
 
@@ -481,7 +406,7 @@ module.exports.removeChatFromCatalog = async (req, res, next) => {
 module.exports.deleteCatalog = async (req, res, next) => {
   try {
     const deleted = await db.Catalog.destroy({
-      where: { id: req.body.catalogId, user_id: req.tokenData.userId },
+      where: { id: req.params.id, user_id: req.tokenData.userId },
     });
     if (!deleted)
       return res.status(404).json({ error: 'Catalog not found or not yours' });
@@ -493,12 +418,6 @@ module.exports.deleteCatalog = async (req, res, next) => {
 
 module.exports.getCatalogs = async (req, res, next) => {
   try {
-    const modelCheck = checkModelsPresent(req, res, next, [
-      'Catalog',
-      'CatalogConversation',
-    ]);
-    if (modelCheck) return modelCheck;
-
     const catalogs = await db.Catalog.findAll({
       where: { user_id: req.tokenData.userId },
     });

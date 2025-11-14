@@ -1,4 +1,3 @@
-import React from 'react';
 import { connect } from 'react-redux';
 import { Form, Formik } from 'formik';
 import { sendMessage } from '../../../../store/slices/chatSlice';

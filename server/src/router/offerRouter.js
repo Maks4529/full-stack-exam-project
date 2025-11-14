@@ -1,20 +1,24 @@
 const {Router} = require('express');
 const checkModerator = require('../middlewares/checkModerator');
+const basicMiddlewares = require('../middlewares/basicMiddlewares');
 const {checkAuth} = require('../middlewares/checkToken');
 const {checkToken} = require('../middlewares/checkToken');
 const offerController = require('../controllers/offerController');
 
 const offerRouter = Router();
 
-const setStatus = (status) => (req, res, next) => {
-  req.body.status = status;
-  next();
-};
+offerRouter.get('/my', checkAuth, offerController.getMyOffers);
+offerRouter.get('/customer-visible', checkAuth, offerController.getApprovedOffers);
 
-offerRouter.post('/moderator-list', checkToken, checkModerator, offerController.getAllOffersForModeration);
-offerRouter.post('/approve', checkToken, checkModerator, setStatus('approved'), offerController.updateOfferStatus);
-offerRouter.post('/reject', checkToken, checkModerator, setStatus('rejected'), offerController.updateOfferStatus);
-offerRouter.post('/my', checkAuth, offerController.getMyOffers);
-offerRouter.post('/customer-visible', checkAuth, offerController.getApprovedOffers);
+
+offerRouter.use(checkToken);
+
+offerRouter.get('/moderation', checkModerator, offerController.getAllOffersForModeration);
+offerRouter.patch('/moderation/:offerId', checkModerator, offerController.updateOfferStatus);
+offerRouter.patch(
+  '/:offerId/status', 
+  basicMiddlewares.onlyForCustomerWhoCreateContest, 
+  offerController.setOfferStatus
+);
 
 module.exports = offerRouter;

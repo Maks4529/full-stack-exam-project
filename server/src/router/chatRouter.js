@@ -2,49 +2,29 @@ const { Router } = require('express');
 const checkToken = require('../middlewares/checkToken');
 const chatController = require('../controllers/chatController');
 
-
 const chatRouter = Router();
 
-chatRouter.post('/newMessage', checkToken.checkToken, chatController.addMessage);
+chatRouter.use(checkToken.checkToken);
 
-chatRouter.post('/getChat', checkToken.checkToken, chatController.getChat);
+chatRouter.get('/preview', chatController.getPreview);
 
-chatRouter.post('/getPreview', checkToken.checkToken, chatController.getPreview);
+chatRouter.route('/dialogs/:id')
+.get(chatController.getChat);
 
-chatRouter.post('/blackList', checkToken.checkToken, chatController.blackList);
+chatRouter.patch('/dialogs/:id/blackList', chatController.blackList);
+chatRouter.patch('/dialogs/:id/favorite', chatController.favoriteChat);
+chatRouter.post('/dialogs/:id/messages', chatController.addMessage);
 
-chatRouter.post('/favorite', checkToken.checkToken, chatController.favoriteChat);
+chatRouter.route('/catalogs')
+.post(chatController.createCatalog)
+.get(chatController.getCatalogs);
 
-chatRouter.post(
-  '/createCatalog',
-  checkToken.checkToken,
-  chatController.createCatalog,
-);
+chatRouter.route('/catalogs/:id')
+.patch(chatController.updateNameCatalog)
+.delete(chatController.deleteCatalog);
 
-chatRouter.post(
-  '/updateNameCatalog',
-  checkToken.checkToken,
-  chatController.updateNameCatalog,
-);
+chatRouter.post('/catalogs/:id/chats', chatController.addNewChatToCatalog);
 
-chatRouter.post(
-  '/addNewChatToCatalog',
-  checkToken.checkToken,
-  chatController.addNewChatToCatalog,
-);
-
-chatRouter.post(
-  '/removeChatFromCatalog',
-  checkToken.checkToken,
-  chatController.removeChatFromCatalog,
-);
-
-chatRouter.post(
-  '/deleteCatalog',
-  checkToken.checkToken,
-  chatController.deleteCatalog,
-);
-
-chatRouter.post('/getCatalogs', checkToken.checkToken, chatController.getCatalogs);
+chatRouter.delete('/catalogs/:catalogId/chats/:chatId', chatController.removeChatFromCatalog);
 
 module.exports = chatRouter;

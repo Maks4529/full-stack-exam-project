@@ -17,20 +17,19 @@ userRouter.post(
 
 userRouter.post('/login', validators.validateLogin, userController.login);
 
-userRouter.post('/getUser', checkToken.checkAuth);
-
-userRouter.post(
-  '/changeMark',
-  checkToken.checkToken,
-  basicMiddlewares.onlyForCustomer,
-  userController.changeMark,
-);
-
-userRouter.post(
-  '/updateUser',
+userRouter.route('/me')
+.get(checkToken.checkAuth)
+.patch(
   checkToken.checkToken,
   upload.uploadAvatar,
   userController.updateUser,
+);
+
+userRouter.post(
+  '/marks',
+  checkToken.checkToken,
+  basicMiddlewares.onlyForCustomer,
+  userController.changeMark,
 );
 
 userRouter.post(

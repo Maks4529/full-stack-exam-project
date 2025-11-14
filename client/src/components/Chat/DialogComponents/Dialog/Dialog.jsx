@@ -12,19 +12,27 @@ import ChatInput from '../../ChatComponents/ChatInut/ChatInput';
 
 class Dialog extends React.Component {
   componentDidMount () {
-    this.props.getDialog({ interlocutorId: this.props.interlocutor.id });
+    if (this.props.interlocutor) {
+      this.props.getDialog({ id: this.props.interlocutor.id });
+    }
     this.scrollToBottom();
   }
 
   messagesEnd = React.createRef();
 
   scrollToBottom = () => {
-    this.messagesEnd.current.scrollIntoView({ behavior: 'smooth' });
+    if(this.messagesEnd.current) {
+      this.messagesEnd.current.scrollIntoView({ behavior: 'smooth' });
+    }
   };
 
   componentWillReceiveProps (nextProps, nextContext) {
-    if (nextProps.interlocutor.id !== this.props.interlocutor.id)
-      this.props.getDialog({ interlocutorId: nextProps.interlocutor.id });
+    const currentId = this.props.interlocutor ? this.props.interlocutor.id : null;
+    const nextId = nextProps.interlocutor ? nextProps.interlocutor.id : null;
+
+    if (nextId && nextId !== currentId) {
+      this.props.getDialog({ id: nextId });
+    }
   }
 
   componentWillUnmount () {
@@ -39,6 +47,11 @@ class Dialog extends React.Component {
     const messagesArray = [];
     const { messages, userId } = this.props;
     let currentTime = moment();
+    
+    if (!messages) {
+      return null;
+    }
+
     messages.forEach((message, i) => {
       if (!currentTime.isSame(message.createdAt, 'date')) {
         messagesArray.push(
@@ -59,11 +72,15 @@ class Dialog extends React.Component {
           <span className={styles.messageTime}>
             {moment(message.createdAt).format('HH:mm')}
           </span>
-          <div ref={this.messagesEnd} />
         </div>
       );
     });
-    return <div className={styles.messageList}>{messagesArray}</div>;
+    return (
+      <div className={styles.messageList}>
+        {messagesArray}
+        <div ref={this.messagesEnd} />
+      </div>
+    );
   };
 
   blockMessage = () => {
@@ -80,12 +97,15 @@ class Dialog extends React.Component {
   };
 
   render () {
-    const { chatData, userId } = this.props;
+    const { chatData, userId, interlocutor } = this.props;
+    if (!interlocutor) {
+      return <div className={styles.loadingDialog}>Завантаження діалогу...</div>;
+    }
+
     return (
       <>
         <ChatHeader userId={userId} />
         {this.renderMainDialog()}
-        <div ref={this.messagesEnd} />
         {chatData && chatData.blackList.includes(true) ? (
           this.blockMessage()
         ) : (
