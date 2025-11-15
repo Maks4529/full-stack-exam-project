@@ -1,12 +1,8 @@
-const fs = require('fs');
+const fs = require('fs').promises;
 const path = require('path');
 
 const LOG_DIR = path.resolve(process.cwd(), 'logs');
 const LOG_FILE = path.join(LOG_DIR, 'errors.log');
-
-if (!fs.existsSync(LOG_DIR)) {
-  fs.mkdirSync(LOG_DIR, { recursive: true });
-}
 
 function formatDateISO() {
   const d = new Date();
@@ -27,10 +23,16 @@ function toErrorRecord(err, code) {
   };
 }
 
-function logError(err, code) {
+async function logError(err, code) {
   const record = toErrorRecord(err, code);
   const line = JSON.stringify(record) + '\n';
-  fs.appendFileSync(LOG_FILE, line, 'utf8');
+  
+  try {
+    await fs.mkdir(LOG_DIR, { recursive: true });
+    await fs.appendFile(LOG_FILE, line, 'utf8');
+  } catch (e) {
+    console.error('Critical Error! Failed to write to log file:', e);
+  }
 }
 
 module.exports = { logError };
