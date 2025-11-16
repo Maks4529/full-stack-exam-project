@@ -13,7 +13,7 @@ export const getCustomersContests = data =>
   http.get(`contests/byCustomer?${queryString.stringify(data)}`);
 export const getContestById = ({ contestId }) =>
   http.get(`contests/${contestId}`);
-export const dataForContest = () => http.get('contests/data');
+export const dataForContest = (data) => http.get('contests/data', { params: data });
 export const getActiveContests = (params) => http.get('contests', { params });
 export const updateContest = ({ id, ...data }) =>
   http.patch(`contests/${id}`, data);

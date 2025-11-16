@@ -1,4 +1,4 @@
-import React, { useRef, useEffect } from 'react';
+import { useRef, useEffect, useState, useCallback } from 'react';
 import { connect } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import styles from './ContestCreationPage.module.sass';
@@ -9,9 +9,31 @@ import BackButton from '../../components/BackButton/BackButton';
 import ProgressBar from '../../components/ProgressBar/ProgressBar';
 import ButtonGroup from '../../components/ButtonGroup/ButtonGroup';
 
+const domainOptions = [
+  {
+    id: "yes_recommended",
+    title: "Yes",
+    description: "But minor variations are allowed",
+    recommended: true,
+  },
+  {
+    id: "yes_exact",
+    title: "Yes",
+    description: "The Domain should exactly match the name",
+    recommended: false,
+  },
+  {
+    id: "no",
+    title: "No",
+    description: "I am only looking for a name, not a Domain",
+    recommended: false,
+  },
+];
+
 function ContestCreationPage (props) {
   const formRef = useRef();
   const navigate = useNavigate();
+  const [selectedDomain, setSelectedDomain] = useState(domainOptions[0].id);
 
   const contestData = props.contestCreationStore.contests[props.contestType]
     ? props.contestCreationStore.contests[props.contestType]
@@ -29,8 +51,13 @@ function ContestCreationPage (props) {
         }
       }
     });
+    
+    const finalValues = {
+      ...values,
+      domainOption: selectedDomain,
+    };
 
-    props.saveContest({ type: props.contestType, info: values });
+    props.saveContest({ type: props.contestType, info: finalValues });
     const route =
       props.bundleStore.bundle[props.contestType] === 'payment'
         ? '/payment'
@@ -49,6 +76,14 @@ function ContestCreationPage (props) {
       navigate('/startContest', { replace: true });
     }
   }, [props.bundleStore.bundle, navigate]);
+
+  const handleDomainSelect = useCallback((id) => {
+    setSelectedDomain(id);
+    
+    if (formRef.current) {
+      formRef.current.setFieldValue('domainOption', id);
+    }
+  }, [formRef]);
 
   return (
     <div>
@@ -72,12 +107,14 @@ function ContestCreationPage (props) {
           />
         </div>
         <ButtonGroup
-          onChange={value => console.log('Selected option:', value)}
+          options={domainOptions}
+          selected={selectedDomain}
+          onSelect={handleDomainSelect}
         />
       </div>
       <div className={styles.footerButtonsContainer}>
         <div className={styles.lastContainer}>
-          <div className={styles.buttonsContainer}>
+          <div className={styles.buttonsContainer}> 
             <BackButton />
             <NextButton submit={submitForm} />
           </div>
