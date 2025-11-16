@@ -1,6 +1,5 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { setShowEventBadge } from '../../store/slices/userSlice';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTrash } from '@fortawesome/free-solid-svg-icons';
 import Header from '../../components/Header/Header';
@@ -26,6 +25,8 @@ const showBadge = useSelector(state => state.userStore.showEventBadge);
       id: Date.now(),
       ...values,
       datetime: eventDateTime.getTime(),
+      notified: false,
+      createdAt: Date.now(),
     };
 
     setEvents(prev =>
@@ -35,27 +36,16 @@ const showBadge = useSelector(state => state.userStore.showEventBadge);
     resetForm();
   };
 
-  const handleDelete = (id) => {
-  const updatedEvents = events.filter(ev => ev.id !== id);
-  setEvents(updatedEvents);
+  const handleDelete = useCallback((id) => {
+    const updatedEvents = events.filter(ev => ev.id !== id);
+    setEvents(updatedEvents);
+  }, [events, dispatch]);
 
-  const now = Date.now();
-  const hasPendingNotifications = updatedEvents.some(
-    ev => now <= ev.datetime && !ev.notified
-  );
-
-  dispatch(setShowEventBadge(hasPendingNotifications));
-};
-
-  const handleNotify = (id) => {
-  setEvents(prev =>
-    prev.map(ev => (ev.id === id ? { ...ev, notified: true } : ev))
-  );
-
-  const now = Date.now();
-  const hasPending = events.some(ev => !ev.notified && now <= ev.datetime);
-  dispatch(setShowEventBadge(hasPending));
-};
+  const handleNotify = useCallback((id) => {
+    setEvents(prev =>
+      prev.map(ev => (ev.id === id ? { ...ev, notified: true } : ev))
+    );
+  }, [events, dispatch]);
 
   return (
     <>

@@ -1,20 +1,40 @@
 .timer
-  display: flex
-  flex-direction: column
-  gap: 5px
+  position: relative
+  overflow: hidden
+  width: 100%
+  height: 100%
+  
+  &::before
+    content: ''
+    position: absolute
+    top: 0
+    left: 0
+    bottom: 0
+    height: 100%
+    background-color: #e6ffed
+    transition: width 1s linear
+    z-index: 1
+    width: var(--progress-width, 0%)
+  
+  &.soon::before
+    background-color: #fff0f0
 
-  strong
-    font-size: 16px
+.content
+  position: relative
+  z-index: 2
+  padding: 15px 20px
+
+  .eventName
     font-weight: bold
+    margin-right: 10px
+    display: inline-block
 
-  span
+  .timeLeft
+    display: inline-block
     font-size: 14px
     color: #555
 
-.soon
-  border-left: 4px solid #ff9800
-  padding-left: 10px
-
 .finished
-  color: #999
-  font-style: italic
+  padding: 15px 20px
+  color: #888
+  background-color: #f9f9f9

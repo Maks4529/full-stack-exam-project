@@ -1,6 +1,9 @@
 import * as yup from 'yup';
 import valid from 'card-validator';
 
+const today = new Date();
+today.setHours(0, 0, 0, 0);
+
 export default {
   LoginSchem: yup.object().shape({
     email: yup
@@ -178,6 +181,7 @@ export default {
       )
       .required('required'),
   }),
+  
   UpdateUserSchema: yup.object().shape({
     firstName: yup
       .string()
@@ -225,11 +229,12 @@ export default {
       )
       .required('required'),
   }),
+
   EventsSchema: yup.object({
     name: yup.string().required("Enter the event name"),
     date: yup.date()
       .required("Enter the date")
-      .min(new Date(), "The date cannot be in the past"),
+      .min(today, "The date cannot be in the past"),
     time: yup.string().required("Enter the time"),
     notifyBefore: yup.number()
       .required("Enter reminder time")

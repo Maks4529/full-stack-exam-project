@@ -15,15 +15,32 @@
 
 .list
   list-style: none
-  display: flex
-  flex-direction: column
-  gap: 15px
+  padding: 0
+  margin: 0
 
   li
     display: flex
     justify-content: space-between
-    align-items: center
+    align-items: stretch
     background: #fafafa
     border: 1px solid #ddd
     border-radius: 8px
-    padding: 15px 20px
+    margin-bottom: 10px
+    overflow: hidden
+    position: relative
+  
+    > :first-child
+      flex-grow: 1
+
+    > button
+      flex-shrink: 0
+      background: none
+      border: none
+      border-left: 1px solid #ddd
+      padding: 15px 20px
+      font-size: 16px
+      color: #aaa
+      cursor: pointer
+      z-index: 2
+      &:hover
+        color: red

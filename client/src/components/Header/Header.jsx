@@ -4,8 +4,7 @@ import NotificationsDropdown from '../NotificationsDropdown/NotificationsDropdow
 import { Link } from 'react-router-dom';
 import styles from './Header.module.sass';
 import CONSTANTS from '../../constants';
-import { clearUserStore } from '../../store/slices/userSlice';
-import { getUser } from '../../store/slices/userSlice';
+import { clearUserStore, getUser, setEventBadgeCount } from '../../store/slices/userSlice';
 import withRouter from '../../hocs/withRouter';
 
 class Header extends React.Component {
@@ -13,11 +12,42 @@ class Header extends React.Component {
     super(props);
     this.emailIconRef = React.createRef();
     this.state = { showNotifications: false };
+    this.eventTimer = null;
   }
+
+  checkEvents = () => {
+    const events = JSON.parse(localStorage.getItem('events') || '[]');
+    const now = Date.now();
+    let notifyCount = 0;
+
+    if (events.length === 0) {
+      this.props.setEventBadgeCount(0);
+      return;
+    }
+
+    events.forEach(ev => {
+      const notifyMs = ev.notifyBefore * 60 * 1000;
+      const notifyTime = ev.datetime - notifyMs;
+      
+      if (now >= notifyTime && !ev.notified) {
+        notifyCount++;
+      }
+    });
+
+    this.props.setEventBadgeCount(notifyCount);
+  };
+
   componentDidMount () {
     if (!this.props.data) {
       this.props.getUser();
     }
+
+    this.checkEvents();
+    this.eventTimer = setInterval(this.checkEvents, 30000);
+  }
+
+  componentWillUnmount() {
+    clearInterval(this.eventTimer);
   }
 
   logOut = () => {
@@ -69,6 +99,16 @@ class Header extends React.Component {
                   <span>My Account</span>
                 </Link>
               </li>
+              {this.props.data && this.props.data.role === CONSTANTS.CUSTOMER && (
+                <li className={styles.eventsLinkContainer}>
+                      <Link to='/events' style={{ textDecoration: 'none' }}><span>Events</span></Link>
+                      {this.props.eventBadgeCount > 0 && (
+                        <div className={styles.badge}>
+                          {this.props.eventBadgeCount}
+                        </div>
+                      )}
+                    </li>
+              )}
               <li>
                 <Link
                   to='http:/www.google.com'
@@ -215,12 +255,6 @@ class Header extends React.Component {
                     <li>
                       <Link to='/how-it-works'>HOW IT WORKS</Link>
                     </li>
-                    <li className={styles.eventsMenuItem}>
-                      <Link to='/events'>EVENTS</Link>
-                      {this.props.showEventBadge && (
-                        <div className={styles.badge}></div>
-                      )}
-                    </li>
                     <li>
                       <a href='http://www.google.com'>PRICING</a>
                     </li>
@@ -332,7 +366,7 @@ class Header extends React.Component {
 
 const mapStateToProps = state => ({
   ...state.userStore,
-  showEventBadge: state.userStore.showEventBadge,
+  eventBadgeCount: state.userStore.eventBadgeCount,
   notificationsUnread: state.notifications
     ? state.notifications.unreadCount
     : 0,
@@ -340,6 +374,7 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = dispatch => ({
   getUser: () => dispatch(getUser()),
   clearUserStore: () => dispatch(clearUserStore()),
+  setEventBadgeCount: (count) => dispatch(setEventBadgeCount(count)),
 });
 
 export default withRouter(connect(mapStateToProps, mapDispatchToProps)(Header));
