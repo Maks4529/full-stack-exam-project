@@ -1,52 +1,79 @@
-.inputContainer
+.searchContainer
+  position: relative
   display: flex
   align-items: center
   width: 100%
-  max-width: 600px
-  padding: 2px
-  border-radius: 50px
-  background: linear-gradient(90deg, #a18cd1, #fbc2eb)
-  overflow: hidden
-  margin-top: 100px
+  max-width: 800px
+  height: 60px
+  border-radius: 30px
+  margin: 40px auto
+  box-sizing: border-box
+  border: 2px solid transparent
+  background: linear-gradient(#fff, #fff) padding-box, linear-gradient(90deg, #8a8df7 0%, #59dcd8 100%) border-box
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05)
 
-  .input
-    flex: 1
-    border: none
-    outline: none
-    padding: 12px 20px
-    font-size: 16px
-    color: #555
-    border-radius: 50px
-    background: #fff
-    &::placeholder
-      color: #aaa
+.leftIcon
+  position: absolute
+  left: 25px
+  color: #999
+  font-size: 20px
+  pointer-events: none
+  z-index: 1
 
-  .button
-    width: 45px
-    height: 45px
-    border: none
-    border-radius: 50%
-    background: #ff6f61
-    color: #fff
-    display: flex
-    align-items: center
-    justify-content: center
-    cursor: pointer
-    font-size: 18px
-    margin-left: 8px
-    transition: background 0.3s ease
+.searchInput
+  width: 100%
+  height: 100%
+  border: none
+  outline: none
+  background: transparent
+  border-radius: 30px
+  font-size: 16px
+  color: #555
+  box-sizing: border-box
+  padding-left: 60px 
+  padding-right: 70px 
 
-    &:hover
-      background: #ff4b3e
+  &::placeholder
+    color: #999
+    font-weight: 400
+
+.searchButton
+  position: absolute
+  right: 5px
+  top: 50%
+  transform: translateY(-50%)
+  width: 50px
+  height: 50px
+  border-radius: 50%
+  border: none
+  background-color: #ff7456 
+  color: white
+  font-size: 20px
+  cursor: pointer
+  display: flex
+  align-items: center
+  justify-content: center
+  transition: background-color 0.3s ease
+  z-index: 2
+
+  &:hover
+    background-color: darken(#ff7456, 10%)
 
 @media (max-width: 580px)
-  .inputContainer
-    .input
-      font-size: 14px
-      padding: 8px 12px
-
-    .button
-      width: 40px
-      height: 40px
-      font-size: 16px
-      margin-left: 6px
+  .searchContainer
+    height: 50px
+    max-width: 90%
+  
+  .searchButton
+    width: 40px
+    height: 40px
+    font-size: 16px
+    
+  .searchInput
+    font-size: 14px
+    padding-left: 50px
+    padding-right: 55px
+    
+  .leftIcon
+    left: 20px
+    font-size: 16px

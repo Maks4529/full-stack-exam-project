@@ -53,10 +53,12 @@ function AccordionFaq() {
                     onClick={() => toggleQuestion(section.id, index)}
                     className={classNames(styles.question, { [styles.open]: isOpen })}
                   >
-                    <span className={styles.questionText}>{item.question}</span>
-                    <span className={styles.plus}>
-                      <FontAwesomeIcon icon={faXmark} />
-                    </span>
+                    <div className={styles.questionHeader}>
+                      <span className={styles.questionText}>{item.question}</span>
+                      <span className={styles.plus}>
+                        <FontAwesomeIcon icon={faXmark} />
+                      </span>
+                    </div>
                     {isOpen && <div className={styles.answer}>{item.answer}</div>}
                   </li>
                 );

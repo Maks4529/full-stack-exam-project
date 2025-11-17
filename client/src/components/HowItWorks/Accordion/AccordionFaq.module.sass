@@ -61,16 +61,19 @@
     border: 1px solid #c9c9c9
     border-radius: 10px
     transition: border 0.3s ease-in-out, background-color 0.3s ease-in-out
-    position: relative
     &:hover
         border: 1px solid #1e7de4
         background-color: #daecfe
+
+.questionHeader
+  display: flex
+  justify-content: space-between
+  align-items: center
+  width: 100%
+  cursor: pointer
+
 .plus 
     display: inline-block
-    position: absolute
-    right: 15px
-    top: 50%
-    transform: translateY(-50%)
     transition: transform 0.3s ease
     svg 
         display: block

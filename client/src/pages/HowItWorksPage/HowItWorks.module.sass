@@ -1,231 +1,228 @@
+$main-padding-x: 20px
+$main-padding-y: 80px
+$desktop-padding-x: 60px
+$blue-bg: #E0F0FF
+$primary-color: #007BFF
+$light-blue-bg: #f3fbfe
+$light-purple-bg: #f8f6fd
+$gray-text: #999999
+
+%section-base
+  width: 100%
+  box-sizing: border-box
+  padding-left: $main-padding-x
+  padding-right: $main-padding-x
+  display: flex
+  flex-direction: column
+  align-items: center
+
 .howItWorksPage
-    display: flex
-    flex-direction: column
-    align-items: center
-    width: 100%
-    position: relative
-    box-sizing: border-box
+  display: flex
+  flex-direction: column
+  align-items: center
+  width: 100%
+  position: relative
+  box-sizing: border-box
 
-.container1,
-.container2,
-.container3,
-.container4
-    width: 100%
-    box-sizing: border-box
-    padding-left: 20px
-    padding-right: 20px
-    display: flex
-    flex-direction: column
-    align-items: center
+.heroSection
+  @extend %section-base
+  display: grid
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr))
+  gap: 40px
+  align-items: center
+  justify-items: center
+  max-width: 1200px
+  padding-bottom: $main-padding-y
 
-.container1
-    display: grid
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr))
-    gap: 40px
-    align-items: center
-    justify-items: center
-    max-width: 1200px
-    padding-bottom: 80px
+.servicesSection
+  @extend %section-base
+  gap: 15px
+  padding-top: $main-padding-y
+  padding-bottom: $main-padding-y
+  background-color: $light-blue-bg
+  
+  .description
+    color: initial
+
+.stepsSection
+  @extend %section-base
+  gap: 40px
+  padding-top: $main-padding-y
+  padding-bottom: $main-padding-y
+  background-color: $light-purple-bg
+  
+  img
+    width: 70px
+
+.faqSection
+  @extend %section-base
+  gap: 40px
+  padding-top: $main-padding-y
+  padding-bottom: $main-padding-y
+  background-color: #fff
 
 .videoContainer
-    width: 100%
-    max-width: 600px
-    aspect-ratio: 16 / 9
-    border-radius: 10px
-    overflow: hidden
+  width: 100%
+  max-width: 600px
+  aspect-ratio: 16 / 9
+  border-radius: 10px
+  overflow: hidden
 
 .titleContainer
-    display: flex
-    flex-direction: column
-    width: 100%
-    gap: 20px
-    h1
-        font-size: 36px
-        font-weight: bold
-
-.description
-    font-size: 16px
-    line-height: 28px
-    color: #999999
-
-.blueMessage
-    display: inline-block
-    max-width: max-content
-    padding: 10px 15px
-    border-radius: 20px
-    color: #007BFF
-    font-size: 14px
-    background-color: #E0F0FF
-
-.container2
-    gap: 15px
-    padding-top: 80px
-    padding-bottom: 80px
-    background-color: #f3fbfe
-    .description
-        color: initial
-
-h2
+  display: flex
+  flex-direction: column
+  width: 100%
+  gap: 20px
+  h1
     font-size: 36px
     font-weight: bold
 
+.description
+  font-size: 16px
+  line-height: 28px
+  color: $gray-text
+
+.blueMessage
+  display: inline-block
+  max-width: max-content
+  padding: 10px 15px
+  border-radius: 20px
+  color: $primary-color
+  font-size: 14px
+  background-color: $blue-bg
+
+.sectionTitle
+  font-size: 36px
+  font-weight: bold
+
 .cardsContainer
-    display: grid
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr))
-    gap: 30px
-    margin-top: 20px
+  display: grid
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr))
+  gap: 30px
+  margin-top: 20px
 
-.container3
-    gap: 40px
-    padding-top: 80px
-    padding-bottom: 80px
-    background-color: #f8f6fd
-    img
-        width: 70px
-    .stepsContainer
-        box-sizing: border-box
-        display: grid
-        grid-template-columns: repeat(4, 1fr)
-        gap: 30px
-        width: 100%
-        padding-left: 60px
-        padding-right: 60px
-
-.container4
-    gap: 40px
-    padding-top: 80px
-    padding-bottom: 80px
-    background-color: #fff
+.stepsContainer
+  box-sizing: border-box
+  display: grid
+  grid-template-columns: repeat(4, 1fr)
+  gap: 30px
+  width: 100%
+  padding-left: $desktop-padding-x
+  padding-right: $desktop-padding-x
 
 .tagsContainer
-    display: flex
-    justify-content: center
-    align-items: center
-    gap: 20px
+  display: flex
+  justify-content: center
+  align-items: center
+  gap: 20px
 
 .tag
-    display: inline-block
-    max-width: max-content
-    padding: 10px 15px
-    border-radius: 20px
-    color: #8d58ff
-    font-size: 14px
-    background-color: #ece3ff
-    box-shadow: 0 1px 0 1px #e2e2e2
-    transition: background-color 0.2s ease
-    &:hover
-        background-color: #fff
-    a
-        text-decoration: none
+  display: inline-block
+  max-width: max-content
+  padding: 10px 15px
+  border-radius: 20px
+  color: #8d58ff
+  font-size: 14px
+  background-color: #ece3ff
+  box-shadow: 0 1px 0 1px #e2e2e2
+  transition: background-color 0.2s ease
+  &:hover
+    background-color: #fff
+  a
+    text-decoration: none
 
 @media (max-width: 980px)
-    .videoContainer
-        margin-top: 125px
-    .titleContainer
-        h1
-            font-size: 24px
-    .titleH2
-        font-size: 32px
-
-@media (max-width: 576px)
-    .container1
-        padding-bottom: 40px
-        grid-template-columns: 1fr
-        gap: 20px
-        text-align: center
-
-    .titleContainer
-        order: 2
-        align-items: center
-        h1
-            font-size: 24px
-        .description
-            font-size: 14px
-            line-height: 22px
-
-    .videoContainer
-        order: 1
-        max-width: 100%
-        border-radius: 6px
-
-    .container2
-        padding-top: 50px
-        padding-bottom: 50px
-
-    .cardsContainer
-        grid-template-columns: 1fr
-        gap: 20px
-
-    .container3
-        padding-top: 50px
-        padding-bottom: 50px
-        .stepsContainer
-            grid-template-columns: 1fr
-            gap: 20px
-            padding-left: 20px
-            padding-right: 20px
-
-    .container4
-        padding-top: 50px
-        padding-bottom: 50px
-
-    h2
-        font-size: 22px
-
-@media (min-width: 577px) and (max-width: 991px)
-    .container1
-        padding-bottom: 60px
-        padding-left: 40px
-        padding-right: 40px
-        grid-template-columns: 1fr
-        text-align: center
-
-    .videoContainer
-        order: 1
-        max-width: 500px
-
-    .titleContainer
-        order: 2
-        align-items: center
-
-    .cardsContainer
-        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr))
-        gap: 20px
-
-    .container3
-        .stepsContainer
-            grid-template-columns: repeat(2, 1fr)
-            padding-left: 20px
-            padding-right: 20px
-
-    h2
-        font-size: 24px
+  .videoContainer
+    margin-top: 125px
+  .titleContainer
+    h1
+      font-size: 24px
+  .sectionTitle
+    font-size: 32px
 
 @media (max-width: 620px)
-    .tag
-        display: none
+  .tag
+    display: none
+
+@media (max-width: 576px)
+  .heroSection
+    padding-bottom: 40px
+    grid-template-columns: 1fr
+    gap: 20px
+    text-align: center
+
+  .titleContainer
+    order: 2
+    align-items: center
+    h1
+      font-size: 24px
+    .description
+      font-size: 14px
+      line-height: 22px
+
+  .videoContainer
+    order: 1
+    max-width: 100%
+    border-radius: 6px
+
+  .servicesSection, 
+  .stepsSection, 
+  .faqSection
+    padding-top: 50px
+    padding-bottom: 50px
+
+  .cardsContainer
+    grid-template-columns: 1fr
+    gap: 20px
+
+  .stepsSection 
+    .stepsContainer
+      grid-template-columns: 1fr
+      gap: 20px
+      padding-left: 20px
+      padding-right: 20px
+
+  .sectionTitle
+    font-size: 22px
+
+@media (min-width: 577px) and (max-width: 991px)
+  .heroSection
+    padding-bottom: 60px
+    padding-left: 40px
+    padding-right: 40px
+    grid-template-columns: 1fr
+    text-align: center
+
+  .videoContainer
+    order: 1
+    max-width: 500px
+
+  .titleContainer
+    order: 2
+    align-items: center
+
+  .cardsContainer
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr))
+    gap: 20px
+
+  .stepsSection 
+    .stepsContainer
+      grid-template-columns: repeat(2, 1fr)
+      padding-left: 20px
+      padding-right: 20px
+
+  .sectionTitle
+    font-size: 24px
 
 @media (min-width: 992px)
-    .container1
-        padding-bottom: 80px
-        padding-left: 60px
-        padding-right: 60px
+  .heroSection
+    padding-top: 130px
+    padding-bottom: $main-padding-y
+    padding-left: $desktop-padding-x
+    padding-right: $desktop-padding-x
 
-    .container3
-        .stepsContainer
-            grid-template-columns: repeat(4, 1fr)
-            padding-left: 60px
-            padding-right: 60px
-
-@media (min-width: 992px)
-    .container1
-        padding-top: 130px
-        padding-bottom: 80px
-        padding-left: 60px
-        padding-right: 60px
-
-    .container3
-        .stepsContainer
-            grid-template-columns: repeat(4, 1fr)
-            padding-left: 60px
-            padding-right: 60px
+  .stepsSection
+    .stepsContainer
+      grid-template-columns: repeat(4, 1fr)
+      padding-left: $desktop-padding-x
+      padding-right: $desktop-padding-x
