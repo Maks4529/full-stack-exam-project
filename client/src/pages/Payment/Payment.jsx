@@ -1,4 +1,3 @@
-import React from 'react';
 import { connect } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import isEmpty from 'lodash/isEmpty';
@@ -50,7 +49,7 @@ function Payment(props) {
         <span className={styles.headerLabel}>Checkout</span>
         {error && (
           <Error
-            data={error.data}
+            data={error.data?.message || error.data}
             status={error.status}
             clearError={clearPaymentStore}
           />

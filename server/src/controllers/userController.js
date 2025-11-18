@@ -167,6 +167,9 @@ module.exports.payment = async (req, res, next) => {
     res.send();
   } catch (err) {
     if (transaction) await transaction.rollback();
+    if (err.name === 'SequelizeDatabaseError' || err.name === 'SequelizeCheckConstraintError') {
+      return res.status(400).send({ message: 'Payment failed. Please check your card details or balance.' });
+    }
     next(err);
   }
 };
@@ -240,3 +243,4 @@ module.exports.cashout = async (req, res, next) => {
     next(err);
   }
 };
+ 

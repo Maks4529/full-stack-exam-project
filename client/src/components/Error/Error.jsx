@@ -1,4 +1,3 @@
-import React from 'react';
 import styles from './Error.module.sass';
 
 function Error(props) {
@@ -8,6 +7,8 @@ function Error(props) {
       case 404:
         return data;
       case 400:
+        if (typeof data === 'string') return data;
+        if (data && data.message) return data.message;
         return 'Check the input data';
       case 409:
         return data;
