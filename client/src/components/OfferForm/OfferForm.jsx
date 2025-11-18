@@ -54,9 +54,10 @@ function OfferForm(props) {
   };
 
   const { valid, addOfferError, clearOfferError } = props;
-  const validationSchema = props.contestType === CONTANTS.LOGO_CONTEST
-    ? Schems.LogoOfferSchema
-    : Schems.TextOfferSchema;
+  const validationSchema =
+    props.contestType === CONTANTS.LOGO_CONTEST
+      ? Schems.LogoOfferSchema
+      : Schems.TextOfferSchema;
   return (
     <div className={styles.offerContainer}>
       {addOfferError && (
@@ -77,9 +78,9 @@ function OfferForm(props) {
           <Form className={styles.form}>
             {renderOfferInput()}
             {isValid && (
-            <button type="submit" className={styles.btnOffer}>
-              Send Offer
-            </button>
+              <button type="submit" className={styles.btnOffer}>
+                Send Offer
+              </button>
             )}
           </Form>
         )}

@@ -12,9 +12,7 @@ import Error from '../../components/Error/Error';
 
 function UserProfile(props) {
   const pay = (values) => {
-    const {
-      number, expiry, cvc, sum,
-    } = values;
+    const { number, expiry, cvc, sum } = values;
     props.cashOut({
       number,
       expiry,

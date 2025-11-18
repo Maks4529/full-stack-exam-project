@@ -7,7 +7,7 @@ const notificationsSlice = createSlice({
     unreadCount: 0,
   },
   reducers: {
-    addNotification (state, action) {
+    addNotification(state, action) {
       const payload = action.payload;
       const id = String(payload.id || Date.now());
       state.list.unshift({
@@ -19,30 +19,30 @@ const notificationsSlice = createSlice({
       });
       state.unreadCount += 1;
     },
-    markAsRead (state, action) {
+    markAsRead(state, action) {
       const id = String(action.payload);
-      const item = state.list.find(n => String(n.id) === id);
+      const item = state.list.find((n) => String(n.id) === id);
       if (item && !item.read) {
         item.read = true;
         state.unreadCount = Math.max(0, state.unreadCount - 1);
       }
     },
-    markAllRead (state) {
-      state.list.forEach(n => {
+    markAllRead(state) {
+      state.list.forEach((n) => {
         n.read = true;
       });
       state.unreadCount = 0;
     },
-    removeNotification (state, action) {
+    removeNotification(state, action) {
       const id = String(action.payload);
-      const idx = state.list.findIndex(n => String(n.id) === id);
+      const idx = state.list.findIndex((n) => String(n.id) === id);
       if (idx !== -1) {
         if (!state.list[idx].read)
           state.unreadCount = Math.max(0, state.unreadCount - 1);
         state.list.splice(idx, 1);
       }
     },
-    clearNotifications (state) {
+    clearNotifications(state) {
       state.list = [];
       state.unreadCount = 0;
     },

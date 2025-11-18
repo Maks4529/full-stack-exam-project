@@ -1,13 +1,7 @@
 import React, { useLayoutEffect } from 'react';
 import { Field, ErrorMessage } from 'formik';
 
-function SelectInput({
-  header,
-  classes,
-  optionsArray,
-  valueArray,
-  ...props
-}) {
+function SelectInput({ header, classes, optionsArray, valueArray, ...props }) {
   const {
     form: { setFieldValue },
     meta: { initialValue },

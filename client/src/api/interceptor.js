@@ -14,7 +14,7 @@ instance.interceptors.request.use(
     }
     return config;
   },
-  (err) => Promise.reject(err),
+  (err) => Promise.reject(err)
 );
 
 instance.interceptors.response.use(
@@ -26,15 +26,15 @@ instance.interceptors.response.use(
   },
   (err) => {
     if (
-      err.response.status === 408
-      && history.location.pathname !== '/login'
-      && history.location.pathname !== '/registration'
-      && history.location.pathname !== '/'
+      err.response.status === 408 &&
+      history.location.pathname !== '/login' &&
+      history.location.pathname !== '/registration' &&
+      history.location.pathname !== '/'
     ) {
       history.replace('/login');
     }
     return Promise.reject(err);
-  },
+  }
 );
 
 export default instance;

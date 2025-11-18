@@ -3,7 +3,7 @@ import classNames from 'classnames';
 import styles from './DialogBox.module.sass';
 import CONSTANTS from '../../../../constants';
 
-const DialogBox = props => {
+const DialogBox = (props) => {
   const {
     chatPreview,
     userId,
@@ -49,7 +49,7 @@ const DialogBox = props => {
             ? CONSTANTS.ANONYM_IMAGE_PATH
             : `${CONSTANTS.publicURL}${interlocutor?.avatar ?? 'anon.png'}`
         }
-        alt='user'
+        alt="user"
       />
 
       <div className={styles.infoContainer}>
@@ -63,7 +63,7 @@ const DialogBox = props => {
           <span className={styles.time}>{getTimeStr(createAt)}</span>
 
           <i
-            onClick={event =>
+            onClick={(event) =>
               changeFavorite(
                 {
                   participants,
@@ -80,7 +80,7 @@ const DialogBox = props => {
           />
 
           <i
-            onClick={event =>
+            onClick={(event) =>
               changeBlackList(
                 {
                   participants,
@@ -97,7 +97,7 @@ const DialogBox = props => {
           />
 
           <i
-            onClick={event => catalogOperation(event, _id)}
+            onClick={(event) => catalogOperation(event, _id)}
             className={classNames({
               'far fa-plus-square':
                 chatMode !== CONSTANTS.CATALOG_PREVIEW_CHAT_MODE,

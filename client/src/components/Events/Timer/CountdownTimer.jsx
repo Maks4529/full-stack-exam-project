@@ -1,6 +1,6 @@
-import { useEffect, useState } from "react";
-import classNames from "classnames";
-import styles from "./CountdownTimer.module.sass";
+import { useEffect, useState } from 'react';
+import classNames from 'classnames';
+import styles from './CountdownTimer.module.sass';
 
 function CountdownTimer({ event, onNotify }) {
   const [timeLeft, setTimeLeft] = useState(event.datetime - Date.now());
@@ -16,7 +16,7 @@ function CountdownTimer({ event, onNotify }) {
 
   useEffect(() => {
     const notifyMs = event.notifyBefore * 60 * 1000;
-    if (timeLeft <= notifyMs && !notified) { 
+    if (timeLeft <= notifyMs && !notified) {
       setNotified(true);
       if (onNotify) onNotify(event.id);
     }
@@ -30,7 +30,9 @@ function CountdownTimer({ event, onNotify }) {
   }
 
   if (timeLeft <= 0) {
-    return <div className={styles.finished}>{event.name} – the time has come!</div>;
+    return (
+      <div className={styles.finished}>{event.name} – the time has come!</div>
+    );
   }
 
   const seconds = Math.floor((timeLeft / 1000) % 60);
@@ -43,10 +45,10 @@ function CountdownTimer({ event, onNotify }) {
   });
 
   return (
-    <div 
+    <div
       className={timerClasses}
       style={{ '--progress-width': `${Math.min(progressPercent, 100)}%` }}
-    > 
+    >
       <div className={styles.content}>
         <div className={styles.eventName}>{event.name}</div>
         <div className={styles.timeLeft}>

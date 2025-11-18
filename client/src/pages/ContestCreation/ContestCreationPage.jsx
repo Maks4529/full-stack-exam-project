@@ -11,26 +11,26 @@ import ButtonGroup from '../../components/ButtonGroup/ButtonGroup';
 
 const domainOptions = [
   {
-    id: "yes_recommended",
-    title: "Yes",
-    description: "But minor variations are allowed",
+    id: 'yes_recommended',
+    title: 'Yes',
+    description: 'But minor variations are allowed',
     recommended: true,
   },
   {
-    id: "yes_exact",
-    title: "Yes",
-    description: "The Domain should exactly match the name",
+    id: 'yes_exact',
+    title: 'Yes',
+    description: 'The Domain should exactly match the name',
     recommended: false,
   },
   {
-    id: "no",
-    title: "No",
-    description: "I am only looking for a name, not a Domain",
+    id: 'no',
+    title: 'No',
+    description: 'I am only looking for a name, not a Domain',
     recommended: false,
   },
 ];
 
-function ContestCreationPage (props) {
+function ContestCreationPage(props) {
   const formRef = useRef();
   const navigate = useNavigate();
   const [selectedDomain, setSelectedDomain] = useState(domainOptions[0].id);
@@ -39,7 +39,7 @@ function ContestCreationPage (props) {
     ? props.contestCreationStore.contests[props.contestType]
     : { contestType: props.contestType };
 
-  const handleSubmit = values => {
+  const handleSubmit = (values) => {
     const formData = new FormData();
 
     Object.entries(values).forEach(([key, value]) => {
@@ -51,7 +51,7 @@ function ContestCreationPage (props) {
         }
       }
     });
-    
+
     const finalValues = {
       ...values,
       domainOption: selectedDomain,
@@ -77,13 +77,16 @@ function ContestCreationPage (props) {
     }
   }, [props.bundleStore.bundle, navigate]);
 
-  const handleDomainSelect = useCallback((id) => {
-    setSelectedDomain(id);
-    
-    if (formRef.current) {
-      formRef.current.setFieldValue('domainOption', id);
-    }
-  }, [formRef]);
+  const handleDomainSelect = useCallback(
+    (id) => {
+      setSelectedDomain(id);
+
+      if (formRef.current) {
+        formRef.current.setFieldValue('domainOption', id);
+      }
+    },
+    [formRef]
+  );
 
   return (
     <div>
@@ -114,7 +117,7 @@ function ContestCreationPage (props) {
       </div>
       <div className={styles.footerButtonsContainer}>
         <div className={styles.lastContainer}>
-          <div className={styles.buttonsContainer}> 
+          <div className={styles.buttonsContainer}>
             <BackButton />
             <NextButton submit={submitForm} />
           </div>
@@ -124,13 +127,13 @@ function ContestCreationPage (props) {
   );
 }
 
-const mapStateToProps = state => {
+const mapStateToProps = (state) => {
   const { contestCreationStore, bundleStore } = state;
   return { contestCreationStore, bundleStore };
 };
 
-const mapDispatchToProps = dispatch => ({
-  saveContest: data => dispatch(saveContestToStore(data)),
+const mapDispatchToProps = (dispatch) => ({
+  saveContest: (data) => dispatch(saveContestToStore(data)),
 });
 
 export default connect(

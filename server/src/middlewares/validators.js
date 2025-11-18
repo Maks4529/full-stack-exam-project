@@ -33,23 +33,23 @@ module.exports.validateContestCreation = (req, res, next) => {
     );
   }
 
-  const validations = contests.map(el =>
+  const validations = contests.map((el) =>
     schems.contestSchem.validate(el, { abortEarly: false }).then(
       () => ({ ok: true }),
-      err => ({ ok: false, errors: err.errors || [err.message] })
+      (err) => ({ ok: false, errors: err.errors || [err.message] })
     )
   );
 
   return Promise.all(validations)
-    .then(results => {
+    .then((results) => {
       const failed = results
         .map((r, i) => ({ r, i }))
-        .filter(x => !x.r.ok)
-        .map(x => ({ index: x.i, errors: x.r.errors }));
+        .filter((x) => !x.r.ok)
+        .map((x) => ({ index: x.i, errors: x.r.errors }));
 
       if (failed.length > 0) {
         const details = failed
-          .map(f => `index ${f.index}: ${f.errors.join('; ')}`)
+          .map((f) => `index ${f.index}: ${f.errors.join('; ')}`)
           .join(' | ');
         return next(
           new BadRequestError(`Invalid contest data in payload: ${details}`)
@@ -57,5 +57,5 @@ module.exports.validateContestCreation = (req, res, next) => {
       }
       next();
     })
-    .catch(err => next(err));
+    .catch((err) => next(err));
 };

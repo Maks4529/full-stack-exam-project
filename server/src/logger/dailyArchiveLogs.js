@@ -25,24 +25,26 @@ cron.schedule('59 23 * * *', async () => {
       .trim()
       .split('\n')
       .filter(Boolean)
-      .map(line => JSON.parse(line));
+      .map((line) => JSON.parse(line));
 
     if (lines.length === 0) return;
 
-    const transformed = lines.map(item => ({
+    const transformed = lines.map((item) => ({
       message: item.message,
       code: item.code,
-      time: item.time
+      time: item.time,
     }));
 
-    const timestamp = new Date().toISOString()
-                                .replace(/:/g, '-')
-                                .split('.')[0];     
-    
+    const timestamp = new Date().toISOString().replace(/:/g, '-').split('.')[0];
+
     const archiveName = `errors-${timestamp}.json`;
     const archivePath = path.join(LOG_DIR, archiveName);
 
-    await fs.writeFile(archivePath, JSON.stringify(transformed, null, 2), 'utf8');
+    await fs.writeFile(
+      archivePath,
+      JSON.stringify(transformed, null, 2),
+      'utf8'
+    );
     await fs.truncate(LOG_FILE, 0);
 
     console.log(`Successfully created new archive: ${archiveName}`);

@@ -1,9 +1,7 @@
 import React from 'react';
 import styles from './RoleInput.module.sass';
 
-function RoleInput({
-  label, id, strRole, infoRole, field, type,
-}) {
+function RoleInput({ label, id, strRole, infoRole, field, type }) {
   return (
     <label htmlFor={id}>
       <div className={styles.roleContainer}>

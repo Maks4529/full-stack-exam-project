@@ -26,7 +26,7 @@ module.exports.dataForContest = async (req, res, next) => {
     if (!characteristics) {
       return next(new ServerError());
     }
-    characteristics.forEach(characteristic => {
+    characteristics.forEach((characteristic) => {
       if (!response[characteristic.type]) {
         response[characteristic.type] = [];
       }
@@ -88,7 +88,7 @@ module.exports.getContestById = async (req, res, next) => {
       ],
     });
     contestInfo = contestInfo.get({ plain: true });
-    contestInfo.Offers.forEach(offer => {
+    contestInfo.Offers.forEach((offer) => {
       if (offer.Rating) {
         offer.mark = offer.Rating.mark;
       }
@@ -110,9 +110,9 @@ module.exports.updateContest = async (req, res, next) => {
     req.body.fileName = req.file.filename;
     req.body.originalFileName = req.file.originalname;
   }
-  
+
   const contestId = req.params.contestId;
-  
+
   try {
     const updatedContest = await contestQueries.updateContest(req.body, {
       id: contestId,
@@ -133,9 +133,9 @@ module.exports.setNewOffer = async (req, res, next) => {
     obj.text = req.body.offerData;
   }
   obj.userId = req.tokenData.userId;
-  
+
   obj.contestId = req.params.contestId;
-  
+
   try {
     const result = await contestQueries.createOffer(obj);
     delete result.contestId;
@@ -150,44 +150,43 @@ module.exports.setNewOffer = async (req, res, next) => {
   }
 };
 
-
 module.exports.getCustomersContests = (req, res, next) => {
   const {
     query: { contestStatus: status, limit, offset },
     tokenData: { userId },
   } = req;
 
-  const requiredOfferStatus = 'approved'; 
+  const requiredOfferStatus = 'approved';
 
   db.Contests.findAll({
     where: { status, userId },
     limit,
     offset: offset ? offset : 0,
     order: [['id', 'DESC']],
-    
+
     attributes: [
-        ...Object.keys(db.Contests.rawAttributes),
-        [
-          db.sequelize.literal(`(
+      ...Object.keys(db.Contests.rawAttributes),
+      [
+        db.sequelize.literal(`(
             SELECT COUNT(*)
             FROM "Offers" AS "o"
             WHERE
               "o"."contestId" = "Contests"."id" AND
               "o"."status" = '${requiredOfferStatus}'
           )`),
-          'count'
-        ]
+        'count',
+      ],
     ],
   })
-    .then(contests => {
+    .then((contests) => {
       let haveMore = true;
-      if (contests.length === 0 || contests.length < limit) { 
+      if (contests.length === 0 || contests.length < limit) {
         haveMore = false;
       }
-    
+
       res.send({ contests, haveMore });
     })
-    .catch(err => next(new ServerError(err)));
+    .catch((err) => next(new ServerError(err)));
 };
 
 module.exports.getContests = (req, res, next) => {
@@ -206,14 +205,18 @@ module.exports.getContests = (req, res, next) => {
       {
         model: db.Offers,
         required: req.query.ownEntries === 'true',
-        where: req.query.ownEntries === 'true' ? { userId: req.tokenData.userId } : {},
+        where:
+          req.query.ownEntries === 'true'
+            ? { userId: req.tokenData.userId }
+            : {},
         attributes: ['id'],
       },
     ],
   })
-    .then(contests => {
+    .then((contests) => {
       contests.forEach(
-        contest => (contest.dataValues.count = contest.dataValues.Offers.length)
+        (contest) =>
+          (contest.dataValues.count = contest.dataValues.Offers.length)
       );
       let haveMore = true;
       if (contests.length === 0) {
@@ -221,7 +224,7 @@ module.exports.getContests = (req, res, next) => {
       }
       res.send({ contests, haveMore });
     })
-    .catch(err => {
+    .catch((err) => {
       console.error(err);
       next(new ServerError());
     });

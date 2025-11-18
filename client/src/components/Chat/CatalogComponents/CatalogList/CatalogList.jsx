@@ -7,7 +7,7 @@ import {
   deleteCatalog,
 } from '../../../../store/slices/chatSlice';
 
-function CatalogList (props) {
+function CatalogList(props) {
   const goToCatalog = (event, catalog) => {
     props.changeShowModeCatalog(catalog);
     event.stopPropagation();
@@ -41,9 +41,9 @@ function CatalogList (props) {
   return <div className={styles.listContainer}>{getListCatalog()}</div>;
 }
 
-const mapDispatchToProps = dispatch => ({
-  changeShowModeCatalog: data => dispatch(changeShowModeCatalog(data)),
-  deleteCatalog: data => dispatch(deleteCatalog(data)),
+const mapDispatchToProps = (dispatch) => ({
+  changeShowModeCatalog: (data) => dispatch(changeShowModeCatalog(data)),
+  deleteCatalog: (data) => dispatch(deleteCatalog(data)),
 });
 
 export default connect(null, mapDispatchToProps)(CatalogList);

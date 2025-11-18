@@ -6,7 +6,7 @@ const FieldFileInput = ({ classes, name }) => {
   const { setFieldValue, values } = useFormikContext();
   const [field, meta] = useField(name);
 
-  const handleChange = e => {
+  const handleChange = (e) => {
     setFieldValue(name, e.currentTarget.files[0]);
   };
 
@@ -15,17 +15,17 @@ const FieldFileInput = ({ classes, name }) => {
       <label htmlFor={name} className={labelClass}>
         Choose file
       </label>
-      <span id='fileNameContainer' className={fileNameClass}>
+      <span id="fileNameContainer" className={fileNameClass}>
         {values[name]?.name || ''}
       </span>
       <input
         id={name}
         name={name}
-        type='file'
+        type="file"
         className={fileInput}
         onChange={handleChange}
       />
-      {meta.touched && meta.error && <div className='error'>{meta.error}</div>}
+      {meta.touched && meta.error && <div className="error">{meta.error}</div>}
     </div>
   );
 };

@@ -9,12 +9,12 @@ function Notification(props) {
       <span>{props.message}</span>
       <br />
       {props.contestId && (
-      <span
-        onClick={() => props.navigate(`/contest/${props.contestId}`)}
-        className={styles.goToContest}
-      >
-        Go to contest
-      </span>
+        <span
+          onClick={() => props.navigate(`/contest/${props.contestId}`)}
+          className={styles.goToContest}
+        >
+          Go to contest
+        </span>
       )}
     </div>
   );

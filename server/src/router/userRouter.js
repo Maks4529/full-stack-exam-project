@@ -1,4 +1,4 @@
-const { Router } = require ('express');
+const { Router } = require('express');
 const basicMiddlewares = require('../middlewares/basicMiddlewares');
 const hashPass = require('../middlewares/hashPassMiddle');
 const userController = require('../controllers/userController');
@@ -12,31 +12,28 @@ userRouter.post(
   '/registration',
   validators.validateRegistrationData,
   hashPass,
-  userController.registration,
+  userController.registration
 );
 
 userRouter.post('/login', validators.validateLogin, userController.login);
 
-userRouter.route('/me')
-.get(checkToken.checkAuth)
-.patch(
-  checkToken.checkToken,
-  upload.uploadAvatar,
-  userController.updateUser,
-);
+userRouter
+  .route('/me')
+  .get(checkToken.checkAuth)
+  .patch(checkToken.checkToken, upload.uploadAvatar, userController.updateUser);
 
 userRouter.post(
   '/marks',
   checkToken.checkToken,
   basicMiddlewares.onlyForCustomer,
-  userController.changeMark,
+  userController.changeMark
 );
 
 userRouter.post(
   '/cashout',
   checkToken.checkToken,
   basicMiddlewares.onlyForCreative,
-  userController.cashout,
+  userController.cashout
 );
 
 module.exports = userRouter;

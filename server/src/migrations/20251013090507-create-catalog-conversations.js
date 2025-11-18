@@ -28,4 +28,3 @@ module.exports = {
     await queryInterface.dropTable('catalog_conversations');
   },
 };
-

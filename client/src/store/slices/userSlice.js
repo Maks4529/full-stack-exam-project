@@ -49,20 +49,20 @@ export const updateUser = createAsyncThunk(
 );
 
 const reducers = {
-  clearUserStore: state => {
+  clearUserStore: (state) => {
     state.error = null;
     state.data = null;
   },
-  clearUserError: state => {
+  clearUserError: (state) => {
     state.error = null;
   },
   setEventBadgeCount: (state, action) => {
     state.eventBadgeCount = action.payload;
-  }
+  },
 };
 
-const extraReducers = builder => {
-  builder.addCase(getUser.pending, state => {
+const extraReducers = (builder) => {
+  builder.addCase(getUser.pending, (state) => {
     state.isFetching = true;
     state.error = null;
     state.data = null;

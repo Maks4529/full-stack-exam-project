@@ -1,7 +1,7 @@
-const {logError} = require('./../logger/loggerErrors.js');
+const { logError } = require('./../logger/loggerErrors.js');
 module.exports = (err, req, res, next) => {
   console.error('Global error handler:', err.stack || err);
-logError(err, err.code || 500);
+  logError(err, err.code || 500);
   if (
     err.message ===
       'new row for relation "Banks" violates check constraint "Banks_balance_ck"' ||

@@ -15,7 +15,7 @@ function Home(props) {
   const [styleName, setStyle] = useState(styles.headline__static);
   let timeout;
 
-  const {data, getUser} = props;
+  const { data, getUser } = props;
 
   useEffect(() => {
     getUser();
@@ -33,9 +33,10 @@ function Home(props) {
   });
 
   const { isFetching } = props;
-  const text = CONSTANTS.HEADER_ANIMATION_TEXT[
-    index % CONSTANTS.HEADER_ANIMATION_TEXT.length
-  ];
+  const text =
+    CONSTANTS.HEADER_ANIMATION_TEXT[
+      index % CONSTANTS.HEADER_ANIMATION_TEXT.length
+    ];
   return (
     <>
       {isFetching ? (
@@ -49,15 +50,17 @@ function Home(props) {
             </div>
             <p>
               Launch a naming contest to engage hundreds of naming experts as
-              you’re guided through our agency-level naming process. Or,
-              explore our hand-picked collection of premium names available
-              for immediate purchase
+              you’re guided through our agency-level naming process. Or, explore
+              our hand-picked collection of premium names available for
+              immediate purchase
             </p>
-            {data && data.role !== CONSTANTS.MODERATOR &&<div className={styles.button}>
-              <Link className={styles.button__link} to="/dashboard">
-                DASHBOARD
-              </Link>
-            </div>}
+            {data && data.role !== CONSTANTS.MODERATOR && (
+              <div className={styles.button}>
+                <Link className={styles.button__link} to="/dashboard">
+                  DASHBOARD
+                </Link>
+              </div>
+            )}
           </div>
           <div className={styles.greyContainer}>
             <SlideBar
@@ -75,11 +78,11 @@ function Home(props) {
                 />
                 <h3>Largest Naming Community</h3>
                 <p>
-                  Our unique approach allows you to receive an unmatched
-                  breadth of business name ideas from world's largest
-                  community of naming experts. With 75,000+ creatives and
-                  15,000+ successful naming projects, Squadhelp is by far the
-                  largest naming platform across the globe .
+                  Our unique approach allows you to receive an unmatched breadth
+                  of business name ideas from world's largest community of
+                  naming experts. With 75,000+ creatives and 15,000+ successful
+                  naming projects, Squadhelp is by far the largest naming
+                  platform across the globe .
                 </p>
               </div>
               <div className={styles.card}>
@@ -91,8 +94,8 @@ function Home(props) {
                 <p>
                   Using an advanced Quality Scoring Algorithm and Machine
                   Learning, we ensure that you receive more ideas from our
-                  top-quality creatives, and Gamification best practices
-                  ensure two-way communication throughout your contest.
+                  top-quality creatives, and Gamification best practices ensure
+                  two-way communication throughout your contest.
                 </p>
               </div>
               <div className={styles.card}>
@@ -103,10 +106,10 @@ function Home(props) {
                 <h3>Agency-Level Features</h3>
                 <p>
                   Squadhelp's high end Audience Testing service allows you to
-                  poll your target demographics to get unbiased feedback on
-                  your favorite names. Also receive Trademark support from our
-                  team of Licensed Trademark Attorneys, so you can pick your
-                  name with confidence.
+                  poll your target demographics to get unbiased feedback on your
+                  favorite names. Also receive Trademark support from our team
+                  of Licensed Trademark Attorneys, so you can pick your name
+                  with confidence.
                 </p>
               </div>
             </div>
@@ -174,8 +177,8 @@ function Home(props) {
                 <p>
                   <i className="fas fa-check" />
                   <span>
-                    We’ll walk you through exactly what you need to share
-                    about your project in order to get an awesome Name
+                    We’ll walk you through exactly what you need to share about
+                    your project in order to get an awesome Name
                   </span>
                 </p>
               </div>
@@ -201,9 +204,7 @@ function Home(props) {
                 </p>
                 <p>
                   <i className="fas fa-check" />
-                  <span>
-                    Names automatically checked for URL availability
-                  </span>
+                  <span>Names automatically checked for URL availability</span>
                 </p>
               </div>
             </div>
@@ -240,20 +241,22 @@ function Home(props) {
             <h3>Names For Sale</h3>
             <p className={styles.blueUnderline}>
               Not interested in launching a contest? Purchase a name instantly
-              from our hand-picked collection of premium names. Price includes
-              a complimentary Trademark Report, a Domain name as well as a
-              Logo design
+              from our hand-picked collection of premium names. Price includes a
+              complimentary Trademark Report, a Domain name as well as a Logo
+              design
             </p>
           </div>
           <SlideBar
             images={carouselConstants.exampleSliderImages}
             carouselType={carouselConstants.EXAMPLE_SLIDER}
           />
-          {data && data.role !== CONSTANTS.MODERATOR &&<div className={styles.button}>
+          {data && data.role !== CONSTANTS.MODERATOR && (
+            <div className={styles.button}>
               <Link className={styles.button__link} to="/dashboard">
                 DASHBOARD
               </Link>
-          </div>}
+            </div>
+          )}
           <div className={styles.blueContainer}>
             <h2 className={styles.whiteUnderline}>What our customers say</h2>
             <SlideBar

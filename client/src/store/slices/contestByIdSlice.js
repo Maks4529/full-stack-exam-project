@@ -86,9 +86,10 @@ const setOfferStatusExtraReducers = createExtraReducers({
   fulfilledReducer: (state, { payload }) => {
     state.offers.forEach((offer) => {
       if (payload.status === CONSTANTS.OFFER_STATUS_WON) {
-        offer.status = payload.id === offer.id
-          ? CONSTANTS.OFFER_STATUS_WON
-          : CONSTANTS.OFFER_STATUS_REJECTED;
+        offer.status =
+          payload.id === offer.id
+            ? CONSTANTS.OFFER_STATUS_WON
+            : CONSTANTS.OFFER_STATUS_REJECTED;
       } else if (payload.id === offer.id) {
         offer.status = CONSTANTS.OFFER_STATUS_REJECTED;
       }

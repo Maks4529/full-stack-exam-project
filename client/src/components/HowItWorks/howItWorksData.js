@@ -46,7 +46,7 @@ const DATA = {
               you choose not to move forward with any name from you project.
               (Please note that the refund is for the contest award). Here is a
               link to our{' '}
-              <a style={{ color: '#fff' }} href='https://google.com'>
+              <a style={{ color: '#fff' }} href="https://google.com">
                 Refund Policy
               </a>
             </li>
@@ -62,7 +62,7 @@ const DATA = {
             Our naming competitions start at $299, and our logo design
             competitions start at $299. Also, there are three additional contest
             level that each offer more features and benefits. See our{' '}
-            <a style={{ color: '#fff' }} href='https://google.com'>
+            <a style={{ color: '#fff' }} href="https://google.com">
               Pricing Page
             </a>{' '}
             for details
@@ -80,7 +80,7 @@ const DATA = {
             Tagline, and Logo bundle. Bundles allow you to purchase multiple
             contests at one time and save as much as from $75 - $400. You can
             learn more about our bundle options on our{' '}
-            <a style={{ color: '#fff' }} href='https://google.com'>
+            <a style={{ color: '#fff' }} href="https://google.com">
               Pricing Page
             </a>
             .
@@ -109,17 +109,17 @@ const DATA = {
           </p>
           <ul style={{ listStyleType: 'initial', paddingLeft: '20px' }}>
             <li>
-              <a style={{ color: '#fff' }} href='https://google.com'>
+              <a style={{ color: '#fff' }} href="https://google.com">
                 Name Examples
               </a>
             </li>
             <li>
-              <a style={{ color: '#fff' }} href='https://google.com'>
+              <a style={{ color: '#fff' }} href="https://google.com">
                 Tagline Examples
               </a>
             </li>
             <li>
-              <a style={{ color: '#fff' }} href='https://google.com'>
+              <a style={{ color: '#fff' }} href="https://google.com">
                 Logo Examples
               </a>
             </li>
@@ -164,7 +164,7 @@ const DATA = {
           </p>
           <p>
             Learn more about our{' '}
-            <a style={{ color: '#fff' }} href='https://google.com'>
+            <a style={{ color: '#fff' }} href="https://google.com">
               Managed Contest Service
             </a>
           </p>
@@ -225,7 +225,7 @@ const DATA = {
             </li>
             <li>
               Here is a link to our{' '}
-              <a style={{ color: '#fff' }} href='https://google.com'>
+              <a style={{ color: '#fff' }} href="https://google.com">
                 Pricing Page
               </a>{' '}
               with a detailed comparison of the two packages.
@@ -247,7 +247,7 @@ const DATA = {
         <>
           <p>
             We are open to anyone to signup. However, we have an extensive{' '}
-            <a style={{ color: '#fff' }} href='https://google.com'>
+            <a style={{ color: '#fff' }} href="https://google.com">
               'Quality Scoring'
             </a>{' '}
             process which ensures that high quality creatives have the ability
@@ -276,7 +276,7 @@ const DATA = {
     { title: 'Real Estate', link: 'https://google.com' },
     { title: 'Crypto', link: 'https://google.com' },
     { title: 'Short', link: 'https://google.com' },
-    { title: 'One Word', link: 'https://google.com' }
+    { title: 'One Word', link: 'https://google.com' },
   ],
 };
 

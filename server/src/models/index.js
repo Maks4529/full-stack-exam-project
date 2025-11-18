@@ -24,12 +24,12 @@ const sequelize = new Sequelize(
 );
 
 fs.readdirSync(__dirname)
-  .filter(file => {
+  .filter((file) => {
     return (
       file.indexOf('.') !== 0 && file !== basename && file.slice(-3) === '.js'
     );
   })
-  .forEach(file => {
+  .forEach((file) => {
     const model = require(path.join(__dirname, file))(
       sequelize,
       Sequelize.DataTypes
@@ -40,8 +40,8 @@ fs.readdirSync(__dirname)
 const chatModelsDir = path.join(__dirname, 'postgresChatModels');
 if (fs.existsSync(chatModelsDir)) {
   fs.readdirSync(chatModelsDir)
-    .filter(file => file.indexOf('.') !== 0 && file.slice(-3) === '.js')
-    .forEach(file => {
+    .filter((file) => file.indexOf('.') !== 0 && file.slice(-3) === '.js')
+    .forEach((file) => {
       const model = require(path.join(chatModelsDir, file))(
         sequelize,
         Sequelize.DataTypes
@@ -50,7 +50,7 @@ if (fs.existsSync(chatModelsDir)) {
     });
 }
 
-Object.keys(db).forEach(name => {
+Object.keys(db).forEach((name) => {
   try {
     if (typeof name !== 'string') return;
     if (name.endsWith('s')) {
@@ -60,12 +60,10 @@ Object.keys(db).forEach(name => {
       const plural = `${name}s`;
       if (!db[plural]) db[plural] = db[name];
     }
-  } catch (err) {
-
-  }
+  } catch (err) {}
 });
 
-Object.keys(db).forEach(modelName => {
+Object.keys(db).forEach((modelName) => {
   if (db[modelName] && typeof db[modelName].associate === 'function') {
     db[modelName].associate(db);
   }

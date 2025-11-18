@@ -23,9 +23,10 @@ const initialState = {
 export const getContests = decorateAsyncThunk({
   key: `${CONTESTS_SLICE_NAME}/getContests`,
   thunk: async ({ requestData, role }) => {
-    const { data } = role === CONSTANTS.CUSTOMER
-      ? await restController.getCustomersContests(requestData)
-      : await restController.getActiveContests(requestData);
+    const { data } =
+      role === CONSTANTS.CUSTOMER
+        ? await restController.getCustomersContests(requestData)
+        : await restController.getActiveContests(requestData);
     return data;
   },
 });
@@ -70,10 +71,7 @@ const contestsSlice = createSlice({
 
 const { actions, reducer } = contestsSlice;
 
-export const {
-  clearContestsList,
-  setNewCustomerFilter,
-  setNewCreatorFilter,
-} = actions;
+export const { clearContestsList, setNewCustomerFilter, setNewCreatorFilter } =
+  actions;
 
 export default reducer;

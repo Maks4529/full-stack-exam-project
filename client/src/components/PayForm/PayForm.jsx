@@ -33,9 +33,7 @@ function PayForm(props) {
         validationSchema={Schems.PaymentSchema}
       >
         {({ values }) => {
-          const {
-            name, number, expiry, cvc,
-          } = values;
+          const { name, number, expiry, cvc } = values;
 
           return (
             <>

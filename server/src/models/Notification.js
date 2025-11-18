@@ -14,7 +14,7 @@ module.exports = (sequelize, DataTypes) => {
     },
   });
 
-  Notification.associate = models => {
+  Notification.associate = (models) => {
     Notification.belongsTo(models.Users, { foreignKey: 'userId' });
   };
 

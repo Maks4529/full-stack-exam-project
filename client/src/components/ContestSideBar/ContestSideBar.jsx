@@ -7,7 +7,7 @@ import CONSTANTS from '../../constants';
 const ContestSideBar = (props) => {
   const getTimeStr = () => {
     const diff = moment.duration(
-      moment().diff(moment(props.contestData.createdAt)),
+      moment().diff(moment(props.contestData.createdAt))
     );
     let str = '';
     if (diff._data.days !== 0) str = `${diff._data.days} days `;

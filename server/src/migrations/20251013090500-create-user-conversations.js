@@ -30,4 +30,3 @@ module.exports = {
     await queryInterface.dropTable('user_conversations');
   },
 };
-

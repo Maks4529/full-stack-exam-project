@@ -1,11 +1,15 @@
 module.exports = (sequelize, DataTypes) => {
-  const Conversation = sequelize.define('Conversation', {
-    id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
-    created_at: { type: DataTypes.DATE, defaultValue: DataTypes.NOW },
-    updated_at: { type: DataTypes.DATE, defaultValue: DataTypes.NOW },
-  }, {
-    timestamps: false,
-  });
+  const Conversation = sequelize.define(
+    'Conversation',
+    {
+      id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
+      created_at: { type: DataTypes.DATE, defaultValue: DataTypes.NOW },
+      updated_at: { type: DataTypes.DATE, defaultValue: DataTypes.NOW },
+    },
+    {
+      timestamps: false,
+    }
+  );
 
   Conversation.associate = (models) => {
     Conversation.belongsToMany(models.User, {

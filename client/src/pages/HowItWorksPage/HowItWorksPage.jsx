@@ -13,45 +13,51 @@ const serviceCards = [
     icon: `${CONSTANTS.STATIC_IMAGES_PATH}/howItWorks/lightning.svg`,
     iconAlt: 'lightning',
     title: 'Launch a Contest',
-    description: 'Work with hundreds of creative experts to get custom name suggestions for your business or brand. All names are auto-checked for URL availability.',
+    description:
+      'Work with hundreds of creative experts to get custom name suggestions for your business or brand. All names are auto-checked for URL availability.',
     link: '/startContest',
-    linkBody: 'Launch a Contest'
+    linkBody: 'Launch a Contest',
   },
   {
     icon: `${CONSTANTS.STATIC_IMAGES_PATH}/howItWorks/computer.svg`,
     iconAlt: 'computer',
     title: 'Explore Names For Sale',
-    description: 'Our branding team has curated thousands of pre-made names that you can purchase instantly. All names include a matching URL and a complimentary Logo Design.',
+    description:
+      'Our branding team has curated thousands of pre-made names that you can purchase instantly. All names include a matching URL and a complimentary Logo Design.',
     link: '/namesForSale',
-    linkBody: 'Explore Names For Sale'
+    linkBody: 'Explore Names For Sale',
   },
   {
     icon: `${CONSTANTS.STATIC_IMAGES_PATH}/howItWorks/lamp.svg`,
     iconAlt: 'lamp',
     title: 'Agency-level Managed Contests',
-    description: 'Our Managed contests combine the power of crowdsourcing with the rich experience of our branding consultants. Get a complete agency-level experience at a fraction of Agency costs.',
+    description:
+      'Our Managed contests combine the power of crowdsourcing with the rich experience of our branding consultants. Get a complete agency-level experience at a fraction of Agency costs.',
     link: '/managedContests',
-    linkBody: 'Learn More'
-  }
+    linkBody: 'Learn More',
+  },
 ];
 
 const stepCards = [
-  { 
-    step: '1', 
-    description: 'Fill out your Naming Brief and begin receiving name ideas in minutes' 
+  {
+    step: '1',
+    description:
+      'Fill out your Naming Brief and begin receiving name ideas in minutes',
   },
-  { 
-    step: '2', 
-    description: 'Rate the submissions and provide feedback to creatives. Creatives submit even more names based on your feedback.' 
+  {
+    step: '2',
+    description:
+      'Rate the submissions and provide feedback to creatives. Creatives submit even more names based on your feedback.',
   },
-  { 
-    step: '3', 
-    description: 'Our team helps you test your favorite names with your target audience. We also assist with Trademark screening.' 
+  {
+    step: '3',
+    description:
+      'Our team helps you test your favorite names with your target audience. We also assist with Trademark screening.',
   },
-  { 
-    step: '4', 
-    description: 'Pick a Winner. The winner gets paid for their submission.' 
-  }
+  {
+    step: '4',
+    description: 'Pick a Winner. The winner gets paid for their submission.',
+  },
 ];
 
 const HowItWorksPage = () => {
@@ -71,11 +77,11 @@ const HowItWorksPage = () => {
           </div>
           <div className={styles.videoContainer}>
             <iframe
-              width='100%'
-              height='100%'
-              src='https://www.youtube.com/embed/Qlbm9p3pd-w'
-              title='Atom How It Works'
-              allow='accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture'
+              width="100%"
+              height="100%"
+              src="https://www.youtube.com/embed/Qlbm9p3pd-w"
+              title="Atom How It Works"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
               allowFullScreen
             ></iframe>
           </div>
@@ -101,9 +107,9 @@ const HowItWorksPage = () => {
           </div>
         </section>
         <section className={styles.stepsSection}>
-          <img 
-            src={`${CONSTANTS.STATIC_IMAGES_PATH}/howItWorks/trophy.svg`} 
-            alt="trophy" 
+          <img
+            src={`${CONSTANTS.STATIC_IMAGES_PATH}/howItWorks/trophy.svg`}
+            alt="trophy"
           />
           <h2 className={styles.sectionTitle}>How Do Naming Contests Work?</h2>
           <div className={styles.stepsContainer}>
@@ -128,7 +134,6 @@ const HowItWorksPage = () => {
             ))}
           </ul>
         </section>
-
       </main>
       <Footer />
     </>

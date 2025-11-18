@@ -5,7 +5,7 @@ import Notification from '../../../components/Notification/Notification';
 import { addNotification } from '../../../store/slices/notificationsSlice';
 
 class NotificationSocket extends WebSocket {
-  constructor (dispatch, getState, room) {
+  constructor(dispatch, getState, room) {
     super(dispatch, getState, room);
   }
 
@@ -26,7 +26,7 @@ class NotificationSocket extends WebSocket {
   };
 
   onChangeOfferStatus = () => {
-    this.socket.on('changeOfferStatus', message => {
+    this.socket.on('changeOfferStatus', (message) => {
       try {
         this.dispatch(
           addNotification({
@@ -58,12 +58,12 @@ class NotificationSocket extends WebSocket {
     });
   };
 
-  subscribe = id => {
+  subscribe = (id) => {
     const room = String(id);
     this.socket.emit('subscribe', room);
   };
 
-  unsubsctibe = id => {
+  unsubsctibe = (id) => {
     this.socket.emit('unsubscribe', id);
   };
 }

@@ -39,7 +39,6 @@ try {
     console.log(`Example app listening on port ${PORT}!`)
   );
   controller.createConnection(server);
-
 } catch (error) {
   console.error(error.message);
   process.exit(1);

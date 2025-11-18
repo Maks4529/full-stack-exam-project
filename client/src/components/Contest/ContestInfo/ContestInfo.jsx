@@ -6,9 +6,7 @@ import NameContestSpecialInfo from './NameContestSpecialInfo';
 import TaglineContestSpecialInfo from './TaglineContestSpecialInfo';
 
 function ContestInfo(props) {
-  const {
-    changeEditContest, userId, contestData, role, goChat,
-  } = props;
+  const { changeEditContest, userId, contestData, role, goChat } = props;
   const {
     typeOfTagline,
     brandStyle,
@@ -32,14 +30,15 @@ function ContestInfo(props) {
             <span className={styles.label}>Contest Type</span>
             <span className={styles.data}>{contestType}</span>
           </div>
-          {User.id === userId && status !== CONSTANTS.CONTEST_STATUS_FINISHED && (
-            <div
-              onClick={() => changeEditContest(true)}
-              className={styles.editBtn}
-            >
-              Edit
-            </div>
-          )}
+          {User.id === userId &&
+            status !== CONSTANTS.CONTEST_STATUS_FINISHED && (
+              <div
+                onClick={() => changeEditContest(true)}
+                className={styles.editBtn}
+              >
+                Edit
+              </div>
+            )}
           {role !== CONSTANTS.CUSTOMER && (
             <i onClick={goChat} className="fas fa-comments" />
           )}
@@ -72,8 +71,7 @@ function ContestInfo(props) {
         </div>
         <div className={styles.dataContainer}>
           <span className={styles.label}>
-            Description target customers of company
-            {' '}
+            Description target customers of company{' '}
           </span>
           <span className={styles.data}>{targetCustomer}</span>
         </div>

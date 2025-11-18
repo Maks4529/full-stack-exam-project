@@ -13,4 +13,3 @@ module.exports = {
     await queryInterface.dropTable('Conversations');
   },
 };
-

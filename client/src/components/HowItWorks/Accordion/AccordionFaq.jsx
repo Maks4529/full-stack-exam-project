@@ -8,11 +8,25 @@ import styles from './AccordionFaq.module.sass';
 function AccordionFaq() {
   const [activeIndex, setActiveIndex] = useState(0);
   const [openQuestion, setOpenQuestion] = useState(null);
-  const { menuItems, questionsBody1, questionsBody2, questionsBody3, questionsBody4 } = DATA;
+  const {
+    menuItems,
+    questionsBody1,
+    questionsBody2,
+    questionsBody3,
+    questionsBody4,
+  } = DATA;
 
   const sections = [
-    { id: 'question1', title: 'Launching A Contest', questions: questionsBody1 },
-    { id: 'question2', title: 'Buying From Marketplace', questions: questionsBody2 },
+    {
+      id: 'question1',
+      title: 'Launching A Contest',
+      questions: questionsBody1,
+    },
+    {
+      id: 'question2',
+      title: 'Buying From Marketplace',
+      questions: questionsBody2,
+    },
     { id: 'question3', title: 'Managed Contests', questions: questionsBody3 },
     { id: 'question4', title: 'For Creatives', questions: questionsBody4 },
   ];
@@ -46,20 +60,27 @@ function AccordionFaq() {
             <ul className={styles.questionsList}>
               {section.questions.map((item, index) => {
                 const isOpen =
-                  openQuestion?.section === section.id && openQuestion?.index === index;
+                  openQuestion?.section === section.id &&
+                  openQuestion?.index === index;
                 return (
                   <li
                     key={index}
                     onClick={() => toggleQuestion(section.id, index)}
-                    className={classNames(styles.question, { [styles.open]: isOpen })}
+                    className={classNames(styles.question, {
+                      [styles.open]: isOpen,
+                    })}
                   >
                     <div className={styles.questionHeader}>
-                      <span className={styles.questionText}>{item.question}</span>
+                      <span className={styles.questionText}>
+                        {item.question}
+                      </span>
                       <span className={styles.plus}>
                         <FontAwesomeIcon icon={faXmark} />
                       </span>
                     </div>
-                    {isOpen && <div className={styles.answer}>{item.answer}</div>}
+                    {isOpen && (
+                      <div className={styles.answer}>{item.answer}</div>
+                    )}
                   </li>
                 );
               })}

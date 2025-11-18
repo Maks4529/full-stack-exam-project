@@ -7,9 +7,9 @@ const _notifyCreator = async (offer, status) => {
 
   const creatorName = offer.User?.firstName || 'Creator';
   const contestTitle = offer.Contest?.title || 'your contest';
-  
+
   const message = `Your offer for the contest "${contestTitle}" (ID: #${offer.id}) was ${statusPastTense}.`;
-  
+
   try {
     await db.Notification.create({
       userId: offer.userId,
@@ -25,11 +25,7 @@ const _notifyCreator = async (offer, status) => {
   try {
     controller
       .getNotificationController()
-      .emitChangeOfferStatus(
-        String(offer.userId),
-        message,
-        offer.contestId
-      );
+      .emitChangeOfferStatus(String(offer.userId), message, offer.contestId);
   } catch (e) {
     console.error(
       `Failed to emit socket notification for offer ${offer.id}:`,
@@ -46,9 +42,10 @@ const _notifyCreator = async (offer, status) => {
           <h2 style="color: #333;">Hello, ${creatorName}!</h2>
           <p>We have an update regarding your offer for the contest: <strong>"${contestTitle}"</strong>.</p>
           <p>Your offer (ID: #${offer.id}) has been <strong>${statusPastTense}</strong> by the moderator.</p>
-          ${status === 'approved'
-            ? '<p style="color: green;">Congratulations! Your offer is now active.</p>'
-            : '<p style="color: red;">You can review the offer in your account and resubmit it if you wish.</p>'
+          ${
+            status === 'approved'
+              ? '<p style="color: green;">Congratulations! Your offer is now active.</p>'
+              : '<p style="color: red;">You can review the offer in your account and resubmit it if you wish.</p>'
           }
           <br>
           <p>Thank you,</p>
@@ -78,7 +75,9 @@ const _notifyCreator = async (offer, status) => {
       );
     }
   } else {
-    console.warn(`[Notify] Email не буде відправлено. 'creatorEmail' не знайдено для оферу #${offer.id}.`);
+    console.warn(
+      `[Notify] Email не буде відправлено. 'creatorEmail' не знайдено для оферу #${offer.id}.`
+    );
   }
 };
 
@@ -113,7 +112,6 @@ module.exports.updateOfferStatus = async (req, res, next) => {
     res.send({ success: true, newStatus: offer.status });
 
     _notifyCreator(offer, status);
-
   } catch (err) {
     next(err);
   }
@@ -131,10 +129,10 @@ module.exports.getAllOffersForModeration = async (req, res, next) => {
       where: { status: 'pending' },
       order: [['id', 'DESC']],
       include: [
-    	{
-    	  model: db.Contests,
-    	  attributes: ['title', 'contestType', 'styleName', 'brandStyle'],
-    	},
+        {
+          model: db.Contests,
+          attributes: ['title', 'contestType', 'styleName', 'brandStyle'],
+        },
       ],
     });
 

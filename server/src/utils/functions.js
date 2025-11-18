@@ -35,7 +35,7 @@ module.exports.createWhereForAllContests = (
   return object;
 };
 
-function getPredicateTypes (index) {
+function getPredicateTypes(index) {
   return { [bd.Sequelize.Op.or]: types[index].split(',') };
 }
 

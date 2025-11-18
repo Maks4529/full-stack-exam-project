@@ -53,30 +53,30 @@ class App extends Component {
               <Route path="/startContest" element={<StartContestPage />} />
               <Route
                 path="/startContest/nameContest"
-                element={(
+                element={
                   <ContestCreationPage
                     contestType={CONSTANTS.NAME_CONTEST}
                     title="Company Name"
                   />
-                )}
+                }
               />
               <Route
                 path="/startContest/taglineContest"
-                element={(
+                element={
                   <ContestCreationPage
                     contestType={CONSTANTS.TAGLINE_CONTEST}
                     title="TAGLINE"
                   />
-                )}
+                }
               />
               <Route
                 path="/startContest/logoContest"
-                element={(
+                element={
                   <ContestCreationPage
                     contestType={CONSTANTS.LOGO_CONTEST}
                     title="LOGO"
                   />
-                )}
+                }
               />
               <Route path="/dashboard" element={<Dashboard />} />
               <Route path="/contest/:id" element={<ContestPage />} />
@@ -84,9 +84,9 @@ class App extends Component {
             </Route>
             <Route path="*" element={<NotFound />} />
           </Route>
-            <Route path="/how-it-works" element={<HowItWorksPage />} />
-            <Route path='events' element={<EventsPage />} />
-            <Route path="/moderator-offers" element={<ModeratorOffersPage />} />
+          <Route path="/how-it-works" element={<HowItWorksPage />} />
+          <Route path="events" element={<EventsPage />} />
+          <Route path="/moderator-offers" element={<ModeratorOffersPage />} />
         </Routes>
         <ChatContainer />
       </Router>

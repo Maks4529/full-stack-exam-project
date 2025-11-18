@@ -27,9 +27,11 @@ function DialogList(props) {
     event.stopPropagation();
   };
 
-  const onlyFavoriteDialogs = (chatPreview, userId) => chatPreview.favoriteList[chatPreview.participants.indexOf(userId)];
+  const onlyFavoriteDialogs = (chatPreview, userId) =>
+    chatPreview.favoriteList[chatPreview.participants.indexOf(userId)];
 
-  const onlyBlockDialogs = (chatPreview, userId) => chatPreview.blackList[chatPreview.participants.indexOf(userId)];
+  const onlyBlockDialogs = (chatPreview, userId) =>
+    chatPreview.blackList[chatPreview.participants.indexOf(userId)];
 
   const getTimeStr = (time) => {
     const currentTime = moment();
@@ -83,8 +85,12 @@ function DialogList(props) {
 
   const renderChatPreview = () => {
     const { chatMode } = props;
-    if (chatMode === CONSTANTS.FAVORITE_PREVIEW_CHAT_MODE) { return renderPreview(onlyFavoriteDialogs); }
-    if (chatMode === CONSTANTS.BLOCKED_PREVIEW_CHAT_MODE) { return renderPreview(onlyBlockDialogs); }
+    if (chatMode === CONSTANTS.FAVORITE_PREVIEW_CHAT_MODE) {
+      return renderPreview(onlyFavoriteDialogs);
+    }
+    if (chatMode === CONSTANTS.BLOCKED_PREVIEW_CHAT_MODE) {
+      return renderPreview(onlyBlockDialogs);
+    }
     return renderPreview();
   };
 
@@ -97,7 +103,8 @@ const mapDispatchToProps = (dispatch) => ({
   goToExpandedDialog: (data) => dispatch(goToExpandedDialog(data)),
   changeChatFavorite: (data) => dispatch(changeChatFavorite(data)),
   changeChatBlock: (data) => dispatch(changeChatBlock(data)),
-  changeShowAddChatToCatalogMenu: (data) => dispatch(changeShowAddChatToCatalogMenu(data)),
+  changeShowAddChatToCatalogMenu: (data) =>
+    dispatch(changeShowAddChatToCatalogMenu(data)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(DialogList);

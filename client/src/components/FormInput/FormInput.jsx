@@ -2,9 +2,7 @@ import React from 'react';
 import { Field, ErrorMessage } from 'formik';
 import classNames from 'classnames';
 
-function FormInput({
-  classes, label, name, ...rest
-}) {
+function FormInput({ classes, label, name, ...rest }) {
   return (
     <Field name={name}>
       {(props) => {

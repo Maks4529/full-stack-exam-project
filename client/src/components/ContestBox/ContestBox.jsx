@@ -20,11 +20,10 @@ function ContestBox(props) {
     return data.typeOfTagline;
   };
 
-  const ucFirstLetter = (string) => string.charAt(0).toUpperCase() + string.slice(1);
+  const ucFirstLetter = (string) =>
+    string.charAt(0).toUpperCase() + string.slice(1);
 
-  const {
-    id, title, contestType, prize, count, goToExtended,
-  } = props.data;
+  const { id, title, contestType, prize, count, goToExtended } = props.data;
   return (
     <div
       className={styles.contestBoxContainer}
@@ -37,9 +36,7 @@ function ContestBox(props) {
         </div>
         <div className={styles.contestType}>
           <span>
-            {`${ucFirstLetter(
-              contestType,
-            )} / ${getPreferenceContest()}`}
+            {`${ucFirstLetter(contestType)} / ${getPreferenceContest()}`}
           </span>
         </div>
         <div className={styles.contestType}>

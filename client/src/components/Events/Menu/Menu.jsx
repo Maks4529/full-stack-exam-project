@@ -1,6 +1,6 @@
-import { Link } from "react-router-dom";
-import Badge from "./Badge/Badge";
-import styles from "./Menu.module.sass";
+import { Link } from 'react-router-dom';
+import Badge from './Badge/Badge';
+import styles from './Menu.module.sass';
 
 function Menu({ badgeCount }) {
   return (

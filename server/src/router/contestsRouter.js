@@ -10,49 +10,33 @@ const contestsRouter = Router();
 
 contestsRouter.use(checkToken.checkToken);
 
-contestsRouter.route('/')
-.post(
-  basicMiddlewares.onlyForCustomer,
-  upload.uploadContestFiles,
-  basicMiddlewares.parseBody,
-  validators.validateContestCreation,
-  userController.payment,
-)
-.get(
-  basicMiddlewares.onlyForCreative,
-  contestController.getContests,
-);
+contestsRouter
+  .route('/')
+  .post(
+    basicMiddlewares.onlyForCustomer,
+    upload.uploadContestFiles,
+    basicMiddlewares.parseBody,
+    validators.validateContestCreation,
+    userController.payment
+  )
+  .get(basicMiddlewares.onlyForCreative, contestController.getContests);
 
-contestsRouter.get(
-  '/byCustomer',
-  contestController.getCustomersContests,
-);
+contestsRouter.get('/byCustomer', contestController.getCustomersContests);
 
-contestsRouter.get(
-  '/data',
-  contestController.dataForContest,
-);
+contestsRouter.get('/data', contestController.dataForContest);
 
-contestsRouter.get(
-  '/download/:fileName',
-  contestController.downloadFile,
-);
+contestsRouter.get('/download/:fileName', contestController.downloadFile);
 
-contestsRouter.route('/:contestId')
-.get(
-  basicMiddlewares.canGetContest,
-  contestController.getContestById,
-)
-.patch(
-  upload.updateContestFile,
-  contestController.updateContest,
-);
+contestsRouter
+  .route('/:contestId')
+  .get(basicMiddlewares.canGetContest, contestController.getContestById)
+  .patch(upload.updateContestFile, contestController.updateContest);
 
 contestsRouter.post(
   '/:contestId/offers',
   upload.uploadLogoFiles,
   basicMiddlewares.canSendOffer,
-  contestController.setNewOffer,
+  contestController.setNewOffer
 );
 
 module.exports = contestsRouter;

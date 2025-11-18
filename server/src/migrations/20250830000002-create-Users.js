@@ -62,7 +62,7 @@ module.exports = {
               [Sequelize.Op.gte]: 0,
             },
           },
-        }),
+        })
       );
   },
   down: (queryInterface, Sequelize) => {

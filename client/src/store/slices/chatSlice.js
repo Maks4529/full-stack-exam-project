@@ -126,7 +126,9 @@ const changeChatFavoriteExtraReducers = createExtraReducers({
   fulfilledReducer: (state, { payload }) => {
     const { messagesPreview } = state;
     messagesPreview.forEach((preview) => {
-      if (isEqual(preview.participants, payload.participants)) { preview.favoriteList = payload.favoriteList; }
+      if (isEqual(preview.participants, payload.participants)) {
+        preview.favoriteList = payload.favoriteList;
+      }
     });
     state.chatData = payload;
     state.messagesPreview = messagesPreview;
@@ -150,7 +152,9 @@ const changeChatBlockExtraReducers = createExtraReducers({
   fulfilledReducer: (state, { payload }) => {
     const { messagesPreview } = state;
     messagesPreview.forEach((preview) => {
-      if (isEqual(preview.participants, payload.participants)) { preview.blackList = payload.blackList; }
+      if (isEqual(preview.participants, payload.participants)) {
+        preview.blackList = payload.blackList;
+      }
     });
     state.chatData = payload;
     state.messagesPreview = messagesPreview;
@@ -242,7 +246,7 @@ const deleteCatalogExtraReducers = createExtraReducers({
     const { catalogList } = state;
     const newCatalogList = remove(
       catalogList,
-      (catalog) => payload.catalogId !== catalog._id,
+      (catalog) => payload.catalogId !== catalog._id
     );
     state.catalogList = [...newCatalogList];
   },
@@ -311,7 +315,9 @@ const reducers = {
   changeBlockStatusInStore: (state, { payload }) => {
     const { messagesPreview } = state;
     messagesPreview.forEach((preview) => {
-      if (isEqual(preview.participants, payload.participants)) { preview.blackList = payload.blackList; }
+      if (isEqual(preview.participants, payload.participants)) {
+        preview.blackList = payload.blackList;
+      }
     });
     state.chatData = payload;
     state.messagesPreview = messagesPreview;

@@ -87,7 +87,7 @@ module.exports = (sequelize, DataTypes) => {
     },
     {
       timestamps: false,
-    },
+    }
   );
 
   return Contest;

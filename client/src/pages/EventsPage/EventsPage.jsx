@@ -7,9 +7,9 @@ import CountdownTimer from '../../components/Events/Timer/CountdownTimer';
 import styles from './EventsPage.module.sass';
 import EventsForm from '../../components/Events/EventsForm/EventsForm';
 
-function EventsPage () {
+function EventsPage() {
   const dispatch = useDispatch();
-const showBadge = useSelector(state => state.userStore.showEventBadge);
+  const showBadge = useSelector((state) => state.userStore.showEventBadge);
   const [events, setEvents] = useState(() => {
     const saved = localStorage.getItem('events');
     return saved ? JSON.parse(saved) : [];
@@ -29,23 +29,29 @@ const showBadge = useSelector(state => state.userStore.showEventBadge);
       createdAt: Date.now(),
     };
 
-    setEvents(prev =>
+    setEvents((prev) =>
       [...prev, newEvent].sort((a, b) => a.datetime - b.datetime)
     );
 
     resetForm();
   };
 
-  const handleDelete = useCallback((id) => {
-    const updatedEvents = events.filter(ev => ev.id !== id);
-    setEvents(updatedEvents);
-  }, [events, dispatch]);
+  const handleDelete = useCallback(
+    (id) => {
+      const updatedEvents = events.filter((ev) => ev.id !== id);
+      setEvents(updatedEvents);
+    },
+    [events, dispatch]
+  );
 
-  const handleNotify = useCallback((id) => {
-    setEvents(prev =>
-      prev.map(ev => (ev.id === id ? { ...ev, notified: true } : ev))
-    );
-  }, [events, dispatch]);
+  const handleNotify = useCallback(
+    (id) => {
+      setEvents((prev) =>
+        prev.map((ev) => (ev.id === id ? { ...ev, notified: true } : ev))
+      );
+    },
+    [events, dispatch]
+  );
 
   return (
     <>
@@ -54,7 +60,7 @@ const showBadge = useSelector(state => state.userStore.showEventBadge);
         <h2>Events</h2>
         <EventsForm handleAddEvent={handleAddEvent} />
         <ul className={styles.list}>
-          {events.map(ev => (
+          {events.map((ev) => (
             <li key={ev.id}>
               <CountdownTimer event={ev} onNotify={handleNotify} />
               <button onClick={() => handleDelete(ev.id)}>

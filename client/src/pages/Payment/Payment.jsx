@@ -13,7 +13,9 @@ function Payment(props) {
   const pay = (values) => {
     const { contests } = props.contestCreationStore;
     const contestArray = [];
-    Object.keys(contests).forEach((key) => contestArray.push({ ...contests[key] }));
+    Object.keys(contests).forEach((key) =>
+      contestArray.push({ ...contests[key] })
+    );
     const { number, expiry, cvc } = values;
     const data = new FormData();
     for (let i = 0; i < contestArray.length; i++) {

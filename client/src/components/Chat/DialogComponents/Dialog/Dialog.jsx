@@ -11,7 +11,7 @@ import styles from './Dialog.module.sass';
 import ChatInput from '../../ChatComponents/ChatInut/ChatInput';
 
 class Dialog extends React.Component {
-  componentDidMount () {
+  componentDidMount() {
     if (this.props.interlocutor) {
       this.props.getDialog({ id: this.props.interlocutor.id });
     }
@@ -21,13 +21,15 @@ class Dialog extends React.Component {
   messagesEnd = React.createRef();
 
   scrollToBottom = () => {
-    if(this.messagesEnd.current) {
+    if (this.messagesEnd.current) {
       this.messagesEnd.current.scrollIntoView({ behavior: 'smooth' });
     }
   };
 
-  componentWillReceiveProps (nextProps, nextContext) {
-    const currentId = this.props.interlocutor ? this.props.interlocutor.id : null;
+  componentWillReceiveProps(nextProps, nextContext) {
+    const currentId = this.props.interlocutor
+      ? this.props.interlocutor.id
+      : null;
     const nextId = nextProps.interlocutor ? nextProps.interlocutor.id : null;
 
     if (nextId && nextId !== currentId) {
@@ -35,11 +37,11 @@ class Dialog extends React.Component {
     }
   }
 
-  componentWillUnmount () {
+  componentWillUnmount() {
     this.props.clearMessageList();
   }
 
-  componentDidUpdate () {
+  componentDidUpdate() {
     if (this.messagesEnd.current) this.scrollToBottom();
   }
 
@@ -47,7 +49,7 @@ class Dialog extends React.Component {
     const messagesArray = [];
     const { messages, userId } = this.props;
     let currentTime = moment();
-    
+
     if (!messages) {
       return null;
     }
@@ -96,10 +98,12 @@ class Dialog extends React.Component {
     return <span className={styles.messageBlock}>{message}</span>;
   };
 
-  render () {
+  render() {
     const { chatData, userId, interlocutor } = this.props;
     if (!interlocutor) {
-      return <div className={styles.loadingDialog}>Завантаження діалогу...</div>;
+      return (
+        <div className={styles.loadingDialog}>Завантаження діалогу...</div>
+      );
     }
 
     return (
@@ -116,10 +120,10 @@ class Dialog extends React.Component {
   }
 }
 
-const mapStateToProps = state => state.chatStore;
+const mapStateToProps = (state) => state.chatStore;
 
-const mapDispatchToProps = dispatch => ({
-  getDialog: data => dispatch(getDialogMessages(data)),
+const mapDispatchToProps = (dispatch) => ({
+  getDialog: (data) => dispatch(getDialogMessages(data)),
   clearMessageList: () => dispatch(clearMessageList()),
 });
 

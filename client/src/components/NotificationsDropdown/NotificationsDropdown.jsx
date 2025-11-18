@@ -8,9 +8,9 @@ import {
   removeNotification,
 } from '../../store/slices/notificationsSlice';
 
-export default function NotificationsDropdown ({ anchorRef, onClose }) {
+export default function NotificationsDropdown({ anchorRef, onClose }) {
   const dispatch = useDispatch();
-  const notifications = useSelector(s => s.notifications.list);
+  const notifications = useSelector((s) => s.notifications.list);
   const containerRef = useRef(null);
   const [pos, setPos] = useState({ top: 0, left: 0 });
 
@@ -22,7 +22,7 @@ export default function NotificationsDropdown ({ anchorRef, onClose }) {
     const left = rect.right - 320 + window.scrollX;
     setPos({ top, left: Math.max(8, left) });
 
-    const handleClickOutside = e => {
+    const handleClickOutside = (e) => {
       if (
         containerRef.current &&
         !containerRef.current.contains(e.target) &&
@@ -62,7 +62,7 @@ export default function NotificationsDropdown ({ anchorRef, onClose }) {
           <div className={styles.empty}>No notifications</div>
         )}
         {notifications &&
-          notifications.map(n => (
+          notifications.map((n) => (
             <div
               key={n.id}
               className={`${styles.item} ${n.read ? styles.read : ''}`}

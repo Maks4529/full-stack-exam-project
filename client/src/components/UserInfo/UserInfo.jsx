@@ -17,15 +17,8 @@ function UserInfo(props) {
   };
 
   const { isEdit, changeEditMode, data } = props;
-  const {
-    avatar,
-    firstName,
-    lastName,
-    displayName,
-    email,
-    role,
-    balance,
-  } = data;
+  const { avatar, firstName, lastName, displayName, email, role, balance } =
+    data;
   return (
     <div className={styles.mainContainer}>
       {isEdit ? (

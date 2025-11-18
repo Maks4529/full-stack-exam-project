@@ -10,7 +10,6 @@ function ButtonOption({
   isSelected,
   onSelect,
 }) {
-
   const cardClasses = classNames(styles.buttonCard, {
     [styles.active]: isSelected,
   });
@@ -21,9 +20,7 @@ function ButtonOption({
 
   return (
     <div className={cardClasses} onClick={handleClick}>
-      {isRecommended && (
-        <span className={styles.badge}>Recommended</span>
-      )}
+      {isRecommended && <span className={styles.badge}>Recommended</span>}
       <div className={styles.buttonCardHeader}>
         <h3>{title}</h3>
         {isSelected && <span className={styles.check}>✔</span>}

@@ -43,13 +43,13 @@ const ModeratorOffersPage = () => {
     fetchOffers(page, true);
   }, [page, fetchOffers]);
 
-  const onApprove = async offerId => {
+  const onApprove = async (offerId) => {
     try {
-      setProcessing(prev => ({ ...prev, [offerId]: true }));
+      setProcessing((prev) => ({ ...prev, [offerId]: true }));
       await approveOffer({ offerId });
 
       if (offers.length === 1 && page > 1) {
-        setPage(p => p - 1);
+        setPage((p) => p - 1);
       } else {
         await fetchOffers(page, false);
       }
@@ -57,7 +57,7 @@ const ModeratorOffersPage = () => {
       console.error('approve error', e);
       setError('Failed to approve offer');
     } finally {
-      setProcessing(prev => {
+      setProcessing((prev) => {
         const copy = { ...prev };
         delete copy[offerId];
         return copy;
@@ -65,13 +65,13 @@ const ModeratorOffersPage = () => {
     }
   };
 
-  const onReject = async offerId => {
+  const onReject = async (offerId) => {
     try {
-      setProcessing(prev => ({ ...prev, [offerId]: true }));
+      setProcessing((prev) => ({ ...prev, [offerId]: true }));
       await rejectOffer({ offerId });
 
       if (offers.length === 1 && page > 1) {
-        setPage(p => p - 1);
+        setPage((p) => p - 1);
       } else {
         await fetchOffers(page, false);
       }
@@ -79,7 +79,7 @@ const ModeratorOffersPage = () => {
       console.error('reject error', e);
       setError('Failed to reject offer');
     } finally {
-      setProcessing(prev => {
+      setProcessing((prev) => {
         const copy = { ...prev };
         delete copy[offerId];
         return copy;
@@ -88,12 +88,12 @@ const ModeratorOffersPage = () => {
   };
   const handlePrevPage = () => {
     if (page > 1) {
-      setPage(p => p - 1);
+      setPage((p) => p - 1);
     }
   };
   const handleNextPage = () => {
     if (page < totalPages) {
-      setPage(p => p + 1);
+      setPage((p) => p + 1);
     }
   };
 
@@ -135,7 +135,7 @@ const ModeratorOffersPage = () => {
           <div className={styles.empty}>No offers for moderation.</div>
         ) : (
           <div className={styles.grid}>
-            {offers.map(offer => (
+            {offers.map((offer) => (
               <ModerationOffersCard
                 key={offer.id}
                 offer={offer}

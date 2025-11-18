@@ -16,7 +16,7 @@ module.exports.parseBody = (req, res, next) => {
   if (!Array.isArray(req.body.contests)) {
     return next(new ServerError('contests should be an array'));
   }
-  
+
   req.files = Array.isArray(req.files) ? req.files : [];
 
   for (let i = 0; i < req.body.contests.length; i++) {
