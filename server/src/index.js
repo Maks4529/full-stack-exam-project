@@ -23,7 +23,7 @@ const checkModels = (required = []) => {
   console.log('The database model verification was successful.');
 };
 
-const PORT = process.env.PORT || 5000;
+const PORT = process.env.PORT || 3000;
 const server = http.createServer(app);
 
 try {
