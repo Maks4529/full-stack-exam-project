@@ -2,65 +2,79 @@ const db = require('../models');
 const mailer = require('../utils/mailer');
 const controller = require('../socketInit');
 
-const _notifyCreator = async (offer, status) => {
+const rejectOffer = async (offerId, creatorId, contestId) => {
+  const rejectedOffer = await db.Offers.update(
+    { status: 'rejected' },
+    { where: { id: offerId } }
+  );
+  return rejectedOffer;
+};
+
+const resolveOffer = async (contestId, creatorId, orderId, offerId, priority, transaction) => {
+  await db.Contests.update(
+    { status: 'finished' },
+    { where: { id: contestId }, transaction }
+  );
+
+  await db.Offers.update(
+    { status: 'won' },
+    { where: { id: offerId }, transaction }
+  );
+
+  const contest = await db.Contests.findByPk(contestId, { transaction });
+  await db.Users.increment(
+    { balance: contest.prize }, 
+    { where: { id: creatorId }, transaction }
+  );
+
+  return await db.Offers.findByPk(offerId, { transaction });
+};
+
+const _notifyCreator = async (offerId, status, userId, contestId) => {
   const statusPastTense = status === 'approved' ? 'approved' : 'rejected';
-
-  const creatorName = offer.User?.firstName || 'Creator';
-  const contestTitle = offer.Contest?.title || 'your contest';
-
-  const message = `Your offer for the contest "${contestTitle}" (ID: #${offer.id}) was ${statusPastTense}.`;
-
+  
   try {
-    await db.Notification.create({
-      userId: offer.userId,
-      message: message,
+    const fullOffer = await db.Offers.findByPk(offerId, {
+      include: [
+        { model: db.Users, attributes: ['email', 'firstName'] },
+        { model: db.Contests, attributes: ['title'] },
+      ],
     });
-  } catch (e) {
-    console.error(
-      `Failed to create DB notification for offer ${offer.id}:`,
-      e.message || e
-    );
-  }
 
-  try {
-    controller
-      .getNotificationController()
-      .emitChangeOfferStatus(String(offer.userId), message, offer.contestId);
-  } catch (e) {
-    console.error(
-      `Failed to emit socket notification for offer ${offer.id}:`,
-      e.message || e
-    );
-  }
+    if (!fullOffer) return;
 
-  const creatorEmail = offer.User && offer.User.email;
+    const creatorName = fullOffer.User?.firstName || 'Creator';
+    const contestTitle = fullOffer.Contest?.title || 'your contest';
+    const message = `Your offer for the contest "${contestTitle}" (ID: #${offerId}) was ${statusPastTense}.`;
 
-  if (creatorEmail) {
     try {
+      await db.Notification.create({ userId: userId, message: message });
+    } catch (e) {
+      console.error(`[Notify] DB Notification failed:`, e.message);
+    }
+
+    try {
+      controller
+        .getNotificationController()
+        .emitChangeOfferStatus(String(userId), message, contestId);
+    } catch (e) {
+      console.error(`[Notify] Socket Notification failed:`, e.message);
+    }
+
+    const creatorEmail = fullOffer.User && fullOffer.User.email;
+    if (creatorEmail) {
       const htmlBody = `
         <div style="font-family: Arial, sans-serif; line-height: 1.6;">
           <h2 style="color: #333;">Hello, ${creatorName}!</h2>
           <p>We have an update regarding your offer for the contest: <strong>"${contestTitle}"</strong>.</p>
-          <p>Your offer (ID: #${offer.id}) has been <strong>${statusPastTense}</strong> by the moderator.</p>
-          ${
-            status === 'approved'
-              ? '<p style="color: green;">Congratulations! Your offer is now active.</p>'
-              : '<p style="color: red;">You can review the offer in your account and resubmit it if you wish.</p>'
-          }
-          <br>
-          <p>Thank you,</p>
-          <p>The Team</p>
-        </div>
-      `;
-
-      const textBody = `
-        Hello, ${creatorName}!
-        We have an update regarding your offer for the contest: "${contestTitle}".
-        Your offer (ID: #${offer.id}) has been ${statusPastTense} by the moderator.
-        ${status === 'approved' ? 'Congratulations! Your offer is now active.' : 'You can review the offer in your account and resubmit it if you wish.'}
-        Thank you,
-        The Team
-      `;
+          <p>Your offer (ID: #${offerId}) has been <strong>${statusPastTense}</strong> by the moderator.</p>
+          ${status === 'approved' 
+            ? '<p style="color: green;">Congratulations! Your offer is now active.</p>' 
+            : '<p style="color: red;">You can review the offer in your account and resubmit it if you wish.</p>'}
+          <br><p>The Team</p>
+        </div>`;
+      
+      const textBody = `Hello, ${creatorName}!\nYour offer (ID: #${offerId}) for "${contestTitle}" has been ${statusPastTense}.`;
 
       await mailer.sendMail({
         to: creatorEmail,
@@ -68,40 +82,30 @@ const _notifyCreator = async (offer, status) => {
         text: textBody,
         html: htmlBody,
       });
-    } catch (e) {
-      console.error(
-        `[Notify] ПОМИЛКА відправки ${statusPastTense} email для оферу ${offer.id}:`,
-        e.message || e
-      );
     }
-  } else {
-    console.warn(
-      `[Notify] Email не буде відправлено. 'creatorEmail' не знайдено для оферу #${offer.id}.`
-    );
+  } catch (e) {
+    console.error(`[Notify] General error in _notifyCreator:`, e);
   }
 };
 
+// --- CONTROLLER METHODS ---
+
 module.exports.updateOfferStatus = async (req, res, next) => {
+  console.log('[updateOfferStatus] Request body:', req.body);
+
   try {
-    const { offerId, status } = req.body;
+    const { status } = req.body;
+    const targetId = req.body.offerId || req.body.id || req.params.offerId || req.params.id;
+
+    if (!targetId) {
+      return res.status(400).send({ error: 'Offer ID is missing.' });
+    }
 
     if (status !== 'approved' && status !== 'rejected') {
       return res.status(400).send({ error: 'Invalid status provided.' });
     }
 
-    const offer = await db.Offers.findByPk(offerId, {
-      include: [
-        {
-          model: db.Users,
-          attributes: ['email', 'firstName'],
-        },
-        {
-          model: db.Contests,
-          attributes: ['title'],
-        },
-      ],
-    });
-
+    const offer = await db.Offers.findByPk(targetId);
     if (!offer) {
       return res.status(404).send({ error: 'Offer not found' });
     }
@@ -109,10 +113,10 @@ module.exports.updateOfferStatus = async (req, res, next) => {
     offer.status = status;
     await offer.save();
 
-    res.send({ success: true, newStatus: offer.status });
-
-    _notifyCreator(offer, status);
+    res.send(offer);
+    _notifyCreator(targetId, status, offer.userId, offer.contestId);
   } catch (err) {
+    console.error('[updateOfferStatus] ERROR:', err);
     next(err);
   }
 };
@@ -153,7 +157,6 @@ module.exports.getMyOffers = async (req, res, next) => {
       order: [['createdAt', 'DESC']],
       attributes: ['id', 'text', 'status', 'contestId'],
     });
-
     res.send({ offers });
   } catch (err) {
     next(err);
@@ -167,7 +170,6 @@ module.exports.getApprovedOffers = async (req, res, next) => {
       order: [['createdAt', 'DESC']],
       attributes: ['id', 'text', 'contestId'],
     });
-
     res.send({ offers });
   } catch (err) {
     next(err);
@@ -175,29 +177,43 @@ module.exports.getApprovedOffers = async (req, res, next) => {
 };
 
 module.exports.setOfferStatus = async (req, res, next) => {
+  console.log('[setOfferStatus] Received body:', req.body); // LOGGING ADDED
+  
+  const { command, contestId, creatorId, orderId, priority } = req.body;
+  
+  // FIX: Extract offerId safely from either 'offerId' or 'id'
+  const offerId = req.body.offerId || req.body.id;
+
+  if (!offerId) {
+    console.error('[setOfferStatus] Error: offerId is undefined!');
+    return res.status(400).send({ error: 'Offer ID is missing (checked both offerId and id)' });
+  }
+
   let transaction;
-  if (req.body.command === 'reject') {
+
+  if (command === 'reject') {
     try {
-      const offer = await rejectOffer(
-        req.body.offerId,
-        req.body.creatorId,
-        req.body.contestId
-      );
+      const offer = await rejectOffer(offerId, creatorId, contestId);
       res.send(offer);
     } catch (err) {
       next(err);
     }
-  } else if (req.body.command === 'resolve') {
+  } else if (command === 'resolve') {
     try {
       transaction = await db.sequelize.transaction();
+      
       const winningOffer = await resolveOffer(
-        req.body.contestId,
-        req.body.creatorId,
-        req.body.orderId,
-        req.body.offerId,
-        req.body.priority,
+        contestId,
+        creatorId,
+        orderId,
+        offerId, // Passing the safely extracted ID
+        priority,
         transaction
       );
+      
+      // Commit transaction
+      await transaction.commit();
+      
       res.send(winningOffer);
     } catch (err) {
       try {
@@ -209,5 +225,7 @@ module.exports.setOfferStatus = async (req, res, next) => {
       }
       next(err);
     }
+  } else {
+    res.status(400).send({ error: 'Invalid command' });
   }
 };

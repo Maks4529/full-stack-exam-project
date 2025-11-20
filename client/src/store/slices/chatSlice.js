@@ -29,7 +29,6 @@ const initialState = {
   catalogCreationMode: CONSTANTS.ADD_CHAT_TO_OLD_CATALOG,
 };
 
-// ---------- getPreviewChat
 export const getPreviewChat = decorateAsyncThunk({
   key: `${CHAT_SLICE_NAME}/getPreviewChat`,
   thunk: async () => {
@@ -50,7 +49,6 @@ const getPreviewChatExtraReducers = createExtraReducers({
   },
 });
 
-// ---------- getDialogMessages
 export const getDialogMessages = decorateAsyncThunk({
   key: `${CHAT_SLICE_NAME}/getDialogMessages`,
   thunk: async (payload) => {
@@ -72,7 +70,6 @@ const getDialogMessagesExtraReducers = createExtraReducers({
   },
 });
 
-// ---------- sendMessage
 export const sendMessage = decorateAsyncThunk({
   key: `${CHAT_SLICE_NAME}/sendMessage`,
   thunk: async (payload) => {
@@ -112,7 +109,6 @@ const sendMessageExtraReducers = createExtraReducers({
   },
 });
 
-// ---------- changeChatFavorite
 export const changeChatFavorite = decorateAsyncThunk({
   key: `${CHAT_SLICE_NAME}/changeChatFavorite`,
   thunk: async (payload) => {
@@ -138,7 +134,6 @@ const changeChatFavoriteExtraReducers = createExtraReducers({
   },
 });
 
-// ---------- changeChatBlock
 export const changeChatBlock = decorateAsyncThunk({
   key: `${CHAT_SLICE_NAME}/changeChatBlock`,
   thunk: async (payload) => {
@@ -164,7 +159,6 @@ const changeChatBlockExtraReducers = createExtraReducers({
   },
 });
 
-// ---------- getCatalogList
 export const getCatalogList = decorateAsyncThunk({
   key: `${CHAT_SLICE_NAME}/getCatalogList`,
   thunk: async (payload) => {
@@ -182,7 +176,6 @@ const getCatalogListExtraReducers = createExtraReducers({
   rejectedReducer,
 });
 
-// ---------- addChatToCatalog
 export const addChatToCatalog = decorateAsyncThunk({
   key: `${CHAT_SLICE_NAME}/addChatToCatalog`,
   thunk: async (payload) => {
@@ -210,7 +203,6 @@ const addChatToCatalogExtraReducers = createExtraReducers({
   },
 });
 
-// ---------- createCatalog
 export const createCatalog = decorateAsyncThunk({
   key: `${CHAT_SLICE_NAME}/createCatalog`,
   thunk: async (payload) => {
@@ -231,7 +223,6 @@ const createCatalogExtraReducers = createExtraReducers({
   },
 });
 
-// ---------- deleteCatalog
 export const deleteCatalog = decorateAsyncThunk({
   key: `${CHAT_SLICE_NAME}/deleteCatalog`,
   thunk: async (payload) => {
@@ -255,7 +246,6 @@ const deleteCatalogExtraReducers = createExtraReducers({
   },
 });
 
-// ---------- removeChatFromCatalog
 export const removeChatFromCatalog = decorateAsyncThunk({
   key: `${CHAT_SLICE_NAME}/removeChatFromCatalog`,
   thunk: async (payload) => {
@@ -282,7 +272,6 @@ const removeChatFromCatalogExtraReducers = createExtraReducers({
   },
 });
 
-// ---------- changeCatalogName
 export const changeCatalogName = decorateAsyncThunk({
   key: `${CHAT_SLICE_NAME}/changeCatalogName`,
   thunk: async (payload) => {
@@ -309,7 +298,6 @@ const changeCatalogNameExtraReducers = createExtraReducers({
     state.isRenameCatalog = false;
   },
 });
-//-------------------------------------------------------
 
 const reducers = {
   changeBlockStatusInStore: (state, { payload }) => {
@@ -327,11 +315,11 @@ const reducers = {
     const { message, preview } = payload;
     const { messagesPreview } = state;
     let isNew = true;
-    messagesPreview.forEach((preview) => {
-      if (isEqual(preview.participants, message.participants)) {
-        preview.text = message.body;
-        preview.sender = message.sender;
-        preview.createAt = message.createdAt;
+    messagesPreview.forEach((previewItem) => {
+      if (isEqual(previewItem.participants, message.participants)) {
+        previewItem.text = message.body;
+        previewItem.sender = message.sender;
+        previewItem.createAt = message.createdAt;
         isNew = false;
       }
     });
@@ -339,7 +327,12 @@ const reducers = {
       messagesPreview.push(preview);
     }
     state.messagesPreview = messagesPreview;
-    state.messages = [...state.messages, payload.message];
+    const isMessageAlreadyExist = state.messages.some(
+      (m) => m._id === message._id
+    );
+    if (!isMessageAlreadyExist) {
+      state.messages = [...state.messages, message];
+    }
   },
 
   backToDialogList: (state) => {

@@ -1,7 +1,5 @@
-import React from 'react';
 import { connect } from 'react-redux';
 import classNames from 'classnames';
-import Header from '../../components/Header/Header';
 import styles from './UserProfile.module.sass';
 import CONSTANTS from '../../constants';
 import UserInfo from '../../components/UserInfo/UserInfo';
@@ -10,8 +8,8 @@ import { cashOut, clearPaymentStore } from '../../store/slices/paymentSlice';
 import { changeProfileViewMode } from '../../store/slices/userProfileSlice';
 import Error from '../../components/Error/Error';
 
-function UserProfile(props) {
-  const pay = (values) => {
+function UserProfile (props) {
+  const pay = values => {
     const { number, expiry, cvc, sum } = values;
     props.cashOut({
       number,
@@ -61,10 +59,16 @@ function UserProfile(props) {
           <UserInfo />
         ) : (
           <div className={styles.container}>
-            {parseInt(balance) === 0 ? (
+            {parseFloat(balance) === 0 ? (
               <span className={styles.notMoney}>
                 There is no money on your balance
               </span>
+            ) : parseFloat(balance) < 5 ? (
+              <div>
+                <span className={styles.notMoney}>
+                  Minimum cashout amount is $5
+                </span>
+              </div>
             ) : (
               <div>
                 {error && (
@@ -84,7 +88,7 @@ function UserProfile(props) {
   );
 }
 
-const mapStateToProps = (state) => {
+const mapStateToProps = state => {
   const { balance, role } = state.userStore.data;
   const { profileViewMode } = state.userProfile;
   const { error } = state.payment;
@@ -96,9 +100,9 @@ const mapStateToProps = (state) => {
   };
 };
 
-const mapDispatchToProps = (dispatch) => ({
-  cashOut: (data) => dispatch(cashOut(data)),
-  changeProfileViewMode: (data) => dispatch(changeProfileViewMode(data)),
+const mapDispatchToProps = dispatch => ({
+  cashOut: data => dispatch(cashOut(data)),
+  changeProfileViewMode: data => dispatch(changeProfileViewMode(data)),
   clearPaymentStore: () => dispatch(clearPaymentStore()),
 });
 

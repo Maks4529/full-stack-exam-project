@@ -4,7 +4,7 @@ const db = require('../models');
 const userQueries = require('./queries/userQueries');
 const controller = require('../socketInit');
 
-async function findConversationByParticipants(participants) {
+async function findConversationByParticipants (participants) {
   const sql = `SELECT conversation_id FROM user_conversations WHERE user_id IN (:a, :b) GROUP BY conversation_id HAVING COUNT(*) = 2 LIMIT 1`;
   const rows = await db.sequelize.query(sql, {
     replacements: { a: participants[0], b: participants[1] },
@@ -16,7 +16,7 @@ async function findConversationByParticipants(participants) {
   return null;
 }
 
-async function createConversationWithParticipants(participants) {
+async function createConversationWithParticipants (participants) {
   const conv = await db.Conversations.create({});
   await db.UserConversation.bulkCreate([
     {
@@ -35,30 +35,39 @@ async function createConversationWithParticipants(participants) {
   return conv;
 }
 
-async function getParticipantsFlags(conversationId, participants) {
+async function getParticipantsFlags (conversationId, participants) {
   const rows = await db.UserConversation.findAll({
     where: { conversation_id: conversationId },
   });
-  const ordered = participants.map((p) => {
-    const r = rows.find((rr) => Number(rr.user_id) === Number(p));
+  const ordered = participants.map(p => {
+    const r = rows.find(rr => Number(rr.user_id) === Number(p));
     return { black: !!(r && r.black_list), fav: !!(r && r.favorite) };
   });
   return {
-    blackList: ordered.map((o) => o.black),
-    favoriteList: ordered.map((o) => o.fav),
+    blackList: ordered.map(o => o.black),
+    favoriteList: ordered.map(o => o.fav),
   };
 }
 
 module.exports.addMessage = async (req, res, next) => {
-  const participants = [Number(req.tokenData.userId), Number(req.params.id)];
-  participants.sort((a, b) => a - b);
+  // Validate inputs early
+  const senderId = Number(req.tokenData?.userId);
+  const recipientId = Number(req.params?.id);
+  const messageBody = req.body?.messageBody;
+
+  if (!senderId || !recipientId)
+    return res.status(400).json({ error: 'participant id required' });
+  if (!messageBody || String(messageBody).trim() === '')
+    return res.status(400).json({ error: 'messageBody required' });
+
+  const participants = [senderId, recipientId].sort((a, b) => a - b);
   try {
     let conv = await findConversationByParticipants(participants);
     if (!conv) conv = await createConversationWithParticipants(participants);
 
     const saved = await db.Messages.create({
-      sender_id: req.tokenData.userId,
-      body: req.body.messageBody,
+      sender_id: senderId,
+      body: messageBody,
       conversation_id: conv.id,
     });
 
@@ -67,9 +76,7 @@ module.exports.addMessage = async (req, res, next) => {
       participants
     );
 
-    const interlocutorId = participants.find(
-      (p) => p !== Number(req.tokenData.userId)
-    );
+    const interlocutorId = participants.find(p => p !== senderId);
 
     const message = {
       _id: saved.id,
@@ -91,24 +98,32 @@ module.exports.addMessage = async (req, res, next) => {
       favoriteList,
     };
 
-    controller.getChatController().emitNewMessage(interlocutorId, {
-      message,
-      preview: Object.assign({}, preview, {
-        interlocutor: {
-          id: req.tokenData.userId,
-          firstName: req.tokenData.firstName,
-          lastName: req.tokenData.lastName,
-          displayName: req.tokenData.displayName,
-          avatar: req.tokenData.avatar,
-          email: req.tokenData.email,
-        },
-      }),
-    });
+    try {
+      const chatCtrl =
+        controller.getChatController && controller.getChatController();
+      if (chatCtrl && typeof chatCtrl.emitNewMessage === 'function') {
+        chatCtrl.emitNewMessage(interlocutorId, {
+          message,
+          preview: Object.assign({}, preview, {
+            interlocutor: {
+              id: senderId,
+              firstName: req.tokenData.firstName,
+              lastName: req.tokenData.lastName,
+              displayName: req.tokenData.displayName,
+              avatar: req.tokenData.avatar,
+              email: req.tokenData.email,
+            },
+          }),
+        });
+      }
+    } catch (emitErr) {
+      console.error(
+        '[chatController][addMessage] emit error',
+        emitErr && emitErr.message ? emitErr.message : emitErr
+      );
+    }
 
-    res.send({
-      message,
-      preview,
-    });
+    res.send({ message, preview });
   } catch (err) {
     if (process.env.NODE_ENV !== 'production') {
       return res.status(500).json({ error: err.message, stack: err.stack });
@@ -127,7 +142,7 @@ module.exports.getChat = async (req, res, next) => {
       where: { conversation_id: conv.id },
       order: [['created_at', 'ASC']],
     });
-    const messages = rows.map((m) => ({
+    const messages = rows.map(m => ({
       _id: m.id,
       sender: m.sender_id,
       body: m.body,
@@ -158,7 +173,7 @@ module.exports.getPreview = async (req, res, next) => {
     const userConvs = await db.UserConversation.findAll({
       where: { user_id: req.tokenData.userId },
     });
-    const convIds = userConvs.map((uc) => uc.conversation_id);
+    const convIds = userConvs.map(uc => uc.conversation_id);
     const previews = [];
     for (const convId of convIds) {
       const lastMsg = await db.Messages.findOne({
@@ -169,10 +184,10 @@ module.exports.getPreview = async (req, res, next) => {
         where: { conversation_id: convId },
       });
       const participants = participantsRows
-        .map((r) => r.user_id)
+        .map(r => r.user_id)
         .sort((a, b) => a - b);
-      const blackList = participantsRows.map((r) => !!r.black_list);
-      const favoriteList = participantsRows.map((r) => !!r.favorite);
+      const blackList = participantsRows.map(r => !!r.black_list);
+      const favoriteList = participantsRows.map(r => !!r.favorite);
       previews.push({
         _id: convId,
         sender: lastMsg ? lastMsg.sender_id : null,
@@ -183,8 +198,8 @@ module.exports.getPreview = async (req, res, next) => {
         favoriteList,
       });
     }
-    const interlocutors = previews.map((p) =>
-      p.participants.find((pid) => pid !== req.tokenData.userId)
+    const interlocutors = previews.map(p =>
+      p.participants.find(pid => pid !== req.tokenData.userId)
     );
     let senders = [];
     if (interlocutors.length > 0) {
@@ -193,11 +208,11 @@ module.exports.getPreview = async (req, res, next) => {
         attributes: ['id', 'firstName', 'lastName', 'displayName', 'avatar'],
       });
     }
-    previews.forEach((preview) => {
+    previews.forEach(preview => {
       const sender = senders.find(
-        (s) =>
+        s =>
           s.id ===
-          preview.participants.find((pid) => pid !== req.tokenData.userId)
+          preview.participants.find(pid => pid !== req.tokenData.userId)
       );
       if (sender) {
         preview.interlocutor = {
@@ -242,7 +257,7 @@ const updateChatFlag = (flagName, flagValueField) => {
       const rows = await db.UserConversation.findAll({
         where: { conversation_id: convId },
       });
-      const participants = rows.map((r) => r.user_id).sort((a, b) => a - b);
+      const participants = rows.map(r => r.user_id).sort((a, b) => a - b);
 
       const { blackList, favoriteList } = await getParticipantsFlags(
         convId,
@@ -250,7 +265,7 @@ const updateChatFlag = (flagName, flagValueField) => {
       );
 
       const interlocutorId = participants.find(
-        (p) => p !== Number(req.tokenData.userId)
+        p => p !== Number(req.tokenData.userId)
       );
 
       const chat = {
@@ -307,7 +322,7 @@ module.exports.createCatalog = async (req, res, next) => {
     const result = {
       _id: catalog.id,
       catalogName: catalog.catalog_name,
-      chats: rows.map((r) => r.conversation_id),
+      chats: rows.map(r => r.conversation_id),
     };
     res.send(result);
   } catch (err) {
@@ -330,7 +345,7 @@ module.exports.updateNameCatalog = async (req, res, next) => {
     const result = {
       _id: catalog.id,
       catalogName: catalog.catalog_name,
-      chats: rows.map((r) => r.conversation_id),
+      chats: rows.map(r => r.conversation_id),
     };
     res.send(result);
   } catch (err) {
@@ -359,7 +374,7 @@ module.exports.addNewChatToCatalog = async (req, res, next) => {
     const result = {
       _id: catalog.id,
       catalogName: catalog.catalog_name,
-      chats: rows.map((r) => r.conversation_id),
+      chats: rows.map(r => r.conversation_id),
     };
     res.send(result);
   } catch (err) {
@@ -388,7 +403,7 @@ module.exports.removeChatFromCatalog = async (req, res, next) => {
     const result = {
       _id: catalog.id,
       catalogName: catalog.catalog_name,
-      chats: rows.map((r) => r.conversation_id),
+      chats: rows.map(r => r.conversation_id),
     };
     res.send(result);
   } catch (err) {
@@ -422,7 +437,7 @@ module.exports.getCatalogs = async (req, res, next) => {
       result.push({
         _id: c.id,
         catalogName: c.catalog_name,
-        chats: rows.map((r) => r.conversation_id),
+        chats: rows.map(r => r.conversation_id),
       });
     }
     res.send(result);

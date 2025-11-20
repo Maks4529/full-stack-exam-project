@@ -1,7 +1,7 @@
 const bd = require('../models');
-const NotFound = require('../errors/UserNotFoundError');
 const RightsError = require('../errors/RightsError');
 const ServerError = require('../errors/ServerError');
+const BadRequestError = require('../errors/BadRequestError');
 const CONSTANTS = require('../constants');
 
 module.exports.parseBody = (req, res, next) => {
@@ -81,34 +81,64 @@ module.exports.onlyForCustomer = (req, res, next) => {
 };
 
 module.exports.canSendOffer = async (req, res, next) => {
-  if (req.tokenData.role === CONSTANTS.CUSTOMER) {
-    return next(new RightsError());
-  }
   try {
+    if (!req.tokenData || req.tokenData.role === CONSTANTS.CUSTOMER) {
+      return next(new RightsError());
+    }
+
+    const contestIdRaw = req.params?.contestId ?? req.body?.contestId;
+    if (
+      contestIdRaw === undefined ||
+      contestIdRaw === null ||
+      String(contestIdRaw).toLowerCase() === 'undefined' ||
+      Number.isNaN(Number(contestIdRaw))
+    ) {
+      return next(new BadRequestError('contestId is required'));
+    }
+
+    const contestId = Number.parseInt(contestIdRaw, 10);
     const result = await bd.Contests.findOne({
       where: {
-        id: req.body.contestId,
+        id: contestId,
       },
       attributes: ['status'],
     });
-    if (
-      result.get({ plain: true }).status === CONSTANTS.CONTEST_STATUS_ACTIVE
-    ) {
+    if (!result) {
+      return next(new RightsError());
+    }
+
+    const { status } = result.get({ plain: true });
+    if (status === CONSTANTS.CONTEST_STATUS_ACTIVE) {
       next();
     } else {
       return next(new RightsError());
     }
   } catch (e) {
-    next(new ServerError());
+    next(new ServerError(e));
   }
 };
 
 module.exports.onlyForCustomerWhoCreateContest = async (req, res, next) => {
   try {
+    if (!req.tokenData) return next(new RightsError());
+    let contestId = req.body?.contestId;
+    if (!contestId) {
+      const offerId = req.params?.offerId || req.body?.offerId;
+      if (!offerId) {
+        return next(new RightsError());
+      }
+      const offer = await bd.Offers.findByPk(offerId, {
+        attributes: ['contestId'],
+      });
+      if (!offer) return next(new RightsError());
+      contestId = offer.get('contestId');
+      req.body.contestId = contestId;
+    }
+
     const result = await bd.Contests.findOne({
       where: {
         userId: req.tokenData.userId,
-        id: req.body.contestId,
+        id: contestId,
         status: CONSTANTS.CONTEST_STATUS_ACTIVE,
       },
     });
@@ -117,7 +147,7 @@ module.exports.onlyForCustomerWhoCreateContest = async (req, res, next) => {
     }
     next();
   } catch (e) {
-    next(new ServerError());
+    next(new ServerError(e));
   }
 };
 
