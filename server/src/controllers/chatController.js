@@ -234,15 +234,21 @@ module.exports.getPreview = async (req, res, next) => {
 const updateChatFlag = (flagName, flagValueField) => {
   return async (req, res, next) => {
     try {
-      const convId = req.params.id;
+      const convId =
+        req.params.id || req.body.participantsConversationId || req.body.chatId;
       if (!convId) {
         return res.status(400).json({ error: 'Conversation ID is required' });
       }
 
-      const flagValue = req.body[flagValueField];
-      if (typeof flagValue === 'undefined') {
+      const flagValueRaw = req.body[flagValueField];
+      if (typeof flagValueRaw === 'undefined') {
         return res.status(400).json({ error: `${flagValueField} is required` });
       }
+      const flagValue =
+        flagValueRaw === true ||
+        flagValueRaw === 'true' ||
+        flagValueRaw === 1 ||
+        flagValueRaw === '1';
 
       await db.UserConversation.update(
         { [flagName]: flagValue },
@@ -278,7 +284,8 @@ const updateChatFlag = (flagName, flagValueField) => {
       res.send(chat);
 
       try {
-        const chatCtrl = controller.getChatController();
+        const chatCtrl =
+          controller.getChatController && controller.getChatController();
         if (
           chatCtrl &&
           typeof chatCtrl.emitChangeBlockStatus === 'function' &&
@@ -332,13 +339,19 @@ module.exports.createCatalog = async (req, res, next) => {
 
 module.exports.updateNameCatalog = async (req, res, next) => {
   try {
+    const catalogId = req.params.id || req.body.catalogId;
+    if (!catalogId)
+      return res.status(400).send({ error: 'catalog id required' });
+    if (!req.body.catalogName)
+      return res.status(400).send({ error: 'catalogName required' });
+
     const [updated] = await db.Catalog.update(
       { catalog_name: req.body.catalogName },
-      { where: { id: req.params.id, user_id: req.tokenData.userId } }
+      { where: { id: catalogId, user_id: req.tokenData.userId } }
     );
     if (!updated)
       return res.status(404).send({ error: 'Catalog not found or not yours' });
-    const catalog = await db.Catalog.findByPk(req.params.id);
+    const catalog = await db.Catalog.findByPk(catalogId);
     const rows = await db.CatalogConversation.findAll({
       where: { catalog_id: catalog.id },
     });
@@ -413,8 +426,11 @@ module.exports.removeChatFromCatalog = async (req, res, next) => {
 
 module.exports.deleteCatalog = async (req, res, next) => {
   try {
+    const catalogId = req.params.id || req.body.catalogId;
+    if (!catalogId)
+      return res.status(400).json({ error: 'catalog id required' });
     const deleted = await db.Catalog.destroy({
-      where: { id: req.params.id, user_id: req.tokenData.userId },
+      where: { id: catalogId, user_id: req.tokenData.userId },
     });
     if (!deleted)
       return res.status(404).json({ error: 'Catalog not found or not yours' });

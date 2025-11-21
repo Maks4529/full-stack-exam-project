@@ -31,7 +31,7 @@ export const setNewOffer = payload => {
   const { contestId, ...data } = payload || {};
   return http.post(`contests/${contestId}/offers`, data);
 };
-export const setOfferStatus = (data) =>
+export const setOfferStatus = data =>
   http.patch(`offers/${data.offerId}/status`, data);
 export const getModeratorOffers = data =>
   http.get('offers/moderation', { params: data });
@@ -42,20 +42,28 @@ export const rejectOffer = ({ offerId }) =>
 
 export const getPreviewChat = () => http.get('chat/preview');
 export const getDialog = ({ id }) => http.get(`chat/dialogs/${id}`);
-export const newMessage = ({ id, ...data }) =>
-  http.post(`chat/dialogs/${id}/messages`, data);
-export const changeChatFavorite = ({ id, ...data }) =>
-  http.patch(`chat/dialogs/${id}/favorite`, data);
-export const changeChatBlock = ({ id, ...data }) =>
-  http.patch(`chat/dialogs/${id}/blacklist`, data);
+export const newMessage = ({ id, participantsConversationId, ...data }) =>
+  http.post(`chat/dialogs/${id || participantsConversationId}/messages`, data);
+export const changeChatFavorite = ({
+  id,
+  participantsConversationId,
+  ...data
+}) =>
+  http.patch(`chat/dialogs/${id || participantsConversationId}/favorite`, data);
+export const changeChatBlock = ({ id, participantsConversationId, ...data }) =>
+  http.patch(
+    `chat/dialogs/${id || participantsConversationId}/blackList`,
+    data
+  );
 
 export const getCatalogList = data =>
   http.get('chat/catalogs', { params: data });
 export const createCatalog = data => http.post('chat/catalogs', data);
 export const addChatToCatalog = ({ id, ...data }) =>
   http.post(`chat/catalogs/${id}/chats`, data);
-export const deleteCatalog = ({ id }) => http.delete(`chat/catalogs/${id}`);
+export const deleteCatalog = ({ id, catalogId }) =>
+  http.delete(`chat/catalogs/${id || catalogId}`);
 export const removeChatFromCatalog = ({ catalogId, chatId }) =>
   http.delete(`chat/catalogs/${catalogId}/chats/${chatId}`);
-export const changeCatalogName = ({ id, ...data }) =>
-  http.patch(`chat/catalogs/${id}`, data);
+export const changeCatalogName = ({ id, catalogId, ...data }) =>
+  http.patch(`chat/catalogs/${id || catalogId}`, data);
